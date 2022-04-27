@@ -1,0 +1,445 @@
+<ng-container>
+  <ngb-tabset #app_tabs="ngbTabset">
+    <ngb-tab id="app_list_tab" title="General">
+      <ng-template ngbTabContent>
+        <fieldset class="form-group">
+          <legend>Chief Complaints</legend>
+          <div class="container form-group">
+            <table class="table table-bordered table-hover table-striped">
+              <thead>
+                <tr style="background-color: #ddd">
+                  <th width="5%">#</th>
+                  <th class="text-left">Type</th>
+                  <th class="text-left" width="70%">Details</th>
+                  <th width="5%">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let datas of labels">
+                  <td class="text-center">{{ datas.id }}</td>
+                  <td>{{ datas.label }}</td>
+                  <td> <textarea (change)="getEvent()" style="font-size: 12px;" name="params[{{datas.key_name}}]"
+                      [(ngModel)]="complaint_data[datas.key_name]" change="changedata(datas.key_name)"
+                      class="form-control form-control-sm" [disabled]="datas.value == 1"></textarea></td>
+                  <td class="text-center" style="vertical-align: middle;">
+                    <button *ngIf="datas.value != 1" class="btn btn-sm btn-warning" (click)="onDisableUser(datas)"><i
+                        class="fa fa-close text-light"></i></button>
+                    <button *ngIf="datas.value == 1" class="btn btn-sm btn-success" (click)="onDisableUser(datas)"><i
+                        class="fa fa-plus"></i></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="row">
+              <div class="col-10"></div>
+              <div class="col-2">
+                <button [disabled]="formatDate(todaysDate) != formatDate(selected_visit.CREATED_TIME)"
+                  class="pull-right btn btn-sm btn-primary" type="button" (click)="saveComplaints()">Save</button>
+                <ng-container
+                  *ngIf="formatDate(todaysDate) != formatDate(selected_visit.CREATED_TIME) && isEmptyObject(complaint_data) > 2">
+                  <button style="margin-left: 20px;" class="btn btn-sm btn-info" type="button"
+                    (click)="Complaints(1)">Copy</button>
+                </ng-container>
+                <ng-container
+                  *ngIf="formatDate(todaysDate) == formatDate(selected_visit.CREATED_TIME) && isEmptyObject(copy_complaint_data) > 0">
+                  <button style="margin-left: 20px;" class="btn btn-sm btn-info" type="button"
+                    (click)="Complaints(2);">Paste</button>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <div class="clearfix"></div>
+        <div class="clearfix"></div>
+        <!-- <app-vital-signals (saveNotifys)="OnApplyNotify($event)"  [assessment_id]="assessment_id" [patient_id]="patient_id" [selected_visit]="selected_visit"></app-vital-signals> -->
+        <div class="clearfix"></div>
+        <div class="clearfix"></div>
+
+        <!-- <fieldset class="form-group" *ngIf="assessment_notes.length != 0">
+            <div class="form-group">
+              <div class="clearfix"></div>
+              <ng-container *ngIf="assessment_notes && assessment_notes.PAST_HISTORY !=''">
+                <label style="vertical-align: top;" class="col-2 text-left"><b>Lab Result</b></label>&nbsp;:&nbsp;
+                <label style="vertical-align: top;" class="col-9 text-left" [innerHTML]="assessment_notes.PAST_HISTORY | nl2br : true"></label>
+              </ng-container>
+              <ng-container *ngIf="assessment_notes && assessment_notes.NURSING_NOTES !=''">
+                <div class="clearfix"></div>
+                <label style="vertical-align: top;" class="col-2 text-left"><b>Nursing Notes</b></label>&nbsp;:&nbsp;
+                <label style="vertical-align: top;" class="col-9 text-left" [innerHTML]="assessment_notes.NURSING_NOTES | nl2br : true"></label>
+              </ng-container>
+            </div>
+          </fieldset> -->
+
+        <!-- <app-pain-assessment (saveNotifys)="OnApplyNotify($event)"  [patient_id]="patient_id" [assessment_id]="assessment_id" [selected_visit]="selected_visit"></app-pain-assessment>
+          <app-allergies (saveNotifys)="OnApplyNotify($event)"  [patient_id]="patient_id" [selected_visit]="selected_visit"></app-allergies> -->
+
+        <fieldset class="form-group">
+          <legend>Previous Chief Complaints</legend>
+          <div class="container form-group">
+            <table class="col-lg-12 borderless">
+              <tr>
+                <td width="60%" class="text-left"></td>
+                <td width="40%" class="text-right">
+                  <div class="input-group mb-3 pull-left">
+                    Search by date &nbsp;&nbsp;
+                    <input style="height:31px" class="form-control form-control-sm" type="date"
+                      [ngModel]="dateVal | date:'yyyy-MM-dd'" (ngModelChange)="dateVal = $event" name="date" id="date"
+                      [max]="getToday()" (change)="getPrevioussearchlist()">
+                    <div class="input-group-append">
+                      <button style="height:31px;padding:7px" class="input-group-text" (click)="clear_search()">
+                        <i *ngIf="dateVal != ''" class="fa fa-close"></i>
+                        <i *ngIf="dateVal == ''" class="fa fa-search"></i>
+                      </button>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </table>
+            <table class="table tbl table-bordered table-striped table-hover">
+              <thead>
+                <tr *ngIf="(complaint_list | json) == '[]'">
+                  <td colspan="3" class="text-center">No details available</td>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let complaint of complaint_list;let i=index">
+                  <tr>
+                    <td colspan="2" style="background-color:#1d578e;font-weight: bolder;color: #fff;" class="text-left">
+                      &nbsp;&nbsp;{{ start + i + 1}}.&nbsp;&nbsp;
+                      <span class="text-left" *ngIf="complaint.VISIT_DATE  != null">
+                        {{formatDateTime(complaint.VISIT_DATE)}}
+                      </span>
+                      <span class="pull-right">
+                        <span
+                          *ngIf="complaint.DOCTORS_NAME != null">Dr.{{complaint.DOCTORS_NAME}}&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <button class="btn btn-xs btn-light" title="Duplicate"
+                          (click)="CopyPreviousComplaints(complaint.COMPLAINTS);"><i
+                            class="fa fa-clone text-info"></i></button>
+                      </span>
+                    </td>
+                  </tr>
+                  <tr class="text-center" style="background-color:rgb(219, 222, 223); font-weight: bolder;">
+                    <td style="width:20%">Medical history</td>
+                    <td>Details</td>
+                  </tr>
+                  <tr *ngFor="let datas of labels;let i=index">
+                    <td *ngIf="complaint.COMPLAINTS[datas.key_name.toUpperCase()]!= null">{{ datas.label }}</td>
+                    <td *ngIf="complaint.COMPLAINTS[datas.key_name.toUpperCase()]!= null"
+                      [innerHTML]="complaint.COMPLAINTS[datas.key_name.toUpperCase()] | nl2br : true"></td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+            <ngb-pagination *ngIf="(complaint_list | json) != '[]'" [disabled]="dateVal !== ''"
+              class="d-flex justify-content-center" [(page)]="page" [pageSize]="p" [collectionSize]="collection"
+              [directionLinks]="true" [boundaryLinks]="true" aria-label="Default pagination" [maxSize]="3"
+              (pageChange)="getPreviousComplaints(page-1)">
+            </ngb-pagination>
+            <pre>Current page : {{page}}</pre>
+            <pre>Total records : {{collection}}</pre>
+          </div>
+        </fieldset>
+      </ng-template>
+    </ngb-tab>
+    <ngb-tab id="app_new_tab" title="Dental" *ngIf="department == 1 || user_data.user_group == 1">
+      <ng-template ngbTabContent>
+        <div class="clearfix"></div>
+        <div class="clearfix"></div>
+        <app-dental-complaint (saveNotify)="OnApplyNotify($event)" [assessment_id]="assessment_id"
+          [patient_id]="patient_id" [vital_values]="vital_values" [selected_visit]="selected_visit">
+        </app-dental-complaint>
+      </ng-template>
+    </ngb-tab>
+    <ngb-tab id="app_pain_tab" title="Pain Assessment">
+      <ng-template ngbTabContent>
+        <div class="clearfix"></div>
+        <div class="clearfix"></div>
+        <app-pain-assessment (saveNotifys)="OnApplyNotify($event)" [patient_id]="patient_id"
+          [assessment_id]="assessment_id" [selected_visit]="selected_visit"></app-pain-assessment>
+      </ng-template>
+    </ngb-tab>
+  </ngb-tabset>
+</ng-container>
+
+<!-- <ng-container *ngIf="department == 1 || user_data.user_group ==1">
+  <ngb-tabset  #app_tabs="ngbTabset">
+    <ngb-tab id="app_list_tab" title="General" >
+      <ng-template ngbTabContent>
+        <fieldset class="form-group">
+          <legend>Chief Complaints</legend>
+          <div class="container form-group">
+            <table class="table table-bordered table-hover table-striped">
+              <thead>
+                <tr style="background-color: #ddd">
+                  <th width="5%">#</th>
+                  <th class="text-left">Type</th>
+                  <th class="text-left" width="70%">Details</th>
+                  <th width="5%">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor = "let datas of labels">
+                  <td class="text-center">{{ datas.id }}</td>
+                  <td>{{ datas.label }}</td>
+                  <td> <textarea (change)="getEvent()" style="font-size: 12px;" name="params[{{datas.key_name}}]" [(ngModel)] ="complaint_data[datas.key_name]" change="changedata(datas.key_name)" class="form-control form-control-sm" [disabled]="datas.value == 1"></textarea></td>
+                  <td class="text-center" style="vertical-align: middle;">
+                    <button *ngIf="datas.value != 1" class="btn btn-sm btn-warning" (click)="onDisableUser(datas)"><i class="fa fa-close text-light"></i></button>
+                    <button *ngIf="datas.value == 1" class="btn btn-sm btn-success" (click)="onDisableUser(datas)"><i class="fa fa-plus"></i></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="row">
+              <div class="col-10"></div>
+              <div class="col-2">
+                <button  [disabled]="formatDate(todaysDate) != formatDate(selected_visit.CREATED_TIME)" class="pull-right btn btn-sm btn-primary" type="button"  (click)="saveComplaints()">Save</button>
+                <ng-container *ngIf="formatDate(todaysDate) != formatDate(selected_visit.CREATED_TIME) && isEmptyObject(complaint_data) > 2">
+                  <button style="margin-left: 20px;" class="btn btn-sm btn-info" type="button"  (click)="Complaints(1)">Copy</button>
+                </ng-container>
+                <ng-container *ngIf="formatDate(todaysDate) == formatDate(selected_visit.CREATED_TIME) && isEmptyObject(copy_complaint_data) > 0">
+                  <button style="margin-left: 20px;" class="btn btn-sm btn-info" type="button"  (click)="Complaints(2);">Paste</button>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+          <div class="clearfix"></div>
+          <div class="clearfix"></div>
+          <app-vital-signals (saveNotifys)="OnApplyNotify($event)"  [assessment_id]="assessment_id" [patient_id]="patient_id" [selected_visit]="selected_visit"></app-vital-signals>
+          <div class="clearfix"></div>
+          <div class="clearfix"></div>
+
+          <fieldset class="form-group" *ngIf="assessment_notes.length != 0">
+            <div class="form-group">
+              <div class="clearfix"></div>
+              <ng-container *ngIf="assessment_notes && assessment_notes.PAST_HISTORY !=''">
+                <label style="vertical-align: top;" class="col-2 text-left"><b>Lab Result</b></label>&nbsp;:&nbsp;
+                <label style="vertical-align: top;" class="col-9 text-left" [innerHTML]="assessment_notes.PAST_HISTORY | nl2br : true"></label>
+              </ng-container>
+              <ng-container *ngIf="assessment_notes && assessment_notes.NURSING_NOTES !=''">
+                <div class="clearfix"></div>
+                <label style="vertical-align: top;" class="col-2 text-left"><b>Nursing Notes</b></label>&nbsp;:&nbsp;
+                <label style="vertical-align: top;" class="col-9 text-left" [innerHTML]="assessment_notes.NURSING_NOTES | nl2br : true"></label>
+              </ng-container>
+            </div>
+          </fieldset>
+
+          <app-pain-assessment (saveNotifys)="OnApplyNotify($event)"  [patient_id]="patient_id" [assessment_id]="assessment_id" [selected_visit]="selected_visit"></app-pain-assessment>
+          <app-allergies (saveNotifys)="OnApplyNotify($event)"  [patient_id]="patient_id" [selected_visit]="selected_visit"></app-allergies>
+
+          <fieldset class="form-group">
+            <legend>Previous Chief Complaints</legend>
+            <div class="container form-group">
+              <table class="col-lg-12 borderless">
+                <tr> 
+                  <td width="60%" class="text-left"></td>
+                  <td width="40%" class="text-right">
+                    <div class="input-group mb-3 pull-left">
+                      Search by date  &nbsp;&nbsp; 
+                      <input style="height:31px"  class="form-control form-control-sm" type="date" 
+                      [ngModel] ="dateVal | date:'yyyy-MM-dd'" (ngModelChange)="dateVal = $event"
+                      name="date" id="date" [max]="getToday()" (change)="getPrevioussearchlist()">
+                      <div class="input-group-append">
+                        <button style="height:31px;padding:7px" class="input-group-text" (click)="clear_search()">
+                          <i *ngIf="dateVal != ''"  class="fa fa-close"></i>
+                          <i *ngIf="dateVal == ''" class="fa fa-search"></i>
+                        </button>
+                      </div>
+                    </div> 
+                  </td>
+                </tr>
+              </table>
+              <table class="table tbl table-bordered table-striped table-hover" >
+                <thead>
+                  <tr *ngIf="(complaint_list | json) == '[]'">
+                    <td colspan="3" class="text-center">No details available</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <ng-container *ngFor="let complaint of complaint_list;let i=index">
+                    <tr>
+                      <td colspan="2" style="background-color:#1d578e;font-weight: bolder;color: #fff;" class="text-left">
+                          &nbsp;&nbsp;{{ start + i + 1}}.&nbsp;&nbsp;
+                          <span class="text-left"  *ngIf="complaint.VISIT_DATE  != null">
+                            {{formatDateTime(complaint.VISIT_DATE)}}
+                          </span>
+                          <span class="pull-right">
+                            <span *ngIf="complaint.DOCTORS_NAME != null">Dr.{{complaint.DOCTORS_NAME}}&nbsp;&nbsp;&nbsp;&nbsp;</span> 
+                            <button class="btn btn-xs btn-light"  title="Duplicate" (click)="CopyPreviousComplaints(complaint.COMPLAINTS);"><i class="fa fa-clone text-info"></i></button>
+                          </span>
+                      </td>
+                    </tr>
+                    <tr class="text-center" style="background-color:rgb(219, 222, 223); font-weight: bolder;">
+                      <td style="width:20%">Medical history</td>
+                      <td>Details</td>
+                    </tr>
+                    <tr *ngFor="let datas of labels;let i=index" >
+                      <td *ngIf="complaint.COMPLAINTS[datas.key_name.toUpperCase()]!= null">{{ datas.label }}</td>
+                      <td *ngIf="complaint.COMPLAINTS[datas.key_name.toUpperCase()]!= null" [innerHTML]="complaint.COMPLAINTS[datas.key_name.toUpperCase()] | nl2br : true"></td>
+                    </tr>
+                  </ng-container>
+                </tbody>
+              </table>
+              <ngb-pagination *ngIf="(complaint_list | json) != '[]'"
+                [disabled]="dateVal !== ''"
+                class="d-flex justify-content-center"
+                [(page)]="page"
+                [pageSize]="p"
+                [collectionSize]="collection"
+                [directionLinks]="true"
+                [boundaryLinks]="true"
+                aria-label="Default pagination"
+                [maxSize]="3"
+                (pageChange)="getPreviousComplaints(page-1)">
+              </ngb-pagination>
+              <pre>Current page : {{page}}</pre>
+              <pre>Total records : {{collection}}</pre>
+            </div>
+          </fieldset>
+      </ng-template>
+    </ngb-tab>
+    <ngb-tab id="app_new_tab" title="Dental" >
+      <ng-template ngbTabContent>
+        <div class="clearfix"></div>
+        <div class="clearfix"></div>
+        <app-dental-complaint (saveNotify)="OnApplyNotify($event)"  [assessment_id]="assessment_id" [patient_id]="patient_id" [vital_values]="vital_values" [selected_visit]="selected_visit"></app-dental-complaint>
+      </ng-template>
+    </ngb-tab>
+  </ngb-tabset>
+</ng-container>
+<ng-container *ngIf="department == 0 && user_data.user_group !=1">
+  <div class="clearfix"></div>
+  <div class="form-group">  
+    <div class="col-12">
+      <table class="table table-bordered table-hover table-striped">
+        <thead>
+          <tr style="background-color: #ddd">
+            <th width="5%">#</th>
+            <th class="text-left">Type</th>
+            <th class="text-left" width="70%">Details</th>
+            <th width="5%">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor = "let datas of labels">
+            <td class="text-center">{{ datas.id }}</td>
+            <td>{{ datas.label }}</td>
+            <td> <textarea (change)="getEvent()" style="font-size: 12px;" name="params[{{datas.key_name}}]" [(ngModel)] ="complaint_data[datas.key_name]" change="changedata(datas.key_name)" class="form-control form-control-sm" [disabled]="datas.value == 1"></textarea></td>
+            <td class="text-center" style="vertical-align: middle;">
+              <button *ngIf="datas.value != 1" class="btn btn-sm btn-warning" (click)="onDisableUser(datas)"><i class="fa fa-close text-light"></i></button>
+              <button *ngIf="datas.value == 1" class="btn btn-sm btn-success" (click)="onDisableUser(datas)"><i class="fa fa-plus"></i></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="row container"></div>
+      <div class="row">
+        <div class="col-10"></div>
+        <div class="col-2">
+          <button  [disabled]="formatDate(todaysDate) != formatDate(selected_visit.CREATED_TIME)" class="pull-right btn btn-sm btn-primary" type="button"  (click)="saveComplaints()">Save</button>
+          <ng-container *ngIf="formatDate(todaysDate) != formatDate(selected_visit.CREATED_TIME) && isEmptyObject(complaint_data) > 2">
+           <button style="margin-left: 20px;" class="btn btn-sm btn-info" type="button"  (click)="Complaints(1)">Copy</button>
+          </ng-container>
+          <ng-container *ngIf="formatDate(todaysDate) == formatDate(selected_visit.CREATED_TIME) && isEmptyObject(copy_complaint_data) > 0">
+          <button [disabled]="isEmptyObject(copy_complaint_data) == 0" style="margin-left: 20px;" class="btn btn-sm btn-info" type="button"  (click)="Complaints(2);">Paste</button>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+
+    <app-vital-signals (saveNotifys)="OnApplyNotify($event)"  [assessment_id]="assessment_id" [patient_id]="patient_id" [selected_visit]="selected_visit"></app-vital-signals>
+
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+
+    <fieldset class="form-group" *ngIf="assessment_notes.length != 0">
+      <div class="form-group">
+        <div class="clearfix"></div>
+        <ng-container *ngIf="assessment_notes && assessment_notes.PAST_HISTORY !=''">
+          <label style="vertical-align: top;" class="col-2 text-left"><b>Lab Result</b></label>&nbsp;:&nbsp;
+          <label style="vertical-align: top;" class="col-9 text-left" [innerHTML]="assessment_notes.PAST_HISTORY | nl2br : true"></label>
+        </ng-container>
+        <ng-container *ngIf="assessment_notes && assessment_notes.NURSING_NOTES !=''">
+          <div class="clearfix"></div>
+          <label style="vertical-align: top;" class="col-2 text-left"><b>Nursing Notes</b></label>&nbsp;:&nbsp;
+          <label style="vertical-align: top;" class="col-9 text-left" [innerHTML]="assessment_notes.NURSING_NOTES | nl2br : true"></label>
+        </ng-container>
+      </div>
+    </fieldset>
+    
+    <app-pain-assessment (saveNotifys)="OnApplyNotify($event)"  [patient_id]="patient_id" [assessment_id]="assessment_id" [selected_visit]="selected_visit"></app-pain-assessment>
+    <app-allergies (saveNotifys)="OnApplyNotify($event)"  [patient_id]="patient_id" [selected_visit]="selected_visit"></app-allergies>
+    
+    <fieldset class="form-group">
+      <legend>Previous Chief Complaints</legend>
+      <div class="container form-group">
+        <table class="col-lg-12 borderless">
+          <tr> 
+            <td width="60%" class="text-left"></td>
+            <td width="40%" class="text-right">
+              <div class="input-group mb-3 pull-left">
+                Search by date  &nbsp;&nbsp; 
+                <input style="height:31px"  class="form-control form-control-sm" type="date" 
+                [ngModel] ="dateVal | date:'yyyy-MM-dd'" (ngModelChange)="dateVal = $event"
+                name="date" id="date" [max]="getToday()" (change)="getPrevioussearchlist()">
+                <div class="input-group-append">
+                  <button style="height:31px;padding:7px" class="input-group-text" (click)="clear_search()">
+                    <i *ngIf="dateVal != ''"  class="fa fa-close"></i>
+                    <i *ngIf="dateVal == ''" class="fa fa-search"></i>
+                  </button>
+                </div>
+              </div> 
+            </td>
+          </tr>
+        </table>
+        <table class="table tbl table-bordered table-striped" >
+          <thead>
+            <tr *ngIf="(complaint_list | json) == '[]'">
+              <td colspan="3" class="text-center">No details available</td>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let complaint of complaint_list;let i=index">
+              <tr>
+                <td colspan="2" style="background-color:#1d578e;font-weight: bolder;color: #fff;" class="text-left">
+                    &nbsp;&nbsp;{{ start + i + 1}}.&nbsp;&nbsp;
+                    <span class="text-left">
+                      {{formatDateTime(complaint.VISIT_DATE)}}
+                    </span>
+                    <span class="pull-right">
+                      <span *ngIf="complaint.DOCTORS_NAME != null">Dr.{{complaint.DOCTORS_NAME}}&nbsp;&nbsp;&nbsp;&nbsp;</span> 
+                      <button class="btn btn-xs btn-light"  title="Duplicate" (click)="CopyPreviousComplaints(complaint.COMPLAINTS);"><i class="fa fa-clone text-info"></i></button>
+                    </span>
+                </td>
+              </tr>
+              <tr class="text-center" style="background-color:rgb(219, 222, 223); font-weight: bolder;">
+                <td style="width:20%">Medical history</td>
+                <td>Details</td>
+              </tr>
+              <tr *ngFor="let datas of labels;let i=index" >
+                <td *ngIf="complaint.COMPLAINTS[datas.key_name.toUpperCase()]!= null">{{ datas.label }}</td>
+                <td *ngIf="complaint.COMPLAINTS[datas.key_name.toUpperCase()]!= null" [innerHTML]="complaint.COMPLAINTS[datas.key_name.toUpperCase()] | nl2br : true"></td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+        <ngb-pagination *ngIf="(complaint_list | json) != '[]'"
+          [disabled]="dateVal !== ''"
+          class="d-flex justify-content-center"
+          [(page)]="page"
+          [pageSize]="p"
+          [collectionSize]="collection"
+          [directionLinks]="true"
+          [boundaryLinks]="true"
+          aria-label="Default pagination"
+          [maxSize]="3"
+          (pageChange)="getPreviousComplaints(page-1)">
+        </ngb-pagination>
+        <pre>Current page : {{page}}</pre>
+        <pre>Total records : {{collection}}</pre>
+      </div>
+    </fieldset>
+  </div>
+</ng-container> -->

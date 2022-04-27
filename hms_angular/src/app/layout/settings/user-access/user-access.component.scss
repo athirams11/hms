@@ -1,0 +1,87 @@
+legend {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    padding: 10px;
+    margin-bottom: .5rem;
+    font-size: 19px;
+    line-height: inherit;
+    color: inherit;
+    white-space: normal;
+}
+
+.high-light {
+    font-weight: bold;
+    font-size: 19px;
+    color: #1d578e;
+}
+
+fieldset {
+    min-width: 0;
+    padding: 10px;
+    margin: 5px;
+    margin-left: 5px;
+
+    border: 1px solid grey;
+}
+
+.clearfix {
+
+    width: 100%;
+    min-height: 10px;
+
+}
+
+label,
+th {
+    font-size: 13px;
+}
+
+input,
+select,
+option {
+    font-size: 13px;
+}
+
+.info-td {
+    text-align: center;
+
+}
+
+.form-group {
+    label {
+        display: inline-block;
+        margin-top: .5rem;
+        margin-bottom: 0rem !important;
+    }
+}
+
+.input-group {
+    label {
+        display: inline-block;
+        margin-top: .0rem;
+        margin-bottom: .5rem !important;
+    }
+}
+
+.sm-tbl {
+
+    td,
+    th {
+        padding: 5px;
+        font-size: 13px;
+    }
+}
+
+.form-check-label {
+    margin-bottom: 0;
+    font-size: 16px !important;
+}
+
+.form-check {
+    position: relative;
+    display: block;
+    padding-left: 40px;
+    background-color: #d7e9f3;
+    padding-bottom: 10px;
+}

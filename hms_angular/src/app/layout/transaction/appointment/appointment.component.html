@@ -1,0 +1,364 @@
+<div [@routerTransition]>
+    <app-page-header [heading]="'Appointment'" [icon]="'fa fa-share-square-o'"></app-page-header>
+    <ngb-tabset  #app_tabs="ngbTabset">
+        <ngb-tab id="app_list_tab" title="Appointment List" (change)="refreshForm()">
+            <ng-template ngbTabContent>
+                <form class="inner_body">
+                    <div class="form-group"> 
+                        <div class="row" >
+                            <div class="col-lg-12">
+                                <form role="form">
+                                    <fieldset class="form-group ">
+                                        <legend>Filter</legend>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="row">
+                                                <label for="date" class="col-2">Date</label>
+                                                <div class="col-10">
+                                                    <input class="form-control form-control-sm" type="date" [ngModel] ="appointmentDate | date:'yyyy-MM-dd'" (ngModelChange)="appointmentDate = $event" name="date" id="date">
+                                                </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="row">
+                                                    <button type="button" (click)="filterByDateforlist()" class="btn btn-info btn-sm" >Filter By date</button>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class=" row">
+                                                <label for="p_type" class="col-2">Doctors</label>
+                                                <div class="col-10">
+                                                    <select [(ngModel)]="doctor_id" class="form-control form-control-sm custom-select custom-select-sm" name="doctor_id" id="doctor_id">
+                                                        <option value="">Select Type</option>
+                                                        <option *ngFor="let dr of dr_list" value="{{ dr.DOCTORS_ID }}" >{{ dr.DOCTORS_NAME }}</option>
+                                                    </select>
+                                                </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="row">
+                                                    <button type="button" (click)="filterByDrforList()" class="btn btn-info btn-sm" >Filter By Doctor</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </form>
+                                <app-appointment-list (onEdit) ="editAppointment($event);" [filter]="filter_ap_list" [appoinment_list]="appoinment_list" [appointmentStatus]="appointmentStatus" ></app-appointment-list>
+                        
+                            </div>
+                        </div>
+                    </div>             
+                </form>
+            </ng-template>
+        </ngb-tab>
+        <ngb-tab id="app_new_tab" title="Create Appointment" (change)="refreshForm()">
+            <ng-template ngbTabContent >
+                <div class="row" >
+                    <div class="col-lg-12">
+                        <fieldset class="form-group ">
+                            <legend>Filter</legend>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="row">
+                                    <label for="date" class="col-2">Date</label>
+                                    <div class="col-10">
+                                        <input class="form-control form-control-sm" type="date" [ngModel] ="dateVal | date:'yyyy-MM-dd'" (ngModelChange)="dateVal = $event" name="date" id="date">
+                                    </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="row">
+                                        <button type="button" (click)="filterByDate()" class="btn btn-info btn-sm" >Filter By date</button>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class=" row">
+                                    <label for="p_type" class="col-2">Doctors</label>
+                                    <div class="col-10">
+                                        <select [(ngModel)]="sel_dr" class="form-control form-control-sm custom-select custom-select-sm" name="sel_dr" id="sel_dr">
+                                            <option value="">Select Type</option>
+                                            <option *ngFor="let dr of dr_list" value="{{ dr.DOCTORS_SCHEDULE_ID }}" >{{ dr.DOCTORS_NAME }}</option>
+                                        </select>
+                                    </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="row">
+                                        <button type="button" (click)="filterByDr()" class="btn btn-info btn-sm" >Filter By Doctor</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset class="form-group row">
+                            <legend>Schedule of <label class="high-light">{{ filter }}</label></legend>
+                            <div class="col-lg-12">
+                                <div class="col-lg-12" *ngIf="dr_schedule_list_date != ''">
+                                        <table class="table table-sm table-bordered">
+                                            <tr>
+                    
+                                                <th class="info-td" colspan="4">
+                                                    <button alt="previous" title="previous" (click)="filterByDrPrev()" class="pull-left btn btn-sm btn-link"><i class="fa fa-chevron-left"></i></button>
+                                                    From: <button class="btn btn-sm btn-link">{{formatDate(dr_schedule_list_date.from)}}</button> To: <button class="btn btn-sm btn-link">{{formatDate(dr_schedule_list_date.to)}}</button>
+                                                    <button alt="next" title="next" (click)="filterByDrNext()" class="pull-right btn btn-sm btn-link"><i class="fa fa-chevron-right"></i></button>
+                                                </th>
+                                            </tr>
+                                        </table>
+                                </div>
+                                <div class="col-lg-12 ">
+                                    <div class="row">
+                                    <app-dr-schedule-date class="col-lg-12" [dr_schedule_list_date]="dr_schedule_list_date" [schedule_list]="date_schedule_list" [date]="formatDateTime(this.dateVal)"></app-dr-schedule-date>
+                                    </div>
+                                </div>
+            
+                                <div class="clearfix"></div>
+                                <div class="clearfix"></div>
+            
+                                
+                            </div>
+                        </fieldset>
+                        <fieldset class="form-group row" #appointment_form>
+                            <legend>Appointment Data</legend>
+                            <div class="row col-lg-12">
+                                <div class="form-group col-lg-3" >
+                                  <label for="p_type">Date</label>
+                                  <input class="form-control form-control-sm" type="date" (change)="getDoctersByDate();" (focusout)="getOnlyToday()" [min]="getMaxDate()" [ngModel] ="appData.dateVal | date:'yyyy-MM-dd'" (ngModelChange)="appData.dateVal = $event" name="optd_date" id="optd_date">
+                                </div>
+                                <div class="form-group col-lg-3" >
+                                    <label for="p_type">Doctor</label><span class="text-danger">&nbsp;*</span>
+                                    <select class="form-control form-control-sm custom-select custom-select-sm" (change)="drSelected($event.target.value)" [(ngModel)]="sel_doc" name="sel_doc" id="sel_doc">
+                                        <option  value="">Select One</option>
+                                        <option *ngFor="let dr of dr_schedule_list_by_date.DOCTORS; let in = index"  value="{{in}}" >{{ dr.name }}</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-lg-3" >
+                                    <label for="p_type">Slot</label><span class="text-danger">&nbsp;*</span>
+                                    <select [(ngModel)]="sel_slot" (change)="slotSelected($event.target.value);" class="form-control form-control-sm custom-select custom-select-sm" name="sel_slot" id="sel_slot">
+                                        <option  value="">Select One</option>
+                                        <option  *ngFor="let slot of slot_list; let in = index"  value="{{in}}" >{{ slot.SCHEDULE_NO.replace('_', ' ') | titlecase }}</option>
+                                    </select>
+                                </div>  
+                                <div class="form-group col-lg-3" >
+                                    <div class="row">
+                                        <div class="form-group col-lg-6" >
+                                            <label for="p_type">Start Time</label>
+                                            <input class="form-control form-control-sm" type="text" (keydown)="getslot(slot);" (click)="getslot(slot);" [ngModel]="appData.sel_time" name="sel_time" id="sel_time" readonly>
+                                        </div>
+                                        <div class="form-group col-lg-6" >
+                                            <label for="p_type">End Time</label>
+                                            <input class="form-control form-control-sm" type="text" [ngModel]="appData.sel_end_time" (keydown)="getslot(slot);" (click)="getslot(slot);" name="end_time" id="end_time" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- <div class="form-group col-lg-1" >
+                                    <label for="p_type">End Time</label>
+                                    <input class="form-control form-control-sm" type="text" [ngModel]="appData.end_time" name="end_time" id="end_time" readonly>
+                                </div> -->
+                                <div class="form-group col-lg-3" >
+                                    <label for="p_type">Op Number</label>
+                                    <input (change)="getPatientDetails()" class="form-control form-control-sm" type="text" [(ngModel)]="appData.p_number" name="p_number" id="p_number">
+                                </div>
+                                <div class="form-group col-lg-3" >
+                                    <label for="p_type">Name</label><span class="text-danger">&nbsp;*</span>
+                                    <input class="form-control form-control-sm" type="text" [(ngModel)]="appData.p_name" name="p_name" id="p_name">
+                                </div>
+                                <div class="form-group col-lg-3" >
+                                    <label for="p_type">Phone Number</label><span class="text-danger">&nbsp;*</span>
+                                    <input (change)="open(content)" class="form-control form-control-sm" type="number" [(ngModel)]="appData.ph_no" name="ph_no" id="ph_no">
+                                </div>
+                                <div class="form-group col-lg-3" >
+                                    <label for="p_type">Email</label>
+                                    <input class="form-control form-control-sm" type="email" [(ngModel)]="appData.email" name="email" id="email">
+                                </div>
+                                <div class="form-group col-lg-3" >
+                                    <label for="p_type">Age</label>
+                                    <input class="form-control form-control-sm" type="number" [(ngModel)]="appData.age" name="age" id="age">
+                                </div>
+                                <div class="form-group col-lg-3" >
+                                    <label for="p_type">Gender</label>
+                                    <select [(ngModel)]="appData.gender" class="form-control form-control-sm custom-select custom-select-sm" name="gender" id="gender">
+                                        <option  value="1">
+                                            Male
+                                        </option>
+                                        <option value="0" >
+                                            Female
+                                        </option>
+                                    </select>
+                                </div>
+                                
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="clearfix"></div>
+                            <div class="row container">
+                                <div class="col-lg-7 pull-right">
+                                    <button *ngIf="user_rights.ADD == '1'" type="button" (click)="addAppointment()" class="btn btn-primary btn-sm" >Confirm</button>&nbsp;
+                                    <button *ngIf="user_rights.ADD == '1'" type="button" (click)="refreshForm()" class="btn btn-danger btn-sm" >Clear</button>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </ng-template>
+        </ngb-tab>
+    </ngb-tabset>
+    <ng-template #content let-modal>
+        <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Patient List</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <div class="modal-body">
+        <form>
+            <div class="form-group">
+                <table class="sm-tbl table table-hover table-striped table-bordered" >
+                    <thead>
+                    <tr>
+                        <th style="width:10%;" class="text-center">Date</th>
+                        <th>Patient Name</th>
+                        <th style="width:5%;" class="text-center">Age</th>
+                        <th style="width:10%;" class="text-center">Patient No</th>
+                        <th style="width:15%;">Phone No</th>
+                        <th style="width:5%;" class="text-center">Action</th>
+                    </tr>
+                    <tr *ngIf="(pat_list | json) == '[]'"><td colspan="12" class="text-center">No data to show</td></tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let list of pat_list">
+                            <td class="text-center">{{ formatDate(list.date)}}</td>
+                            <td>{{list.name}}</td>
+                            <td class="text-center">{{list.age}}</td>
+                            <td class="text-center">{{list.OP_no}}</td>
+                            <td>{{list.phone_no}}</td>
+                            <td class="text-center"><button (click)="selectPatient(list);modal.close('Save click');" class="btn btn-sm btn-info" ><i class="fa fa-check"></i></button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </form>
+        </div>
+    </ng-template>
+
+    <ng-template #slot let-modal>
+        <div class="modal-header">
+        <h5 class="modal-title" id="modal-basic-title">
+            Time slots
+        </h5>
+        <button type="button" class="close" aria-label="Close" (click)="close()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group"> 
+                <div class="col-lg-12 ">
+                    <table class="col-lg-12 borderless">
+                        <tr> 
+                            <td width="10%" class="text-left"></td>
+                            <td class="text-right">
+                                <table class="table-bordered-color">
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-center"  style="background-color: #0087b4;" >
+                                                <span class="text-light" style="vertical-align: middle;">
+                                                    <span style="font-size: 14;font-weight: bold;">
+                                                        &nbsp;&nbsp;&nbsp;&nbsp;{{formatDate(appData.dateVal)}}&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    </span><br>
+                                                    <span style="font-size: 13;">
+                                                        &nbsp;&nbsp;&nbsp;&nbsp;{{getDay(appData.dateVal)}}&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    </span><br>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-center">
+                                                <label>
+                                                    <!-- {{slot_array.length}}
+                                                    {{alreadyBookedSlot.length}}
+                                                    {{notavailableSlot.length}} -->
+                                                    <!-- {{availableSlot.length}} -->
+                                                    <!-- <ng-container *ngIf="slot_array.length > alreadyBookedSlot.length">
+                                                        Available slots : {{slot_array.length -  alreadyBookedSlot.length - notavailableSlot.length}}/{{slot_array.length}}
+                                                    </ng-container>
+                                                    <ng-container *ngIf="alreadyBookedSlot.length > slot_array.length">
+                                                        Available slots : {{alreadyBookedSlot.length - slot_array.length - notavailableSlot.length}}/{{slot_array.length}}
+                                                    </ng-container> -->
+                                                    Available slots : {{count()}}/{{slot_array.length}}
+                                                </label>
+                                            </td>
+                                        </tr>
+                                        <!-- <tr>
+                                            <td class="text-center">
+                                                <input type="checkbox" name="check">&nbsp;&nbsp;<label>Multiple time slots</label>
+                                            </td>
+                                        </tr> -->
+                                        <tr *ngFor="let data of slot_array;let i=index">
+                                            <td class="text-center" width="100px" style="padding-left:10px;padding-right:10px;">
+                                                <ng-container *ngIf="i==0">
+                                                    <div class="clearfix"></div>
+                                                </ng-container>
+                                                <button class="btn btn-sm text-light btn-secondary" disabled *ngIf="format_date(todaysDate) == format_date(appData.dateVal) && formatTimeslot(current_seconds) > formatTimeslot(data.start_time) && data.booked == 0">
+                                                    <label>&nbsp;&nbsp;&nbsp;{{ formatTimes(data.start_time)}} - {{formatTimes(data.end_time)}}&nbsp;&nbsp;&nbsp;</label>
+                                                </button>
+                                                <button class="btn btn-sm btn-danger text-light" title="Booked&nbsp;Patient Name:&nbsp;{{ data.patientName}},&nbsp;Ph no:&nbsp;{{ data.phone_no}}" *ngIf="data.booked == 1">
+                                                    <label>&nbsp;&nbsp;&nbsp;{{ formatTimes(data.start_time)}} - {{formatTimes(data.end_time)}}&nbsp;&nbsp;&nbsp;</label>
+                                                </button>
+                                                <ng-container *ngIf="(format_date(todaysDate) == format_date(appData.dateVal) && formatTimeslot(data.start_time) > formatTimeslot(current_seconds))  && data.booked == 0 " >
+                                                    <button class="btn btn-sm btn-success" title="Available" (click)="selectSlot(data.start_time);selectTimeSlot(data,i)" 
+                                                    [class.btn-orange]="appData.time_slots[i] && (appData.time_slots[i]) ===  formatTimes(data.start_time)">
+                                                        <label style="cursor: pointer;">&nbsp;&nbsp;&nbsp;{{ formatTimes(data.start_time)}} - {{formatTimes(data.end_time)}}&nbsp;&nbsp;&nbsp;</label>
+                                                    </button>
+                                                </ng-container>
+                                                <ng-container *ngIf="(format_date(todaysDate) != format_date(appData.dateVal))  && data.booked == 0 " >
+                                                    <button class="btn btn-sm btn-success" title="Available" (click)="selectSlot(data.start_time);selectTimeSlot(data,i)" 
+                                                    [class.btn-orange]="appData.time_slots[i] && (appData.time_slots[i]) ===  formatTimes(data.start_time)">
+                                                        <label style="cursor: pointer;">&nbsp;&nbsp;&nbsp;{{ formatTimes(data.start_time)}} - {{formatTimes(data.end_time)}}&nbsp;&nbsp;&nbsp;</label>
+                                                    </button>
+                                                </ng-container>
+                                                <ng-container *ngIf="slot_array.length == i + 1">
+                                                    <div class="clearfix"></div>
+                                                </ng-container>
+                                                <!-- <ng-container *ngIf="i==0">
+                                                    <div class="clearfix"></div>
+                                                </ng-container>
+                                                <button class="btn btn-sm text-light btn-secondary" disabled *ngIf="format_date(todaysDate) == format_date(appData.dateVal) && formatTimeslot(current_seconds) > formatTimeslot(data.start_time)">
+                                                    <label>&nbsp;&nbsp;&nbsp;{{ formatTimes(data.start_time)}} - {{formatTimes(data.end_time)}}&nbsp;&nbsp;&nbsp;</label>
+                                                </button>
+                                                <button class="btn btn-sm btn-orange text-light" *ngIf="formatTimes(appData.sel_time) ==  formatTimes(data.start_time)">
+                                                    <label>&nbsp;&nbsp;&nbsp;{{ formatTimes(data.start_time)}} - {{formatTimes(data.end_time)}}&nbsp;&nbsp;&nbsp;</label>
+                                                </button>
+                                                <button class="btn btn-sm btn-danger text-light" title="Booked&nbsp;Patient Name:&nbsp;{{ data.patientName}},&nbsp;Ph no:&nbsp;{{ data.phone_no}}" *ngIf="data.booked == 1 && formatTimes(appData.sel_time) !=  formatTimes(data.start_time)">
+                                                    <label>&nbsp;&nbsp;&nbsp;{{ formatTimes(data.start_time)}} - {{formatTimes(data.end_time)}}&nbsp;&nbsp;&nbsp;</label>
+                                                </button>
+                                                <ng-container *ngIf="(format_date(todaysDate) == format_date(appData.dateVal) && formatTimeslot(data.start_time) > formatTimeslot(current_seconds))  && data.booked == 0 && formatTimes(appData.sel_time) !=  formatTimes(data.start_time)" >
+                                                    <button class="btn btn-sm btn-success" title="Available" (click)="selectSlot(data.start_time)" >
+                                                        <label style="cursor: pointer;">&nbsp;&nbsp;&nbsp;{{ formatTimes(data.start_time)}} - {{formatTimes(data.end_time)}}&nbsp;&nbsp;&nbsp;</label>
+                                                    </button>
+                                                </ng-container>
+                                                <ng-container *ngIf="(format_date(todaysDate) != format_date(appData.dateVal))  && data.booked == 0 && formatTimes(appData.sel_time) !=  formatTimes(data.start_time)" >
+                                                    <button class="btn btn-sm btn-success" title="Available" (click)="selectSlot(data.start_time)" >
+                                                        <label style="cursor: pointer;">&nbsp;&nbsp;&nbsp;{{ formatTimes(data.start_time)}} - {{formatTimes(data.end_time)}}&nbsp;&nbsp;&nbsp;</label>
+                                                    </button>
+                                                </ng-container>
+                                                <ng-container *ngIf="slot_array.length == i + 1">
+                                                    <div class="clearfix"></div>
+                                                </ng-container> -->
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                            <td width="10%" class="text-right" style="vertical-align: top;"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <label class="form-group" class="text-center col-lg-12" style="font-style: italic;font-size: 12px">
+                <i style="font-size: 13px;" class="fa fa-circle text-danger"></i>&nbsp;Booked&nbsp;&nbsp;
+                <i style="font-size: 13px;" class="fa fa-circle text-success"></i>&nbsp;Available&nbsp;&nbsp;
+                <i style="font-size: 13px;" class="fa fa-circle text-orange"></i>&nbsp;Current&nbsp;&nbsp;
+                <i style="font-size: 13px;" class="fa fa-circle text-secondary"></i>&nbsp;Not available
+            </label> 
+        </div>
+    </ng-template>
+</div>

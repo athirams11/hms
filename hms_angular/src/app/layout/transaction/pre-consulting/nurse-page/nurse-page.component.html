@@ -1,0 +1,55 @@
+<div class="row">
+  <div class="col-2 side_div"> <!-- required for floating -->
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs tabs-left side_nav" >
+      <li [ngClass]="{'active': selectedUserTab.MODULE_ID == tab.MODULE_ID}" *ngFor="let tab of assessment_menu_list">
+        <a (click)="tabChange(tab)">{{tab.MODULE_NAME}}</a>
+      </li>
+      <!-- <li  *ngIf="user_rights.EDIT=='1' && selected_visit.STAT != 1">
+        <a (click)="OnFinish()">Finish Assessment </a>
+      </li> -->
+    </ul>
+    <div class="clearfix"></div>
+    <span *ngIf="selected_visit.DISCOUNT_SITE_ID > 0"
+      style="font-size: 14px;width:180px;" 
+      title="Discount Details"  alt="Discount Details"  
+      class="btn  text-left" (click)="ShowDiscount()">
+      <span class="fa-stack fa-lg text-warning">
+        <i class="fa fa-certificate fa-stack-2x"></i>
+        <i class="fa fa-tag fa-stack-1x fa-inverse"></i>
+      </span>
+      Discount Details
+    </span>
+    <div class="clearfix"></div>
+    <button *ngIf="selected_visit.STAT != 1"  
+      style="padding:5px 15px 5px 15px;font-size: 14px;width:180px;"
+      title="Finish Assessment"  alt="Finish Assessment"  
+      class="btn btn-success" (click)="OnFinish()">
+      Finish Assessment
+    </button>
+    
+  </div>
+  <div class="col-10">
+    <div class="tab-content">
+      <div class="tab-pane active" *ngFor="let tab of assessment_menu_list" [ngClass]="{'showTab':selectedUserTab.MODULE_ID == tab.MODULE_ID, 'hideTab':selectedUserTab.MODULE_ID != tab.MODULE_ID}"> <!-- Profile tab -->
+          <div class="panel panel-default">
+              <div class="panel-heading">
+                  {{tab.MODULE_NAME}}
+
+              </div> 
+              <div class="panel-body">
+                <app-summary *ngIf="tab.MODULE_ID == settings.ASSESSMENT_SUMMARY_ID" [assessment_id]="assessment_id" [patient_id]="patient_id" [vital_values]="vital_values" [blood_sugar]="blood_sugar"></app-summary>
+                <app-treatment-summary *ngIf="tab.MODULE_ID == settings.TREATMENT_SUMMARY_ID"[assessment_id]="assessment_id" [patient_id]="patient_id" ></app-treatment-summary>
+                <app-document *ngIf="tab.MODULE_ID == settings.DOCUMENT_ID" [assessment_id]="assessment_id" [patient_id]="patient_id" [selected_visit]="selected_visit"></app-document>
+                <app-assessment-values  (onEvent)="getAssesmentParameterValues();getBloodSugarReport()" *ngIf="tab.MODULE_ID == settings.ASSESSMENTS_ID" [selected_visit]="selected_visit" [assessment_id]="assessment_id" [patient_id]="patient_id"></app-assessment-values><br>
+                <app-vitals (onEvent) ="getAssesmentParameterValues();getBloodSugarReport()" *ngIf="tab.MODULE_ID == settings.ASSESSMENTS_ID" [assessment_id]="assessment_id" [patient_id]="patient_id" [vital_values]="vital_values" [blood_sugar]="blood_sugar" [selected_visit]="selected_visit"></app-vitals><br>
+                <app-pain-assessment [assessment_id]="assessment_id" [patient_id]="patient_id" *ngIf="tab.MODULE_ID == settings.ASSESSMENTS_ID" [selected_visit]="selected_visit"></app-pain-assessment><br>  
+                <app-document-assessment  *ngIf="tab.MODULE_ID == settings.ASSESSMENTS_ID" [assessment_id]="assessment_id" [patient_id]="patient_id" [selected_visit]="selected_visit"></app-document-assessment><br>
+                
+              </div>  
+          </div>
+      </div>   
+    </div>
+  </div>
+</div>
+

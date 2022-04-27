@@ -1,0 +1,60 @@
+<div class="border">
+  <form>
+    <div class="row  container" background-color: #1d578e style="padding:9px">
+      <div class="second">&nbsp;
+        <label>
+          <input type="radio" ng-model="myVar" value="All">All</label>
+      </div>&nbsp;&nbsp;
+      <div class="col-1.8 label"><label>
+          <input type="radio" ng-model="myVar" value="Laboratory">Laboratory</label>
+      </div>&nbsp;&nbsp;
+      <div class="col-1.8 label"><label>
+          <input type="radio" ng-model="myVar" value="Radiolagy">Radiolagy</label>
+      </div>&nbsp;&nbsp;
+      <div class="col-1.8 label"><label>
+          <input type="radio" ng-model="myVar" value="Treatment_procedure">Treatment procedure</label>
+      </div>&nbsp;&nbsp;
+      <div class="col-1.8 label"><label>
+          <input type="radio" ng-model="myVar" value="Investigative_procedure">Investigative procedure</label>
+      </div>&nbsp;&nbsp;
+      <div class="col-3">
+        <label><input type="button" value="Investigative procedure" class="btn btn-info btn-sm"></label>
+      </div>
+    </div>
+
+  </form>&nbsp;
+  <div class="border">
+    <ng-template #rt let-r="result" let-t="term">
+      <ngb-highlight [result]="r.PROCEDURE_CODE+' - '+r.PROCEDURE_CODE_NAME" [term]="t"></ngb-highlight>
+    </ng-template>
+    <!-- <div class="form-group">
+        
+        <label for="typeahead-http">Search for cpt data</label>
+        <input id="typeahead-http" type="text" class="form-control"  [resultTemplate]="rt" [class.is-invalid]="searchFailed" [inputFormatter]="formatter" [(ngModel)]="model" [ngbTypeahead]="cptsearch" placeholder="cpt code / cpt alliasname / cpt description..."/>
+        <span *ngIf="searching">searching...</span>
+        <div class="invalid-feedback" *ngIf="searchFailed">Sorry, suggestions could not be loaded.</div>
+      </div> -->
+    <div class="border">
+      <div class="border">
+        <table class="table tbl tbl-sm table-bordered table-hover table-light">
+          <thead>
+            <tr>
+              <!-- <th  style="width:1%;"><label>Sl#</label></th> -->
+              <!-- <th style="width:200px;padding:8px"><label>Search</label></th> -->
+              <th style="width:20%;padding:8px"><label>CPT name</label></th>
+              <th style="width:10%;padding:8px"><label>CPT code</label></th>
+              <th style="width:40%;padding:8px"><label>Description</label></th>
+              <th style="width:10%;padding:8px"><label>Qty</label></th>
+              <th style="width:10%;padding:8px"><label>Rate</label></th>
+              <th style="width:10%;padding:8px"><label>Change of future.</label></th>
+              <th style="width:10%;padding:8px"><label>Remarks</label></th>
+              <th style="width:10%;padding:8px"><label>Priority</label></th>
+              <th style="width:20px;padding:8px">*</th>
+            </tr>
+          </thead>
+
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

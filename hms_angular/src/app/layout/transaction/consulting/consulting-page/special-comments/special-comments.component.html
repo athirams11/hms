@@ -1,0 +1,55 @@
+<div>
+  <fieldset class="container form-group">
+    <legend>SPECIAL COMMENTS &nbsp;<i class="fa fa-pencil" aria-hidden="true" style="color: ##f0f8ff;"></i></legend>
+    <div class="container form-group">
+      <div class="form-group">
+        <form>
+          <div>
+            <div><textarea [(ngModel)]="comments_data.specialComments" name="specialComments" id="specialComments"
+                placeholder="Dr special comments" style="width:100%;height:200px ;" class="form-control"></textarea>
+            </div>&nbsp;
+            <div class="row">
+
+              <!-- <div class="col-7 label">
+            <div class="loading-screen-wrapper" *ngIf="loading">
+                <div class="loading-screen-icon"><i class="fa fa-spinner fa-pulse fa-3x fa-fw" style="color: #1d578e;size:250px"></i>
+                <span class="sr-only">Loading...</span>
+                
+                Loading...
+                </div>
+                </div>
+        </div> -->
+              <div class="col-5 label">&nbsp;&nbsp;
+                <table>
+                  <td> <button [disabled]="formatDate(todaysDate) != formatDate(selected_visit.CREATED_TIME)"
+                      class="btn btn-primary btn-sm ng-star-inserted" type="button" (click)="save_specialComments();"
+                      style="width:60px;height:35px;">&nbsp;Save&nbsp;</button>&nbsp;&nbsp;&nbsp;</td>
+                </table>
+                <!-- <button class="btn btn-danger btn-sm ng-star-inserted" type="button" (click)="clearComments()" style="width:60px;height:35px;">&nbsp;Clear&nbsp; </button> -->
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </fieldset>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <fieldset class="container form-group">
+    <legend>PREVIOUS SPECIAL COMMENTS &nbsp;<i class="fa fa-file-text"></i></legend>
+    <div>
+      <table class="table table-hover table-bordered" style="width: 100%;">
+
+        <tbody style="width:100%">
+          <tr *ngIf="(comment_arr | json) == '[]'" style="width=100%">
+            <td colspan="9" class="text-center">No data available</td>
+          </tr>
+          <tr style="width:100%">
+            <td *ngIf="(comment_arr | json) != '[]'"> <textarea style="width: 100%;height: 200px;"
+                [(ngModel)]="comments_data.previousComments" class="form-control"
+                readonly>{{comment_arr.SPECIAL_COMMENT}}</textarea></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </fieldset>
+</div>

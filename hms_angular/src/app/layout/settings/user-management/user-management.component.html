@@ -1,0 +1,116 @@
+<div [@routerTransition]>
+  <app-page-header [heading]="'User Management'" [icon]="'fa-edit'"></app-page-header>
+  <form role="form">
+    <fieldset class="form-group row" *ngIf="user_rights.ADD == '1'">
+      <legend>New</legend>
+      <div class="row col-lg-12">
+        <div class="form-group col-lg-6">
+          <label for="p_type">First Name</label><span class="text-danger">&nbsp;*</span>
+          <input [(ngModel)]="formData.firstname" type="text" name="f_name" class="form-control"
+            placeholder="Enter first name" />
+        </div>
+        <div class="form-group col-lg-6">
+          <label for="p_type">Last Name</label><span class="text-danger">&nbsp;*</span>
+          <input [(ngModel)]="formData.lastname" type="text" name="l_name" class="form-control"
+            placeholder="Enter last name" />
+        </div>
+        <div class="form-group col-lg-6">
+          <label for="p_type">Email</label><span class="text-danger">&nbsp;*</span>
+          <input [(ngModel)]="formData.email" type="email" name="email" class="form-control"
+            placeholder="Enter email" />
+        </div>
+        <div class="form-group col-lg-6">
+          <label for="p_type">User Group</label><span class="text-danger">&nbsp;*</span>
+          <select [(ngModel)]="formData.useraccesstype"
+            class="form-control form-control-sm custom-select custom-select-sm" name="sel_user_group"
+            id="sel_user_group" (change)="selectDr(formData.useraccesstype)">
+            <option value="">Select User Group</option>
+            <option *ngFor="let gr of user_groups" value="{{ gr.USER_ACCESS_GROUP_ID }}">{{ gr.USER_ACCESS_GROUP_NAME }}
+            </option>
+          </select>
+        </div>
+        <ng-container *ngIf="formData.useraccesstype == 8">
+          <div class="form-group col-lg-6">
+            <label for="p_type">Select Department</label><span class="text-danger">&nbsp;*</span>
+            <select class="form-control form-control-sm custom-select custom-select-sm"
+              [(ngModel)]="formData.department_id" name="departments" id="departments">
+              <option value=0>Select Department</option>
+              <option *ngFor="let data of departments" value="{{data.OPTIONS_ID}}">{{data.OPTIONS_NAME}} </option>
+            </select>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="drFlag == 1">
+          <div class="form-group col-lg-6">
+            <label for="p_type">Select Doctor</label><span class="text-danger">&nbsp;*</span>
+            <select class="form-control form-control-sm custom-select custom-select-sm" [(ngModel)]="formData.doctor_id"
+              name="spec_in" id="spec_in">
+              <option value="">Select Doctor</option>
+              <option *ngFor="let data of doc_list" value="{{data.DOCTORS_ID}}">{{data.DOCTORS_NAME}} </option>
+            </select>
+          </div>
+        </ng-container>
+        <div class="form-group col-lg-6">
+          <label for="p_type">User Name</label><span class="text-danger">&nbsp;*</span>
+          <input [(ngModel)]="formData.username" type="text" name="u_name" class="form-control"
+            placeholder="Enter user name" />
+        </div>
+        <div class="form-group col-lg-6">
+          <label for="p_type">Password</label><span class="text-danger">&nbsp;*</span>
+          <input [(ngModel)]="formData.password" type="password" name="u_pass" class="form-control"
+            placeholder="Enter Password" />
+        </div>
+        <div class="form-group col-lg-6">
+          <label for="p_type">Status</label><br>
+          <label class="radio-inline">
+            <input type="radio" name="u_stat" id="u_stat_1" value="1" (click)="formData.status = $event.target.value"
+              [checked]="formData.status == 1">&nbsp;&nbsp;Enable &nbsp;&nbsp;
+          </label>
+          <label class="radio-inline">
+            <input type="radio" name="u_stat" id="u_stat_0" value="0" (click)="formData.status = $event.target.value"
+              [checked]="formData.status == 0">&nbsp;&nbsp;Disable
+          </label>
+        </div>
+        <div class="clearfix"></div>
+        <div class="clearfix"></div>
+      </div>
+      <div class="col-lg-1">
+        <button (click)="updateUserData()" class="btn btn-sm btn-primary">Submit</button>
+      </div>
+    </fieldset>
+
+    <fieldset class="form-group row" *ngIf="user_rights.ADD == '1'">
+      <legend>List</legend>
+      <div class="col-lg-12">
+        <table class="table tbl table-hover table-striped table-bordered">
+          <thead>
+            <tr>
+              <th class="text-center" width="2%">#</th>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <!-- <th>User Name</th> -->
+              <th>Email</th>
+              <th width="15%">Access Group</th>
+              <th class="text-center" width="5%">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of userlist; let i = index" [class.text-muted]="user.STATUS != '1'">
+              <td class="text-center">{{ i+1 }}</td>
+              <td>{{ user.FIRSTNAME }}</td>
+              <td>{{ user.LASTNAME }}</td>
+              <!-- <td>{{ user.USERNAME }}</td>  -->
+              <td>{{ user.EMAIL }}</td>
+              <td>{{ user.USER_ACCESS_GROUP_NAME }}</td>
+              <td class="text-center">
+                <button *ngIf="user_rights.EDIT == '1'" (click)="editUser(user)" title="Edit" alt="Edit"
+                  class="btn btn-small btn-link"><i class="fa fa-edit"></i></button>
+                <button *ngIf="user_rights.DELETE == '2'" title="Delete" alt="Delete" class="btn btn-small btn-link"><i
+                    class="fa fa-times"></i></button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </fieldset>
+  </form>
+</div>

@@ -1,0 +1,181 @@
+<div>
+    <app-page-header [heading]="'Doctor Appointment'" [icon]="'fa fa-calendar'"></app-page-header>
+    <form class="inner_body">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-12">
+                    <form role="form">
+                        <fieldset class="form-group ">
+                            <legend>Filter</legend>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="row">
+                                        <label for="date" class="col-2">Date</label>
+                                        <div class="col-10">
+                                            <input class="form-control form-control-sm" type="date"
+                                                [ngModel]="dateVal | date:'yyyy-MM-dd'" (focusout)="getOnlyToday()"
+                                                [min]="getMaxDate()" (ngModelChange)="dateVal = $event" name="date"
+                                                id="date">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="row">
+                                        <button type="button" (click)="getScheduleBydate()"
+                                            class="btn btn-info btn-sm">Filter</button>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class=" row">
+                                        <label for="p_type" class="col-4">Department</label>
+                                        <div class="col-8">
+                                            <select [(ngModel)]="department_id"
+                                                class="form-control form-control-sm custom-select custom-select-sm"
+                                                name="department">
+                                                <option value="">Select Department</option>
+                                                <option *ngFor="let spec of specialized_in"
+                                                    value="{{ spec.OPTIONS_ID }}">{{ spec.OPTIONS_NAME }}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="row">
+                                        <button type="button" (click)="getScheduleBydate()"
+                                            class="btn btn-info btn-sm">Filter</button>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class=" row">
+                                        <label for="p_type" class="col-3">Doctors</label>
+                                        <div class="col-9">
+                                            <select [(ngModel)]="doctor_id"
+                                                class="form-control form-control-sm custom-select custom-select-sm"
+                                                name="doctor_id" id="doctor_id">
+                                                <option value="">Select Doctor</option>
+                                                <option *ngFor="let dr of dr_list" value="{{ dr.DOCTORS_ID }}">{{
+                                                    dr.DOCTORS_NAME }}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="row">
+                                        <button type="button" (click)="getScheduleBydate()"
+                                            class="btn btn-info btn-sm">Filter</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                    <fieldset class="form-group row">
+                        <legend>Doctor Appointment List of <label class="high-light">{{ filter }}</label></legend>
+                        <div class="col-lg-12">
+                            <div class="col-lg-12" [class.scrollData]="date_schedule_list && date_schedule_list.length > 0" >
+                                <table class="table table-sm table-bordered">
+                                    <!-- <tr>
+                                        <td width="1%" rowspan="2" class="info-td">#</th>
+                                        <th rowspan="2" class="info-td">Doctor Name</th>
+                                        <th class="info-td" colspan="3">Schedules</th>
+                                    </tr> -->
+                                    <ng-container *ngIf="date_schedule_list && date_schedule_list.length > 0">
+                                        <ng-container *ngFor="let data of date_schedule_list;let i=index">
+                                            <tbody>
+                                                <tr>
+                                                    <th class="text-center"><label style="width:20px;">{{i+1}}</label>
+                                                    </th>
+                                                    <th><label style="width: 150px;">Dr. {{data.name}} </label></th>
+                                                    <ng-container *ngFor="let list of data.slotList;let j=index">
+                                                        <ng-container *ngFor="let data of list.SLOTS;let k=index">
+                                                            <td>
+                                                                <button class="btn btn-sm text-light btn-secondary"
+                                                                    disabled
+                                                                    *ngIf="format_date(todaysDate) == format_date(dateVal) && formatTimeslot(current_seconds) > formatTimeslot(data.start_time) && data.booked == 0">
+                                                                    {{ formatTimes(data.start_time)}} <br>
+                                                                    {{formatTimes(data.end_time)}}
+                                                                </button>
+                                                                <button class="btn btn-sm btn-danger text-light"
+                                                                    title="Booked&nbsp;Patient Name:&nbsp;{{ data.patientName}},&nbsp;Ph no:&nbsp;{{ data.phone_no}}"
+                                                                    *ngIf="data.booked == 1">
+                                                                    {{ formatTimes(data.start_time)}} <br>
+                                                                    {{formatTimes(data.end_time)}}
+                                                                </button>
+                                                                <ng-container
+                                                                    *ngIf="(format_date(todaysDate) == format_date(dateVal) && formatTimeslot(data.start_time) > formatTimeslot(current_seconds))  && data.booked == 0 ">
+                                                                    <button class="btn btn-sm btn-success"
+                                                                        title="Available">
+                                                                        {{ formatTimes(data.start_time)}} <br>
+                                                                        {{formatTimes(data.end_time)}}
+                                                                    </button>
+                                                                </ng-container>
+                                                                <ng-container
+                                                                    *ngIf="(format_date(todaysDate) != format_date(dateVal))  && data.booked == 0 ">
+                                                                    <button class="btn btn-sm btn-success"
+                                                                        title="Available">
+                                                                        {{ formatTimes(data.start_time)}}<br>
+                                                                        {{formatTimes(data.end_time)}}
+                                                                    </button>
+                                                                </ng-container>
+                                                            </td>
+                                                        </ng-container>
+                                                    </ng-container>
+                                                </tr>
+                                            </tbody>
+                                        </ng-container>
+                                    </ng-container>
+                                    <ng-container *ngIf="date_schedule_list && date_schedule_list.length === 0">
+                                        <tr>
+                                            <th class="text-center" colspan="6">No data found</th>
+                                        </tr>
+                                    </ng-container>
+                                </table>
+
+                                <!-- <tr *ngFor="let data of date_schedule_list;let i=index">
+                                        <td >
+                                            {{data.name}}</td>
+                                        <td>
+                                            <ng-container *ngFor="let list of data.slotList;let j=index">
+                                                <ng-container *ngFor="let slot of list.SLOTS;let k=index">
+                                                    <ng-container *ngIf="list.SCHEDULE_NO === 'slot_1'">
+                                                       <div>{{ formatTimes(slot.start_time)}} - {{formatTimes(slot.end_time)}}</div>
+                                                    </ng-container>
+                                                </ng-container>
+                                            </ng-container>
+                                        </td>
+                                        <td>
+                                            <ng-container *ngFor="let list of data.slotList;let j=index">
+                                                <ng-container *ngFor="let slot of list.SLOTS;let k=index">
+                                                    <ng-container *ngIf="list.SCHEDULE_NO === 'slot_2'">
+                                                        <div>{{ formatTimes(slot.start_time)}} - {{formatTimes(slot.end_time)}}</div>
+                                                    </ng-container>
+                                                </ng-container>
+                                            </ng-container>
+                                        </td>
+                                        <td>
+                                            <ng-container *ngFor="let list of data.slotList;let j=index">
+                                                <ng-container *ngFor="let slot of list.SLOTS;let k=index">
+                                                    <ng-container *ngIf="list.SCHEDULE_NO === 'slot_3'">
+                                                        <div>{{ formatTimes(slot.start_time)}} - {{formatTimes(slot.end_time)}}</div>
+                                                    </ng-container>
+                                                </ng-container>
+                                            </ng-container>
+                                        </td>
+
+                                    </tr> -->
+                            </div>
+                            <div class="col-lg-12 ">
+                                <div class="row">
+                                </div>
+                            </div>
+
+                            <div class="clearfix"></div>
+                            <div class="clearfix"></div>
+
+
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,101 @@
+<fieldset class="form-group row" >
+    <legend>Appoinment List <label class="high-light">{{ filter }}</label></legend>
+    <div class=" col-lg-12 text-center" >
+      <div class="input-group-append pull-right">
+        &nbsp; &nbsp; <i  class="fa fa-search"></i>
+     </div>
+     <input type="text"  class="form-control form-control-sm"  class="pull-right" [(ngModel)]="term"> 
+      <div class="clearfix"></div>
+      <div class="clearfix"></div>
+      <table class="table tbl table-hover  table-bordered" >
+        <thead>
+          <tr>
+            <th class="text-left" width="15%">Patient Name</th>
+            <th width="7%">Patient No.</th>
+            <!-- <th width="3%">Age</th> -->
+            <th width="3%">Gender</th>
+            <!-- <th width="7%">Nationality</th> -->
+            <!-- <th width="7%">Type</th> -->
+            <th width="3%">App.Time</th>
+            <th class="text-left" width="10%">Doctor</th>
+            <!-- <th width="3%">Type</th> -->
+            <th class="text-left" width="10%">Phone No.</th>
+            <th class="text-center" width="10%" *ngIf="page == 'Appointment'">Status</th>
+            <th class="text-left" width="10%">Action</th>
+          </tr>
+          <tr *ngIf="(appoinment_list | json) == '[]'">
+            <td colspan="12" class="text-center">No appointments to show</td>
+          </tr>
+        </thead>
+        <tbody *ngIf="(appoinment_list | json) != []">
+            <tr  *ngFor="let appointment of appoinment_list | filter:term;let i=index"  
+              style="cursor: pointer;" (mouseover)="showTpa(appointment)" (mouseout)="hideTpa(appointment)" title="{{text}}"
+              [class.bg-info]="appointment.PATIENT_VISIT_LIST_ID" 
+              [class.bg-danger]="appointment.APPOINTMENT_STATUS == '2'" 
+              [class.bg-orange]="appointment.APPOINTMENT_STATUS == '3'" 
+              [class.bg-success]="appointment.APPOINTMENT_STATUS == '4'" 
+              [class.bg-primary]="appointment.APPOINTMENT_STATUS == '5'" 
+              [class.bg-pink]="appointment.APPOINTMENT_STATUS == '6'" >
+              <td class="text-left">{{ appointment.PATIENT_NAME }} </td>
+              <td class="text-center">{{ appointment.OP_REGISTRATION_NUMBER }} </td>
+              <!-- <td class="text-center">{{ appointment.AGE != null ? appointment.AGE : appointment.APP_AGE }} </td> -->
+              <td class="text-center">{{appointment.GENDER != null ? (appointment.GENDER == 1 ? 'Male' : 'Female' ) : (appointment.APP_GENDER == 1 ? 'Male' : 'Female')}}</td>
+              <!--  <td class="text-center">{{ appointment.COUNTRY_ISO3 }}</td> -->
+              <!-- <td class="text-left"><span *ngIf="appointment.OP_REGISTRATION_NUMBER != '' && appointment.OP_REGISTRATION_NUMBER != null">Existing</span><span *ngIf="appointment.OP_REGISTRATION_NUMBER == '' || appointment.OP_REGISTRATION_NUMBER == null">New</span></td> -->
+              <td class="text-center">{{ formatTime(appointment.APPOINTMENT_TIME) }}</td>
+              <td class="text-left">{{ appointment.DOCTORS_NAME }} </td>
+              <!-- <td class="text-center"><button *ngIf="appointment.OP_REGISTRATION_TYPE == 1" class="btn btn-xs btn-link"><i class="fa fa-umbrella"></i></button></td> -->
+              <td class="text-left">{{ appointment.PATIENT_PHONE_NO }} </td>
+              <td class="text-center" *ngIf="page == 'Appointment'">
+                <select class="custom-select custom-select-sm"  name="status" 
+                [(ngModel)]="appointmentStatus[i] = appointment.APPOINTMENT_STATUS" 
+                *ngIf="appointment.APPOINTMENT_STATUS != '2' && appointment.PATIENT_VISIT_LIST_ID == null"
+                (change)="changeAppointmentStatus(appointment.APPOINTMENT_ID,i)">
+                  <option *ngIf="appointment.APPOINTMENT_STATUS == 1 || appointment.APPOINTMENT_STATUS < 0" value="1">Status</option>
+                  <option value="3">Call not Attended</option>
+                  <option value="4">Confirmed</option>
+                  <option value="5">Not Confirmed</option>  
+                  <option value="6">Not Available</option>  
+                </select> 
+              </td>
+              <td class="text-left"> {{appointment.ACTION }}
+                <!-- <ng-container *ngIf="appointment.APPOINTMENT_STATUS == '2'">
+                  Cancelled
+                </ng-container>
+                <ng-container *ngIf="appointment.PATIENT_VISIT_LIST_ID != null && appointment.NURSING_ASSESSMENT_ID == null">
+                  Arrived
+                </ng-container>
+                <ng-container *ngIf="appointment.NURSING_ASSESSMENT_ID != null && appointment.STAT != 1 " >
+                  Nursing Assessment Started
+                </ng-container>
+                <ng-container *ngIf="appointment.NURSING_ASSESSMENT_ID != null && appointment.STAT == 1 && appointment.BILL_STATUS == null" >
+                  Nursing Assessment Completed
+                </ng-container>
+                <ng-container *ngIf="appointment.BILL_STATUS == 1" >
+                  Billing Completed
+                </ng-container> -->
+                <!-- <ng-container *ngIf="appointment.APPOINTMENT_STATUS == '1' && appointment.PATIENT_VISIT_LIST_ID == null"> -->
+                  <ng-container *ngIf="appointment.APPOINTMENT_STATUS != '2' && appointment.PATIENT_VISIT_LIST_ID == null">
+                  <a [routerLink]="['/transaction/op-new-registration', appointment.APPOINTMENT_ID]" >
+                    <button title="Add to Reg." alt="Add to Reg." *ngIf="appointment.OP_REGISTRATION_NUMBER == null && user_rights.ADD == '1'" class="btn btn-xs btn-info"><i class="fa fa-plus text-center"></i></button>
+                  </a>
+                  <button title="Add Visit" alt="Mark Visit" (click)="addVisit(appointment)" *ngIf="appointment.OP_REGISTRATION_NUMBER != null && page == 'Visit' && user_rights.ADD == '1'" class="btn btn-xs btn-info"><i class="fa fa-list-ul text-center"></i></button>
+                  <button *ngIf="user_rights.DELETE == '1'" title="Cancel Appointment" alt="Cancel Appointment" (click)="cancelAppointment(appointment.APPOINTMENT_ID)"  class="btn btn-xs btn-danger"><i class="fa fa-times text-center"></i></button>
+                  <button *ngIf="user_rights.EDIT == '1' && page != 'Visit'"  title="Edit Appointment" alt="Edit Appointment" (click)="editAppointment(appointment)" class="btn btn-xs btn-warning"><i class="fa fa-edit text-center"></i></button>
+                  
+                </ng-container>
+              </td>
+              
+            </tr>
+        </tbody>
+      </table>
+      <label  class="text-left col-lg-12" style="font-style: italic;">
+        <i style="font-size: 12px;" class="fa fa-circle text-orange"></i>&nbsp;Call not Attended&nbsp;&nbsp;&nbsp;&nbsp;
+        <i style="font-size: 12px;" class="fa fa-circle text-success"></i>&nbsp;Confirmed&nbsp;&nbsp;&nbsp;&nbsp;
+        <i style="font-size: 12px;" class="fa fa-circle text-primary"></i>&nbsp;Not Confirmed&nbsp;&nbsp;&nbsp;&nbsp;
+        <i style="font-size: 12px;" class="fa fa-circle text-pink"></i>&nbsp;Not Available&nbsp;&nbsp;&nbsp;&nbsp;
+        <i style="font-size: 12px;" class="fa fa-circle text-info"></i>&nbsp;Arrived&nbsp;&nbsp;&nbsp;&nbsp;
+        <i style="font-size: 12px;" class="fa fa-circle text-danger"></i>&nbsp;Cancelled&nbsp;&nbsp;&nbsp;&nbsp;
+    </label> 
+    </div>
+</fieldset>

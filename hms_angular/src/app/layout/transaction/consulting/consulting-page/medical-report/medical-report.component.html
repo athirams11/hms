@@ -1,0 +1,151 @@
+<fieldset class="form-group">
+  <legend>Medical Report</legend>
+  <button title="Print" printSectionId="print-section"  
+  [useExistingCss]="true" class="btn  pull-right btn-primary btn-sm" ngxPrint> 
+  <i class="fa fa-print">&nbsp;Print</i></button>
+  <div class="clearfix"></div>
+  <div id="print-section">
+    <div class="header-space">&nbsp;</div>
+    <div class="header col-md-12">
+      <div class="col-md-12 text-center">
+        <ng-container  *ngIf="institution">
+          <h5 class="name"><b>{{institution.INSTITUTION_NAME}}</b></h5>
+          <div style="line-height: 0.5em;"><label>{{institution.INSTITUTION_ADDRESS}}</label></div>
+          <div style="line-height: 0.5em;"><label>{{institution.INSTITUTION_CITY}},&nbsp;{{institution.INSTITUTION_COUNTRY_NAME}}</label></div>
+          <div style="line-height: 0.5em;"><label>Ph :&nbsp;{{institution.INSTITUTION_PHONE_NO}}</label></div>
+          <div style="line-height: 0.5em;"><label>Email :&nbsp;{{institution.INSTITUTION_EMAIL}}</label></div>
+        </ng-container>
+      </div>
+    </div>  
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <h5 style="text-align: center">MEDICAL REPORT</h5>
+    <hr>
+    <div class="row">
+      <div class="col-sm-4" >
+        <label style="font-size: 13px;">Patient Name&nbsp;&nbsp;:&nbsp;&nbsp;{{ selected_visit.FIRST_NAME }} {{ selected_visit.MIDDLE_NAME }} {{ selected_visit.LAST_NAME }}</label>
+      </div>
+      <div class="col-sm-4 text-center" >
+        <label style="font-size: 13px;">Date&nbsp;&nbsp;:&nbsp;&nbsp;{{formatDate(selected_visit.CREATED_TIME)}}</label>
+      </div>
+      <div class="col-sm-4" class="text-right pull-right">
+        <label style="font-size: 13px;" class="text-right pull-right">Age&nbsp;&nbsp;:&nbsp;&nbsp;{{ selected_visit.AGE }}&nbsp;Year(s)&nbsp;{{selected_visit.MONTHS}}&nbsp;Month(s)&nbsp;{{selected_visit.DAYS}}&nbsp;Day(s)</label>
+      </div>
+    </div>   
+    <hr>
+    <div class="clearfix"></div>
+    <ng-container *ngFor = "let datas of labels">
+      <ng-container  *ngIf="complaint_list[datas.key_name.toUpperCase()]!=null">
+        <div class="fontsize">{{datas.label}}</div>
+       <div class="clearfix"></div>
+      </ng-container>
+      <ng-container *ngIf="complaint_list[datas.key_name.toUpperCase()]!=null">
+        <div style="font-size: 12px;" [innerHTML]="complaint_list[datas.key_name.toUpperCase()] | nl2br : true" ></div>
+        <div class="clearfix"></div>
+      </ng-container>
+    </ng-container>
+    <div class="clearfix"></div>
+    <ng-container *ngIf="(vital_values | json) != '[]'">
+      <div class="fontsize">Vitals Information</div>
+      <div class="clearfix"></div>
+      <table class="table tbl table-bordered">
+        <thead>
+          <tr>
+              <td style="width:10%;" class="text-center"><b>Date & Time</b></td>
+              <td class="text-center" style="width:8%;" *ngFor="let vitals of vital_params"><b>{{ vitals.SHORT_FORM }}({{ vitals.SYMBOL }})</b></td>
+          </tr>
+        </thead>        
+        <tbody>
+          <tr *ngFor="let details of vital_values">
+              <td class="text-center">{{ formatDate(details.DATE_TIME)}}</td>
+              <td class="text-center" *ngFor="let details_data of details.param_values;let i = index">{{ details_data.PARAMETER_VALUE }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </ng-container>
+    <div class="clearfix"></div>
+    <ng-container *ngIf="(diagnosis_list | json) != '[]' || other_diagnosis != ''">
+      <div class="fontsize">Diagnosis Details</div>
+      <div class="clearfix"></div>
+      <table class="table tbl table-bordered">
+        <thead>
+          <tr>
+            <td class="text-center" width="1%">#</td>
+            <td width="15%">Diagnosis Name</td>
+            <td width="7%">ICD</td>
+            <td width="7%">Level</td>
+            <td width="5%">Type</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let diagnosis of diagnosis_list;let i=index">
+            <td  class="text-center">{{ i + 1 }}</td>
+            <td>{{ diagnosis.DIAGNOSIS_NAME }}</td>
+            <td>{{ diagnosis.DIAGNOSIS_CODE }}</td>    
+            <td>{{ diagnosis.DIAGNOSIS_LEVEL_NAME }}</td>
+            <td>{{ diagnosis.DIAGNOSIS_TYPE_NAME  }}</td>
+          </tr> 
+          <tr *ngIf="other_diagnosis != ''">
+            <td class="text-center">
+              <ng-container *ngIf="diagnosis_list.length == 0">1</ng-container>
+              <ng-container *ngIf="diagnosis_list.length > 0">
+                {{diagnosis_list.length + 1}}
+              </ng-container> 
+            </td>
+            <td colspan="4">
+              {{other_diagnosis}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </ng-container>
+    <div class="clearfix"></div>
+    <ng-container  *ngIf="allergy == 1 || allergy == 0">
+      <div class="fontsize">About Allergies</div>
+       <label *ngIf="allergy == 1">No known allergies</label>
+       <div class="clearfix"></div>
+      <ng-container *ngIf="allergy == 0 && drug_allergy.BRAND_NAME !=''">
+        <div class="font-sm-size">Drug Allergy</div>
+        <table class="table tbl table-bordered">
+          <thead>
+            <tr>  
+              <td  class="text-center" style="width:1%">#</td>
+              <td style="width:20%;">Generic Name</td>
+              <td style="width:20%;">Brand Name</td>
+            </tr>
+          </thead>
+          <tbody *ngFor="let drug of drug_allergy;let i=index">
+            <tr >
+              <td  class="text-center" >{{ i + 1 }}</td>
+              <td>{{ drug.GENERIC_NAME }}</td>
+              <td>{{ drug.BRAND_NAME }}</td>    
+            </tr> 
+          </tbody>
+        </table>
+      </ng-container>
+      <div class="clearfix"></div>
+      <ng-container *ngIf="allergy == 0 && other_allergy.ALLERGIES_OTHER_ID !=''">
+        <div class="font-sm-size">Other Allergy</div>
+        <table class="table tbl table-bordered">
+          <thead>
+            <tr>
+                <td  class="text-center" style="width:1%">#</td>
+                <td style="width:20%;">Other Allergy</td>
+                <td style="width:20%;">Allergy Item</td>
+            </tr>
+          </thead>
+          <tbody *ngFor="let other of other_allergy;let i=index">
+            <tr>
+              <td  class="text-center">{{ i + 1 }}</td>
+              <td>{{ other.ALLERGIES_OTHER_NAME }}</td>
+              <td>{{ other.ALLERGIES_ITEM }}</td>    
+            </tr> 
+          </tbody>
+        </table>  
+      </ng-container>
+    </ng-container>
+  </div>
+</fieldset>
+  
+

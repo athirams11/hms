@@ -1,0 +1,58 @@
+<fieldset class="form-group row">
+  <legend>Pain Assessment</legend>
+  <div class="row col-lg-12">
+    <div class="form-group col-lg-2"></div>
+    <div class="form-group col-lg-8" >
+      <table class="borderless" style="border:none">
+        <tr *ngIf="formatDate(todaysDate) == formatDate(selected_visit.CREATED_TIME)">
+          <td class="text-center" *ngFor="let rate of pain_rate;let i=index">
+            <ng-container *ngIf="rate.check == 0">
+              <img src="{{rate.image}}" style="cursor: pointer;" height="auto" width="100px"  (click)="selectPainRate(i)">
+            </ng-container>
+            <ng-container *ngIf="rate.check == 1">
+              <img src="{{rate.select}}" style="cursor: pointer;" height="auto" width="100px" (click)="selectPainRate(i)">
+            </ng-container>
+          </td>
+        </tr>
+        <tr *ngIf="formatDate(todaysDate) != formatDate(selected_visit.CREATED_TIME)">
+          <td  class="text-center" *ngFor="let rate of pain_rate;let i=index">
+            <ng-container *ngIf="rate.check == 0">
+              <img src="{{rate.image}}" height="auto" width="100px"  (click)="selectPainRate(i)">
+            </ng-container>
+            <ng-container *ngIf="rate.check == 1">
+              <img src="{{rate.select}}" height="auto" width="100px" (click)="selectPainRate(i)">
+            </ng-container>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="form-group col-lg-2" ></div>
+  </div>
+  <ng-container *ngIf="pain_assessment_data && pain_assessment_data.length != 0">
+    <div class="form-group row"></div>
+    <div class="row col-lg-12">
+      <div class="form-group col-lg-2"></div>
+      <div class="form-group col-lg-8" >
+        <table *ngFor="let pain of pain_assessment_data;let i=index">
+          <ng-container *ngIf="pain.USER_ACCESS_TYPE == 1">Admin</ng-container>
+          <ng-container *ngIf="pain.USER_ACCESS_TYPE == 3">Nurse</ng-container>
+          <ng-container *ngIf="pain.USER_ACCESS_TYPE == 4">Doctor</ng-container>
+          <tr style="border-top: 1px solid #ccc">
+            <ng-container *ngFor="let data of pain_rate_user;let i=index">
+              <td class="text-center">
+                <ng-container *ngIf="data.value != pain.PAIN_SCORE">
+                  <img src="{{data.image}}" height="auto" width="100px" >
+                </ng-container>
+                <ng-container *ngIf="data.value == pain.PAIN_SCORE">
+                  <img src="{{data.select}}" height="auto" width="100px">
+                </ng-container>
+              </td>
+            </ng-container>
+          </tr>
+        </table>
+      </div>
+      <div class="form-group col-lg-2" ></div>
+    </div>
+  </ng-container>
+  <div class="clearfix"></div>
+</fieldset>

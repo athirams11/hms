@@ -1,0 +1,66 @@
+/*!
+ * Bootstrap v4.0.0-beta.3 (https://getbootstrap.com)
+ * Copyright 2011-2017 The Bootstrap Authors
+ * Copyright 2011-2017 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ */
+
+@import "functions";
+@import "variables";
+@import "mixins";
+@import "root";
+@import "reboot";
+@import "type";
+@import "images";
+@import "code";
+@import "grid";
+@import "tables";
+@import "forms";
+@import "buttons";
+@import "transitions";
+@import "dropdown";
+@import "button-group";
+@import "input-group";
+@import "custom-forms";
+@import "nav";
+@import "navbar";
+@import "card";
+@import "breadcrumb";
+@import "pagination";
+@import "badge";
+@import "jumbotron";
+@import "alert";
+@import "progress";
+@import "media";
+@import "list-group";
+@import "close";
+@import "modal";
+@import "tooltip";
+@import "popover";
+@import "carousel";
+@import "utilities";
+@import "print";
+.icon{
+    color:#3e126e;
+  }
+  .icon1{
+    color: #1674b8;
+  }
+  .icon2{
+    color: #ff66b3;//#ad138c;
+  }
+  .icon3{
+    color: #539c25;
+  }
+  .icon4{
+    color: #e09429; //#db860f
+  }
+  .icon5{
+    color: #ff6600; // #ffcc00;
+  }
+  .icon6{
+    color: #17a2b8 ; //#db860f
+  }
+  .icon7{
+    color: #0048BA; // #ffcc00;
+  }

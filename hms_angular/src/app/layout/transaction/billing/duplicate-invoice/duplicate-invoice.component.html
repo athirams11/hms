@@ -1,0 +1,1426 @@
+<fieldset class="form-group row">
+  <legend>Summary</legend>
+  <div class="col-lg-12 row">
+    <div class="col-lg-7" *ngIf="patient_details.patient_data">
+      <div class="row">
+        <label for="p_type" class="col-4 font-weight-bold">Name</label>
+        <div class="col-8">
+          <label>:&nbsp;  
+            {{ gender_sur[patient_details.patient_data.GENDER] }}
+            {{ patient_details.patient_data.FIRST_NAME }}
+            {{ patient_details.patient_data.MIDDLE_NAME }}
+            {{ patient_details.patient_data.LAST_NAME }}
+            </label>
+        </div>
+      </div>
+    </div>  
+    <div class="col-lg-5">
+      <div class="row" *ngIf="patient_details.patient_data">
+        <label for="p_type"  class="col-4 font-weight-bold " >Gender  </label>
+        <div class="col-8 pull-right">
+          <label>
+              :&nbsp; {{ gender[patient_details.patient_data.GENDER] }}
+          </label>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-lg-7">
+      <div class="row" *ngIf="patient_details.patient_data">
+        <label for="p_type" class="col-4 font-weight-bold">Mobile&nbsp;No</label>
+        <div class="col-8">
+          <label>
+              :&nbsp; {{ patient_details.patient_data.MOBILE_NO }}
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-5">
+      <div class="row" *ngIf="patient_details.patient_data">
+        <label for="p_type" class="col-4 font-weight-bold">Payment&nbsp;Type </label>
+        <div class="col-8">
+            <label >:&nbsp; {{ patient_details.patient_data.PAY_TYPE }}</label>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-lg-7">
+      <div class="row" *ngIf="patient_details.ins_data">
+        <label for="p_type" class="col-4 font-weight-bold">Insurance&nbsp;Company/Payer</label>
+        <div class="col-8">
+            <label >:&nbsp;  {{ patient_details.ins_data.INSURANCE_PAYERS_NAME }}</label>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-5">
+      <div class="row" *ngIf="patient_details.ins_data">
+        <label for="p_type" class="col-4 font-weight-bold">Network</label>
+        <div class="col-8">
+            <label >:&nbsp; {{ patient_details.ins_data.INS_NETWORK_NAME }}</label>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-lg-7">
+      <div class="row"  *ngIf="patient_details.patient_data">
+        <label for="p_type"  class="col-4 font-weight-bold">Payment Method</label>
+        <div class="col-8">
+          <label class="radio-inline">:&nbsp;
+              <input  type="radio" (click)="selectCoinPaymentType(0)" name="payment_mode" id="cash" value="0" [checked]="payment_mode == 0">&nbsp;&nbsp;cash &nbsp;&nbsp;
+          </label>
+          <label class="radio-inline">
+              <input  type="radio" (click)="selectCoinPaymentType(1)" name="payment_mode" id="card" value="1" [checked]="payment_mode == 1">&nbsp;&nbsp;card
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="clearfix"></div>
+  <div class="clearfix"></div>
+  <div class="col-lg-12">
+    <table class="table tbl table-hover table-striped table-bordered">
+      <thead>
+        <tr>
+          <th style="width:1%">#</th>
+          <th style="width:20%" class="text-left">Description</th>
+          <th style="width:7%">Code</th>
+          <th style="width:3%">Price(AED)</th> 
+          <th style="width:3%">Qty</th>
+          <th style="width:3%">Gross(AED)</th>
+          <th style="width:4%">Co-payment</th>
+          <th style="width:4%">Patient Pay</th>
+          <th style="width:4%">Patient Total</th>
+          <th style="width:4%">Insurance Total</th>
+          <th class="text-center" style="width:5%">Action</th>
+        </tr>
+        <tr *ngIf="(table_invoice_list | json) == '[]'">
+            <td colspan="11" class="text-center">No details available</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let invoice of table_invoice_list;let i=index">
+          <td class="text-center" [class.bg-success]="invoice.BILL_TYPE == 1" [class.bg-orange]="invoice.BILL_TYPE == 0">{{ i + 1 }}</td>
+          <td class="text-left">{{ invoice.PROCEDURE_CODE_NAME }}</td>
+          <td class="text-center">{{ invoice.PROCEDURE_CODE}} </td>
+          <td class="text-right">{{ invoice.RATE}}</td>
+          <td class="text-center">{{ invoice.QUANTITY }}</td>  
+          <td class="text-right">{{ invoice.RATE * invoice.QUANTITY | number : '1.2-2'}}</td>  
+          <td class="text-right"> {{ invoice.CO_PAYMENT +  invoice.CO_PAYMENT_TYPE}}</td>
+          <td class="text-right"> {{invoice.PATIENT_PAYABLE | number : '1.2-2'}}</td>
+          <td class="text-right"> {{invoice.TOTAL_PATIENT_PAYABLE | number : '1.2-2'}}</td>     
+          <td class="text-right"> {{invoice.TOTAL | number : '1.2-2'}}</td>     
+          <td class="text-center" >
+            <button  [disabled]="lab_status == 'Failed' ||  claim_generate_status == 1 || cash_generate_status == 1" class="btn btn-sm btn-xs btn-success" (click)="addToClaim(i,invoice)"  title="Add to claim"><i class="fa fa-plus text-light"></i> </button>&nbsp;&nbsp;
+            <button [disabled]=" lab_status == 'Failed' ||  cash_generate_status == 1 || cash_generate_status == 1" class="btn btn-sm btn-xs btn-orange" (click)="addToCash(i,invoice)" title="Add to cash"><i class="fa fa-arrows text-light"></i> </button>
+          </td> 
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="clearfix"></div>
+  <div class="col-lg-12 pull-right">
+    <table cellspacing="0" cellpadding="0" class="table table-sm table-striped ">
+      <tbody *ngIf="(table_invoice_list | json) != '[]'">
+        <tr> 
+            <td  style="text-align: right">Gross Total:</td>
+            <td style="text-align: right;width:10%">{{ gross_total | number : '1.2-2'}}</td>
+        </tr>
+        <tr>
+            <td   style="text-align: right">Net Total:</td>
+            <td style="text-align: right;width:10%">{{ net_total  | number : '1.2-2'}}</td>
+        </tr>
+        <tr>
+            <td  style="text-align: right">Patient Payable:</td>     
+            <td  style="text-align: right;width:10%">{{ patient_payable_total  | number : '1.2-2'}}</td>
+        </tr>
+        <tr>
+            <td   style="text-align: right">Amount to be Claimed:</td>
+            <td style="text-align: right;width:10%">{{ bill_total  | number : '1.2-2'}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div *ngIf="investigation && investigation.INSTRUCTION_TO_CASHIER != null && investigation.INSTRUCTION_TO_CASHIER != ''">
+      <label class="font-weight-bold form-group">Instruction to cashier&nbsp;:&nbsp; </label>
+      <div class="col-1"></div>
+      <div class="col-11"><label  [innerHTML]="investigation.INSTRUCTION_TO_CASHIER | nl2br : true"></label></div>
+    </div>
+  </div>
+  <div class="clearfix"></div>
+  <div class="clearfix"></div>
+</fieldset>
+<fieldset class="form-group row" *ngIf="patient_details.patient_data && patient_details.patient_data.OP_REGISTRATION_TYPE == 1">
+  <legend>Credit Invoice</legend>
+  <div class="col-lg-12">
+    <table class="table tbl table-hover table-striped table-bordered">
+      <thead>
+        <tr>
+          <th style="width:2%">#</th>
+          <th style="width:20%" class="text-left">Description</th>
+          <th style="width:7%">Code</th>
+          <th style="width:3%">Price(AED)</th> 
+          <th style="width:5%">Qty</th>
+          <th style="width:3%">Gross(AED)</th>
+          <th style="width:4%">Co-payment</th>
+          <th style="width:4%">Patient Pay</th>
+          <th style="width:4%">Authorization No:</th>
+          <th style="width:4%">Patient Total</th>
+          <th style="width:4%">Insurance Total</th>
+          <th style="width:4%">Action</th>
+        </tr>
+        <tr *ngIf="(claim_list | json) == '[]'">
+          <td colspan="12 " class="text-center">No details available</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let claim of claim_list;let i=index">
+          <td class="text-center">{{ i + 1 }}</td>
+          <td class="text-left">{{ claim.PROCEDURE_CODE_NAME }}</td>
+          <td class="text-center">{{ claim.PROCEDURE_CODE}} </td>
+          <td class="text-right">{{ claim.RATE}}</td>
+          <td class="text-center">{{ claim.QUANTITY }}</td>  
+          <td class="text-right">{{ claim.RATE * claim.QUANTITY | number : '1.2-2'}}</td>  
+          <td class="text-right"> {{ claim.CO_PAYMENT +  claim.CO_PAYMENT_TYPE}}</td>
+          <td class="text-right"> {{claim.PATIENT_PAYABLE | number : '1.2-2'}}</td>
+          <td><input class="form-control form-control-sm" type="text" [(ngModel)]="prior_authorization[i]" name="prior_authorization{{i}}"></td>
+          <td class="text-right"> {{claim.TOTAL_PATIENT_PAYABLE | number : '1.2-2'}}</td>     
+          <td class="text-right"> {{claim.TOTAL | number : '1.2-2'}}</td>   
+          <td class="text-center">
+            <button class="btn btn-sm btn-xs btn-danger" [disabled]="lab_status == 'Failed' || claim_generate_status == 1" title="Remove" (click)="remove(i,claim);confirms(remove_claim)"><i class="fa fa-minus text-light"></i></button>
+          </td> 
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="clearfix"></div>
+  <div class="col-lg-12 pull-right">
+    <table cellspacing="0" cellpadding="0" class="table table-sm table-striped ">
+      <tbody *ngIf="(claim_list | json) != '[]'">
+        <tr> 
+            <td  style="text-align: right">Gross Total:</td>
+            <td style="text-align: right;width:10%">{{ claim_gross_total | number : '1.2-2'}}</td>
+        </tr>
+        <tr>
+            <td   style="text-align: right">Net Total:</td>
+            <td style="text-align: right;width:10%">{{ claim_net_total  | number : '1.2-2'}}</td>
+        </tr>
+        <tr>
+          <td style="text-align: right">Discount&nbsp;&nbsp;&nbsp;:<br>
+            <input type="radio" (click)="selectType(1,1)"   name="%claim" id="%claim" value="1" [checked]="invoice_data.claim_discount_type == 1">&nbsp;%&nbsp;&nbsp;
+            <input  maxlength="7" type="radio" (click)="selectType(2,1)" name="AEDclaim" id="AEDclaim"  value="2" [checked]="invoice_data.claim_discount_type == 2">&nbsp;AED&nbsp;
+          </td> 
+          <td width="10%" style="text-align: right;">
+            <input maxlength="7"  (keydown)="validateNumber($event)" class="text-right form-control form-control-sm" type="text" [(ngModel)]="invoice_data.claim_amount" (focusout)="getclaimAmount()" name="percentage" id="percentage">
+        
+          </td>
+        </tr>
+        <tr *ngIf="invoice_data.claim_discount">
+          <td style="text-align: right">Discount Amount&nbsp;:</td>
+          <td style="text-align: right;"width="10%" >{{ invoice_data.claim_discount  | number : '1.2-2'}}</td>
+        </tr>
+        <tr>
+            <td  style="text-align: right">Patient Payable:</td>     
+            <td  style="text-align: right;width:10%">{{ claim_patienttotal    | number : '1.2-2'}}</td>
+        </tr>
+        <tr>
+            <td   style="text-align: right">Amount to be claimed:</td>
+            <td style="text-align: right;width:10%">{{ claim_bill_total  | number : '1.2-2'}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="clearfix"></div>
+    <button  *ngIf="claim_billing_id > 0 && claim_list.length > 0" class="btn btn-sm btn-info" (click)="open(printclaimBill)"> <i class="fa fa-eye"></i>&nbsp;View </button>
+    <button  *ngIf="claim_billing_id > 0 && claim_list.length > 0"  [useExistingCss]="true" class="btn pull-right btn-info btn-sm" type="button" printSectionId="printclaimBill1" ngxPrint> <i class="fa fa-print"></i>&nbsp;Print </button>
+   
+  </div>
+  <div class="clearfix"></div>
+  <div class="clearfix"></div>
+</fieldset>
+<fieldset class="form-group row">
+  <legend>Cash Invoice</legend>
+  <div class="col-lg-12">
+    <table class="table tbl table-hover table-striped table-bordered">
+      <thead>
+        <tr>
+          <th style="width:2%">#</th>
+          <th class="text-left">Description</th>
+          <th style="width:7%">Code</th>
+          <th style="width:3%">Price(AED)</th> 
+          <th style="width:5%">Qty</th>
+          <th style="width:3%">Gross(AED)</th>
+          <th style="width:4%">Action</th>
+        </tr>
+        <tr *ngIf="(cash_list | json) == '[]'">
+          <td colspan="11" class="text-center">No details available</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cash of cash_list;let i=index">
+          <td class="text-center">{{ i + 1 }}</td>
+          <td class="text-left">{{ cash.PROCEDURE_CODE_NAME }}</td>
+          <td class="text-center">{{ cash.PROCEDURE_CODE}} </td>
+          <td class="text-right">{{ cash.RATE}}</td>
+          <td class="text-center">{{ cash.QUANTITY }}</td> 
+          <td class="text-right"> {{cash.TOTAL_PATIENT_PAYABLE | number : '1.2-2'}}</td> 
+          <td class="text-center">
+            <button class="btn btn-sm btn-xs btn-danger" [disabled]="lab_status == 'Failed' || cash_generate_status == 1" title="Remove" (click)="remove(i,cash);confirms(remove_cash)"><i class="fa fa-minus text-light"></i></button>
+          </td>   
+        </tr>
+      </tbody>
+    </table>  
+  </div>
+  <div class="clearfix"></div>
+  <div class="col-lg-12 pull-right">
+    <table cellspacing="0" cellpadding="0" class="table table-sm table-striped ">
+      <tbody *ngIf="(cash_list | json) != '[]'">
+        <tr> 
+            <td  style="text-align: right">Gross Total:</td>
+            <td style="text-align: right;width:10%">{{ cash_gross_total | number : '1.2-2'}}</td>
+        </tr>
+        <tr>
+          <td style="text-align: right">Discount&nbsp;&nbsp;&nbsp;:<br>
+            <input type="radio" (click)="selectType(1,0)"   name="%cash" id="%cash" value="1" [checked]="invoice_data.cash_discount_type == 1">&nbsp;%&nbsp;&nbsp;
+            <input  maxlength="7" type="radio" (click)="selectType(2,0)" name="AEDcash" id="AEDcash"  value="2" [checked]="invoice_data.cash_discount_type == 2">&nbsp;AED&nbsp;
+          </td> 
+          <td width="10%" style="text-align: right;">
+            <input maxlength="7"  (keydown)="validateNumber($event)" class="text-right form-control form-control-sm" type="text" [(ngModel)]="invoice_data.cash_amount" (focusout)="getcashAmount()" name="percentage" id="percentage">
+          </td>
+        </tr>
+        <tr *ngIf="invoice_data.claim_discount">
+          <td style="text-align: right">Discount Amount&nbsp;:</td>
+          <td style="text-align: right;"width="10%" >{{ invoice_data.cash_discount  | number : '1.2-2'}}</td>
+        </tr>
+        <tr>
+            <td  style="text-align: right">Patient Payable:</td>     
+            <td  style="text-align: right;width:10%">{{ cash_patienttotal  | number : '1.2-2'}}</td>
+        </tr>
+        <!-- <tr>
+            <td  style="text-align: right">Patient Payable:</td>     
+            <td  style="text-align: right;width:10%">{{ cash_patient_payable_total  | number : '1.2-2'}}</td>
+        </tr> -->
+      </tbody>
+    </table>
+    <div class="clearfix"></div>
+    <button *ngIf="cash_billing_id > 0 && cash_list.length > 0" class="btn btn-sm btn-info" (click)="open(printcashBill)"> <i class="fa fa-eye"></i>&nbsp;View </button>
+    <button *ngIf="cash_billing_id > 0 && cash_list.length > 0"  [useExistingCss]="true" class="btn pull-right btn-info btn-sm" type="button" printSectionId="printcashBill1" ngxPrint> <i class="fa fa-print"></i>&nbsp;Print </button>
+   
+    <div class="col-lg-12"  class="pull-right">
+    </div>
+  </div>
+  <div class="clearfix"></div>
+  <div class="clearfix"></div>
+</fieldset>
+<div class="clearfix"></div> 
+<div class="form-group row">
+  <div class="col-lg-12 ">
+    <button  [disabled]=" lab_status == 'Failed'" class="btn btn-primary btn-sm ng-star-inserted" type="button" (click)="savePatientBill()"> &nbsp;Save</button>&nbsp;&nbsp;
+  </div>
+  <div class="clearfix"></div> 
+</div>
+
+
+<div id="printBill" style="display: none;">
+  <div class="header-space">&nbsp;</div>
+  <div class="header col-md-12">
+    <table class="col-lg-12 borderless">
+      <tr> 
+        <td width="30%" class="text-left">
+          <ng-container *ngIf="institution.INSTITUTION_LOGO">
+            <img  [src]="logo_path+institution.INSTITUTION_LOGO" height="100px" width="auto"  >
+          </ng-container>
+        </td>
+        <td width="70%" class="text-right">
+          <ng-container  *ngIf="institution">
+            <h5 class="name"><b>{{institution.INSTITUTION_NAME}}</b></h5>
+            <div style="line-height: 1em;"><label style="font-size: 15px;">{{institution.INSTITUTION_ADDRESS}}</label></div>
+            <div style="line-height: 1em;"><label style="font-size: 15px;">{{institution.INSTITUTION_CITY}},&nbsp;{{institution.INSTITUTION_COUNTRY_NAME}}</label></div>
+            <div style="line-height: 1em;"><label style="font-size: 15px;">Ph :&nbsp;{{institution.INSTITUTION_PHONE_NO}}</label></div>
+            <div style="line-height: 1em;"><label style="font-size: 15px;">Email :&nbsp;{{institution.INSTITUTION_EMAIL}}</label></div>
+          </ng-container >
+        </td>
+      </tr>
+    </table>
+  <div>&nbsp;</div>
+  <div class="clearfix"></div>
+  <div style="padding: 30px"></div>
+  <h3 class="text-center">INVOICE</h3>
+  <br>
+  <div class="main" style="text-align: center;margin-right: 10%;margin-left: 10%">
+    <table class="table tbl table-bordered text-left" *ngIf="patient_details.ins_data">
+      <tr>
+        <td style="font-size: 15px;">Insurance Company Name</td>
+        <td style="font-size: 15px;" >{{ patient_details.ins_data.INSURANCE_PAYERS_NAME }}</td>
+      </tr>
+      <tr>
+        <td style="font-size: 15px;">Network/TPA</td>
+        <td style="font-size: 15px;">{{ patient_details.ins_data.INS_NETWORK_NAME }} </td>
+      </tr>
+    </table>
+  </div>
+  <div>&nbsp;</div>
+  <main>
+  <div class="" *ngIf="patient_details.patient_data">
+    <table style="width: 100%;border: none;font-size: 14px;">
+      
+      <tr> 
+        <td width="10%" class="text-left"> Patient #</td>
+        <td width="70%" class="text-left">{{patient_details.patient_data.OP_REGISTRATION_NUMBER}} </td>
+        <td width="10%" class="text-left ">Invoice #</td>
+        <td width="20%" class="text-right">{{this.invoice_number}}</td>
+      </tr>
+      <tr>
+        <td width="10%" class="text-left" >Name</td>
+        <td width="70%"class="text-left" >{{ gender_sur[patient_details.patient_data.GENDER] }}
+            {{ patient_details.patient_data.FIRST_NAME }}
+            {{ patient_details.patient_data.MIDDLE_NAME }}
+            {{ patient_details.patient_data.LAST_NAME }}
+        </td>
+      <td width="10%" class="text-left">Payment Type</td>
+      <td width="20%" class="text-right">{{ patient_details.patient_data.PAY_TYPE }}</td>
+    </tr>
+    <tr>
+      <td width="10%" class="text-left">Gender</td>
+      <td width="70%" class="text-left">{{ gender[patient_details.patient_data.GENDER] }}</td>
+      <td width="10%" class="text-left">Visit Date</td>
+      <td width="20%" class="text-right">{{ formatDate(patient_details.patient_data.CREATED_DATE) }}</td>
+    </tr>
+    <tr>
+      <td width="10%" class="text-left">DOB</td>
+      <td width="70%" class="text-left">{{ formatDate(patient_details.patient_data.DOB) }}</td>
+      <td width="10%" class="text-left" *ngIf="patient_details.ins_data">Policy #</td>
+      <td width="20%" class="text-right" *ngIf="patient_details.ins_data">{{ patient_details.ins_data.OP_INS_POLICY_NO }}</td>
+    </tr> 
+    <tr *ngIf="patient_details.ins_data">
+        <td width="10%" class="text-left">Insurance</td>
+        <td width="50%" class="text-left">{{ patient_details.ins_data.INSURANCE_PAYERS_NAME }}</td>
+        <td width="10%" class="text-left">Member #</td>
+        <td width="20%" class="text-right">{{ patient_details.ins_data.OP_INS_MEMBER_ID }}</td>
+    </tr> 
+  </table>
+</div>
+  <div>&nbsp;</div>
+
+    <table  class="table tbl table-hover table-striped table-bordered" >
+      <thead >
+        <tr>
+            <th class="text-center" style="width:1%">#</th>
+            <th class="text-left">Description</th>
+            <th style="width:7%" class="text-center">Code</th>
+            <th style="width:7%" class="text-center">Fee</th>
+            <th style="width:5%" class="text-center">Qty</th>
+            <th style="width:7%">Co-payment</th>
+            <th style="width:7%">Patient Pay</th>
+            <th style="width:7%" style="width:10%">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let invoice of table_invoice_list;let i=index">
+          <td class="text-center">{{ i + 1 }}</td>
+          <td class="text-left">{{ invoice.PROCEDURE_CODE_NAME }}</td>
+          <td class="text-center">{{ invoice.PROCEDURE_CODE}} </td>
+          <td class="text-right">{{ invoice.RATE}}</td>
+          <td class="text-center">{{ invoice.QUANTITY }}</td>  
+          <td class="text-right"> {{ invoice.CO_PAYMENT}}&nbsp;{{ invoice.CO_PAYMENT_TYPE}}</td>
+          <td class="text-right"> {{invoice.PATIENT_PAYABLE  | number : '1.2-2'}}</td>     
+          <td class="text-right">{{invoice.TOTAL  | number : '1.2-2'}}</td>  
+        </tr>
+      </tbody>
+    </table>
+    <div>&nbsp;</div>
+    <div class="pull-right">
+      <table cellspacing="0" cellpadding="0" class="table table-sm table-striped">
+        <tbody>
+          <tr> 
+              <td style="text-align: right">Gross Total&nbsp;&nbsp;&nbsp;:</td>
+              <td style="text-align: right;width:10%">{{ gross_total | number : '1.2-2'}}</td>
+          </tr>
+          <tr>
+              <td style="text-align: right">Net Total&nbsp;&nbsp;&nbsp;:</td>
+              <td style="text-align: right;width:10%">{{ net_total  | number : '1.2-2'}}</td>
+          </tr>
+
+          <tr *ngIf="convertParseFloat(invoice_data.claim_discount) > 0">
+            <td style="text-align: right">Discount&nbsp;&nbsp;&nbsp;:</td>
+            <td style="text-align: right;width:10%">{{ invoice_data.claim_discount  | number : '1.2-2'}}</td>
+          </tr>
+          <tr>
+              <td style="text-align: right">Patient Payable&nbsp;&nbsp;&nbsp;:</td>
+              <td style="text-align: right;width:10%">{{ patient_payable_total  | number : '1.2-2'}}</td>
+          </tr>
+          <tr>
+              <td style="text-align: right">Amount to be Claimed&nbsp;&nbsp;&nbsp;:</td>
+              <td style="text-align: right;width:10%">{{ bill_total  | number : '1.2-2'}}</td>
+          </tr>
+        </tbody>
+        <div class="clearfix"></div>
+      </table>
+    </div>
+    <div style="height:100px"></div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <hr>
+    <div class="footer">Thank you!</div>
+  </main>
+  <div class="clearfix"></div>
+  </div>
+</div>
+
+<div id="printclaimBillold" style="display: none;">
+  <div class="header-space">&nbsp;</div>
+  <div class="header col-md-12">
+    <div class="col-md-4" class="pull-left" >
+      <ng-container *ngIf="institution && institution.INSTITUTION_LOGO">
+        <img [src]="logo_path+institution.INSTITUTION_LOGO" height="100px" width="100">
+      </ng-container>
+    </div>
+    <div class="col-md-8 pull-right text-right" >
+      <ng-container  *ngIf="institution">
+        <h5 class="name"><b>{{institution.INSTITUTION_NAME}}</b></h5>
+        <div style="line-height: 1em;"><label style="font-size: 15px;">{{institution.INSTITUTION_ADDRESS}}</label></div>
+        <div style="line-height: 1em;"><label style="font-size: 15px;">{{institution.INSTITUTION_CITY}},&nbsp;{{institution.INSTITUTION_COUNTRY_NAME}}</label></div>
+        <div style="line-height: 1em;"><label style="font-size: 15px;">Ph :&nbsp;{{institution.INSTITUTION_PHONE_NO}}</label></div>
+        <div style="line-height: 1em;"><label style="font-size: 15px;">Email :&nbsp;{{institution.INSTITUTION_EMAIL}}</label></div>
+      </ng-container >
+    </div>
+  <div>&nbsp;</div>
+  <div class="clearfix"></div>
+  <div style="padding: 30px"></div>
+  <h3 class="text-center">INVOICE</h3>
+  <br>
+  <div class="main" style="text-align: center;margin-right: 10%;margin-left: 10%">
+    <table class="table tbl table-bordered text-left" *ngIf="patient_details.ins_data">
+      <tr>
+        <td style="font-size: 15px;">Insurance Company Name</td>
+        <td style="font-size: 15px;" >{{ patient_details.ins_data.INSURANCE_PAYERS_NAME }}</td>
+      </tr>
+      <tr>
+        <td style="font-size: 15px;">Network/TPA</td>
+        <td style="font-size: 15px;">{{ patient_details.ins_data.INS_NETWORK_NAME }} </td>
+      </tr>
+    </table>
+  </div>
+  <div>&nbsp;</div>
+  <main>
+  <div class="" *ngIf="patient_details.patient_data">
+    <table style="width: 100%;border: none;font-size: 14px;">
+      
+      <tr> 
+        <td width="10%" class="text-left"> Patient #</td>
+        <td width="70%" class="text-left">{{patient_details.patient_data.OP_REGISTRATION_NUMBER}} </td>
+        <td width="10%" class="text-left ">Invoice #</td>
+        <td width="20%" class="text-right">{{this.claim_invoice_number}}</td>
+      </tr>
+      <tr>
+        <td width="10%" class="text-left" >Name</td>
+        <td width="70%"class="text-left" >{{ gender_sur[patient_details.patient_data.GENDER] }}
+            {{ patient_details.patient_data.FIRST_NAME }}
+            {{ patient_details.patient_data.MIDDLE_NAME }}
+            {{ patient_details.patient_data.LAST_NAME }}
+        </td>
+      <td width="10%" class="text-left">Payment Type</td>
+      <td width="20%" class="text-right">{{ patient_details.patient_data.PAY_TYPE }}</td>
+    </tr>
+    <tr>
+      <td width="10%" class="text-left">Gender</td>
+      <td width="70%" class="text-left">{{ gender[patient_details.patient_data.GENDER] }}</td>
+      <td width="10%" class="text-left">Visit Date</td>
+      <td width="20%" class="text-right">{{ formatDate(patient_details.patient_data.CREATED_DATE) }}</td>
+    </tr>
+    <tr>
+      <td width="10%" class="text-left">DOB</td>
+      <td width="70%" class="text-left">{{ formatDate(patient_details.patient_data.DOB) }}</td>
+      <td width="10%" class="text-left" *ngIf="patient_details.ins_data">Policy #</td>
+      <td width="20%" class="text-right" *ngIf="patient_details.ins_data">{{ patient_details.ins_data.OP_INS_POLICY_NO }}</td>
+    </tr> 
+    <tr *ngIf="patient_details.ins_data">
+        <td width="10%" class="text-left">Insurance</td>
+        <td width="50%" class="text-left">{{ patient_details.ins_data.INSURANCE_PAYERS_NAME }}</td>
+        <td width="10%" class="text-left">Member #</td>
+        <td width="20%" class="text-right">{{ patient_details.ins_data.OP_INS_MEMBER_ID }}</td>
+    </tr> 
+  </table>
+</div>
+  <div>&nbsp;</div>
+
+    <table  class="table tbl table-hover table-striped table-bordered" >
+      <thead >
+        <tr>
+            <th class="text-left">Description</th>
+            <th class="text-center">Code</th>
+            <th class="text-center">Fee</th>
+            <th class="text-center">Qty</th>
+            <th class="text-center">Co-payment</th>
+            <th class="text-center">Patient Pay</th>
+            <th class="text-center" style="width:10%">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let invoice of claim_list;let i=index">
+          <td class="text-left">{{ invoice.PROCEDURE_CODE_NAME }}</td>
+          <td class="text-center">{{ invoice.PROCEDURE_CODE}} </td>
+          <td class="text-right">{{ invoice.RATE}}</td>
+          <td class="text-center">{{ invoice.QUANTITY }}</td>  
+          <td class="text-right"> {{ invoice.CO_PAYMENT}}&nbsp;{{ invoice.CO_PAYMENT_TYPE}}</td>
+          <td class="text-right"> {{invoice.PATIENT_PAYABLE  | number : '1.2-2'}}</td>     
+          <td class="text-right">{{invoice.TOTAL  | number : '1.2-2'}}</td>  
+        </tr>
+      </tbody>
+    </table>
+    <div>&nbsp;</div>
+    <div class="pull-right">
+      <table cellspacing="0" cellpadding="0" class="table table-sm table-striped">
+        <tbody>
+          <tr> 
+              <td style="text-align: right">Gross Total&nbsp;&nbsp;&nbsp;:</td>
+              <td style="text-align: right;width:10%">{{ claim_gross_total | number : '1.2-2'}}</td>
+          </tr>
+          <tr>
+              <td style="text-align: right">Net Total&nbsp;&nbsp;&nbsp;:</td>
+              <td style="text-align: right;width:10%">{{ claim_net_total  | number : '1.2-2'}}</td>
+          </tr>
+          <tr *ngIf="convertParseFloat(invoice_data.claim_discount)> 0">
+            <td style="text-align: right">Discount&nbsp;&nbsp;&nbsp;:</td>
+            <td style="text-align: right;width:10%">{{ invoice_data.claim_discount  | number : '1.2-2'}}</td>
+          </tr>
+          <tr>
+              <td style="text-align: right">Patient Payable&nbsp;&nbsp;&nbsp;:</td>
+              <td style="text-align: right;width:10%">{{ claim_patienttotal  | number : '1.2-2'}}</td>
+          </tr>
+          <tr>
+              <td style="text-align: right">Amount to be Claimed&nbsp;&nbsp;&nbsp;:</td>
+              <td style="text-align: right;width:10%">{{ claim_bill_total  | number : '1.2-2'}}</td>
+          </tr>
+        </tbody>
+        <div class="clearfix"></div>
+      </table>
+    </div>
+    <div style="height:100px"></div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <hr>
+    <div class="footer">Thank you!</div>
+  </main>
+  <div class="clearfix"></div>
+</div>
+</div>
+
+<div id="printcashBillold" style="display: none;">
+  <div class="header-space">&nbsp;</div>
+  <div class="header col-md-12">
+    <div class="col-md-4" class="pull-left" >
+      <ng-container *ngIf="institution && institution.INSTITUTION_LOGO">
+        <img [src]="logo_path+institution.INSTITUTION_LOGO" height="100px" width="100">
+      </ng-container>
+    </div>
+    <div class="col-md-8 pull-right text-right" >
+      <ng-container  *ngIf="institution">
+        <h5 class="name"><b>{{institution.INSTITUTION_NAME}}</b></h5>
+        <div style="line-height: 1em;"><label style="font-size: 15px;">{{institution.INSTITUTION_ADDRESS}}</label></div>
+        <div style="line-height: 1em;"><label style="font-size: 15px;">{{institution.INSTITUTION_CITY}},&nbsp;{{institution.INSTITUTION_COUNTRY_NAME}}</label></div>
+        <div style="line-height: 1em;"><label style="font-size: 15px;">Ph :&nbsp;{{institution.INSTITUTION_PHONE_NO}}</label></div>
+        <div style="line-height: 1em;"><label style="font-size: 15px;">Email :&nbsp;{{institution.INSTITUTION_EMAIL}}</label></div>
+      </ng-container >
+    </div>
+  <div>&nbsp;</div>
+  <div class="clearfix"></div>
+  <div style="padding: 30px"></div>
+  <h3 class="text-center">INVOICE</h3>
+  <br>
+  <div class="main" style="text-align: center;margin-right: 10%;margin-left: 10%">
+    <table class="table tbl table-bordered text-left" *ngIf="patient_details.ins_data">
+      <tr>
+        <td style="font-size: 15px;">Insurance Company Name</td>
+        <td style="font-size: 15px;" >{{ patient_details.ins_data.INSURANCE_PAYERS_NAME }}</td>
+      </tr>
+      <tr>
+        <td style="font-size: 15px;">Network/TPA</td>
+        <td style="font-size: 15px;">{{ patient_details.ins_data.INS_NETWORK_NAME }} </td>
+      </tr>
+    </table>
+  </div>
+  <div>&nbsp;</div>
+  <main>
+  <div class="" *ngIf="patient_details.patient_data">
+    <table style="width: 100%;border: none;font-size: 14px;">
+      
+      <tr> 
+        <td width="10%" class="text-left"> Patient #</td>
+        <td width="70%" class="text-left">{{patient_details.patient_data.OP_REGISTRATION_NUMBER}} </td>
+        <td width="10%" class="text-left ">Invoice #</td>
+        <td width="20%" class="text-right">{{this.cash_invoice_number}}</td>
+      </tr>
+      <tr>
+        <td width="10%" class="text-left" >Name</td>
+        <td width="70%"class="text-left" >{{ gender_sur[patient_details.patient_data.GENDER] }}
+            {{ patient_details.patient_data.FIRST_NAME }}
+            {{ patient_details.patient_data.MIDDLE_NAME }}
+            {{ patient_details.patient_data.LAST_NAME }}
+        </td>
+      <td width="10%" class="text-left">Payment Type</td>
+      <td width="20%" class="text-right">Cash</td>
+    </tr>
+    <tr>
+      <td width="10%" class="text-left">Gender</td>
+      <td width="70%" class="text-left">{{ gender[patient_details.patient_data.GENDER] }}</td>
+      <td width="10%" class="text-left">Visit Date</td>
+      <td width="20%" class="text-right">{{ formatDate(patient_details.patient_data.CREATED_DATE) }}</td>
+    </tr>
+    <tr>
+      <td width="10%" class="text-left">DOB</td>
+      <td width="70%" class="text-left">{{ formatDate(patient_details.patient_data.DOB) }}</td>
+      <td width="10%" class="text-left" *ngIf="patient_details.ins_data">Policy #</td>
+      <td width="20%" class="text-right" *ngIf="patient_details.ins_data">{{ patient_details.ins_data.OP_INS_POLICY_NO }}</td>
+    </tr> 
+    <tr *ngIf="patient_details.ins_data">
+        <td width="10%" class="text-left">Insurance</td>
+        <td width="50%" class="text-left">{{ patient_details.ins_data.INSURANCE_PAYERS_NAME }}</td>
+        <td width="10%" class="text-left">Member #</td>
+        <td width="20%" class="text-right">{{ patient_details.ins_data.OP_INS_MEMBER_ID }}</td>
+    </tr> 
+  </table>
+</div>
+  <div>&nbsp;</div>
+
+    <table  class="table tbl table-hover table-striped table-bordered" >
+      <thead >
+        <tr>
+            <th class="text-left">Description</th>
+            <th class="text-center">Code</th>
+            <th class="text-center">Fee</th>
+            <th class="text-center">Qty</th>
+            <th class="text-center" style="width:10%">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let invoice of cash_list;let i=index">
+          <td class="text-left">{{ invoice.PROCEDURE_CODE_NAME }}</td>
+          <td class="text-center">{{ invoice.PROCEDURE_CODE}} </td>
+          <td class="text-right">{{ invoice.RATE}}</td>
+          <td class="text-center">{{ invoice.QUANTITY }}</td>  
+          <td class="text-right"> {{invoice.PATIENT_PAYABLE  | number : '1.2-2'}}</td>   
+        </tr>
+      </tbody>
+    </table>
+    <div>&nbsp;</div>
+    <div class="pull-right">
+      <table cellspacing="0" cellpadding="0" class="table table-sm table-striped">
+        <tbody>
+          <tr> 
+              <td style="text-align: right">Gross Total&nbsp;&nbsp;&nbsp;:</td>
+              <td style="text-align: right;width:10%">{{ cash_gross_total | number : '1.2-2'}}</td>
+          </tr>
+          <tr *ngIf="convertParseFloat(invoice_data.cash_discount) > 0">
+            <td style="text-align: right">Discount&nbsp;&nbsp;&nbsp;:</td>
+            <td style="text-align: right;width:10%">{{ invoice_data.cash_discount  | number : '1.2-2'}}</td>
+          </tr>
+          <tr>
+              <td style="text-align: right">Patient Payable&nbsp;&nbsp;&nbsp;:</td>
+              <td style="text-align: right;width:10%">{{ cash_patienttotal  | number : '1.2-2'}}</td>
+          </tr>
+        </tbody>
+        <div class="clearfix"></div>
+      </table>
+    </div>
+    <div style="height:100px"></div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <hr>
+    <div class="footer">Thank you!</div>
+  </main>
+  <div class="clearfix"></div>
+</div>
+</div>
+
+<div class="col-lg-12" id="printcashBill1" style="display: none;">
+   <table class="col-lg-12 borderless">
+    <tr> 
+      <td width="30%" class="text-left">
+        <ng-container *ngIf="institution.INSTITUTION_LOGO">
+          <img  [src]="logo_path+institution.INSTITUTION_LOGO" height="100px" width="auto"  >
+        </ng-container>
+      </td>
+      <td width="70%" class="text-right">
+        <ng-container  *ngIf="institution">
+          <h5 class="name"><b>{{institution.INSTITUTION_NAME}}</b></h5>
+          <div style="line-height: 1em;"><label style="font-size: 15px;">{{institution.INSTITUTION_ADDRESS}}</label></div>
+          <div style="line-height: 1em;"><label style="font-size: 15px;">{{institution.INSTITUTION_CITY}},&nbsp;{{institution.INSTITUTION_COUNTRY_NAME}}</label></div>
+          <div style="line-height: 1em;"><label style="font-size: 15px;">Ph :&nbsp;{{institution.INSTITUTION_PHONE_NO}}</label></div>
+          <div style="line-height: 1em;"><label style="font-size: 15px;">Email :&nbsp;{{institution.INSTITUTION_EMAIL}}</label></div>
+        </ng-container >
+      </td>
+    </tr>
+  </table>
+  <div class="clearfix"></div>
+  <div class="clearfix"></div>
+  <div class="clearfix"></div>
+  <h3 class="text-center">INVOICE</h3>
+  <br>
+  <div class="main" style="text-align: center;margin-right: 10%;margin-left: 10%">
+    <table class="table tbl table-bordered text-left" *ngIf="patient_details.ins_data">
+      <tr>
+        <td style="font-size: 15px;">Insurance Company Name</td>
+        <td style="font-size: 15px;" >{{ patient_details.ins_data.INSURANCE_PAYERS_NAME }}</td>
+      </tr>
+      <tr>
+        <td style="font-size: 15px;">Network/TPA</td>
+        <td style="font-size: 15px;">{{ patient_details.ins_data.INS_NETWORK_NAME }} </td>
+      </tr>
+    </table>
+  </div>
+  <div>&nbsp;</div>
+  <main>
+    <div class="" *ngIf="patient_details.patient_data">
+      <table class="col-lg-12 borderless" style="border: none;font-size: 14px;">
+          <tr> 
+            <td width="10%" class="text-left"> Patient #</td>
+            <td width="70%" class="text-left">{{patient_details.patient_data.OP_REGISTRATION_NUMBER}} </td>
+            <td width="10%" class="text-left ">Invoice #</td>
+            <td width="20%" class="text-right">{{cash_invoice_number}}</td>
+          </tr>
+          <tr>
+            <td width="10%" class="text-left" >Name</td>
+            <td width="70%"class="text-left" >{{ gender_sur[patient_details.patient_data.GENDER] }}
+                {{ patient_details.patient_data.FIRST_NAME }}
+                {{ patient_details.patient_data.MIDDLE_NAME }}
+                {{ patient_details.patient_data.LAST_NAME }}
+            </td>
+          <td width="10%" class="text-left">Payment Type</td>
+          <td width="20%" class="text-right">Cash</td>
+        </tr>
+        <tr>
+          <td width="10%" class="text-left">Gender</td>
+          <td width="70%" class="text-left">{{ gender[patient_details.patient_data.GENDER] }}</td>
+          <td width="10%" class="text-left">Visit Date</td>
+          <td width="20%" class="text-right">{{ formatDate(patient_details.patient_data.CREATED_DATE) }}</td>
+        </tr>
+        <tr>
+          <td width="10%" class="text-left">DOB</td>
+          <td width="70%" class="text-left">{{ formatDate(patient_details.patient_data.DOB) }}</td>
+          <td width="10%" class="text-left" *ngIf="patient_details.ins_data">Policy #</td>
+          <td width="20%" class="text-right" *ngIf="patient_details.ins_data">{{ patient_details.ins_data.OP_INS_POLICY_NO }}</td>
+        </tr> 
+        <tr *ngIf="patient_details.ins_data">
+            <td width="10%" class="text-left">Insurance</td>
+            <td width="50%" class="text-left">{{ patient_details.ins_data.INSURANCE_PAYERS_NAME }}</td>
+            <td width="10%" class="text-left">Member #</td>
+            <td width="20%" class="text-right">{{ patient_details.ins_data.OP_INS_MEMBER_ID }}</td>
+        </tr> 
+      </table>
+    </div>
+    <div>&nbsp;</div>
+    <table  class="printtable table-hover table-striped table-bordered" >
+      <thead >
+        <tr>
+          <th style="width:1%">#</th>
+          <th class="text-left">Description</th>
+          <th style="width:7%">Code</th>
+          <th style="width:3%">Price(AED)</th> 
+          <th style="width:5%">Qty</th>
+          <th style="width:3%">Gross(AED)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let invoice of cash_list;let i=index">
+          <td class="text-center">{{ i + 1 }}</td>
+          <td class="text-left">{{ invoice.PROCEDURE_CODE_NAME }}</td>
+          <td class="text-center">{{ invoice.PROCEDURE_CODE}} </td>
+          <td class="text-right">{{ invoice.RATE}}</td>
+          <td class="text-center">{{ invoice.QUANTITY }}</td> 
+          <td class="text-right"> {{invoice.TOTAL_PATIENT_PAYABLE | number : '1.2-2'}}</td> 
+        </tr>
+      </tbody>
+    </table>
+    <div>&nbsp;</div>
+    <div class="pull-right">
+      <table cellspacing="0" cellpadding="0" class="table-sml">
+        <tbody>
+          <tr> 
+              <td style="text-align: right">Gross Total&nbsp;&nbsp;&nbsp;:</td>
+              <td style="text-align: right;width:10%">{{ cash_gross_total | number : '1.2-2'}}</td>
+          </tr>
+          <tr *ngIf="convertParseFloat(invoice_data.cash_discount) > 0">
+            <td style="text-align: right">Discount&nbsp;&nbsp;&nbsp;:</td>
+            <td style="text-align: right;width:10%">{{ invoice_data.cash_discount  | number : '1.2-2'}}</td>
+          </tr>
+          <tr>
+              <td style="text-align: right">Patient Payable&nbsp;&nbsp;&nbsp;:</td>
+              <td style="text-align: right;width:10%">{{ cash_patienttotal  | number : '1.2-2'}}</td>
+          </tr>
+        </tbody>
+        <div class="clearfix"></div>
+      </table>
+      <div style="margin-bottom:50px"></div>
+      <div class="clearfix"></div>
+      <label class="pull-right" style="font-size: 15px;">Signature</label>
+    </div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <hr>
+    <div class="footer"><label>Thank you!</label></div>
+  </main>
+  <div class="clearfix"></div>
+</div>
+
+<div class="col-lg-12" id="printclaimBill1" style="display: none;">
+   <table class="col-lg-12 borderless">
+    <tr> 
+      <td width="30%" class="text-left">
+        <ng-container *ngIf="institution.INSTITUTION_LOGO">
+          <img  [src]="logo_path+institution.INSTITUTION_LOGO" height="100px" width="auto"  >
+        </ng-container>
+      </td>
+      <td width="70%" class="text-right">
+        <ng-container  *ngIf="institution">
+          <h5 class="name"><b>{{institution.INSTITUTION_NAME}}</b></h5>
+          <div style="line-height: 1em;"><label style="font-size: 15px;">{{institution.INSTITUTION_ADDRESS}}</label></div>
+          <div style="line-height: 1em;"><label style="font-size: 15px;">{{institution.INSTITUTION_CITY}},&nbsp;{{institution.INSTITUTION_COUNTRY_NAME}}</label></div>
+          <div style="line-height: 1em;"><label style="font-size: 15px;">Ph :&nbsp;{{institution.INSTITUTION_PHONE_NO}}</label></div>
+          <div style="line-height: 1em;"><label style="font-size: 15px;">Email :&nbsp;{{institution.INSTITUTION_EMAIL}}</label></div>
+        </ng-container >
+      </td>
+    </tr>
+  </table>
+  <div class="clearfix"></div>
+  <div class="clearfix"></div>
+  <div class="clearfix"></div>
+  <h3 class="text-center">INVOICE</h3>
+  <br>
+  <div class="main" style="text-align: center;margin-right: 10%;margin-left: 10%">
+    <table class="table tbl table-bordered text-left" *ngIf="patient_details.ins_data">
+      <tr>
+        <td style="font-size: 15px;">Insurance Company Name</td>
+        <td style="font-size: 15px;" >{{ patient_details.ins_data.INSURANCE_PAYERS_NAME }}</td>
+      </tr>
+      <tr>
+        <td style="font-size: 15px;">Network/TPA</td>
+        <td style="font-size: 15px;">{{ patient_details.ins_data.INS_NETWORK_NAME }} </td>
+      </tr>
+    </table>
+  </div>
+  <div>&nbsp;</div>
+  <main>
+    <div class="" *ngIf="patient_details.patient_data">
+      <table class="col-lg-12 borderless" style="border: none;font-size: 14px;">
+          <tr> 
+            <td width="10%" class="text-left"> Patient #</td>
+            <td width="70%" class="text-left">{{patient_details.patient_data.OP_REGISTRATION_NUMBER}} </td>
+            <td width="10%" class="text-left ">Invoice #</td>
+            <td width="20%" class="text-right">{{claim_invoice_number}}</td>
+          </tr>
+          <tr>
+            <td width="10%" class="text-left" >Name</td>
+            <td width="70%"class="text-left" >{{ gender_sur[patient_details.patient_data.GENDER] }}
+                {{ patient_details.patient_data.FIRST_NAME }}
+                {{ patient_details.patient_data.MIDDLE_NAME }}
+                {{ patient_details.patient_data.LAST_NAME }}
+            </td>
+          <td width="10%" class="text-left">Payment Type</td>
+          <td width="20%" class="text-right">Cash</td>
+        </tr>
+        <tr>
+          <td width="10%" class="text-left">Gender</td>
+          <td width="70%" class="text-left">{{ gender[patient_details.patient_data.GENDER] }}</td>
+          <td width="10%" class="text-left">Visit Date</td>
+          <td width="20%" class="text-right">{{ formatDate(patient_details.patient_data.CREATED_DATE) }}</td>
+        </tr>
+        <tr>
+          <td width="10%" class="text-left">DOB</td>
+          <td width="70%" class="text-left">{{ formatDate(patient_details.patient_data.DOB) }}</td>
+          <td width="10%" class="text-left" *ngIf="patient_details.ins_data">Policy #</td>
+          <td width="20%" class="text-right" *ngIf="patient_details.ins_data">{{ patient_details.ins_data.OP_INS_POLICY_NO }}</td>
+        </tr> 
+        <tr *ngIf="patient_details.ins_data">
+            <td width="10%" class="text-left">Insurance</td>
+            <td width="50%" class="text-left">{{ patient_details.ins_data.INSURANCE_PAYERS_NAME }}</td>
+            <td width="10%" class="text-left">Member #</td>
+            <td width="20%" class="text-right">{{ patient_details.ins_data.OP_INS_MEMBER_ID }}</td>
+        </tr> 
+      </table>
+    </div>
+    <div>&nbsp;</div>
+    <table  class="printtable table-hover table-striped table-bordered" >
+      <thead >
+        <tr>
+            <th class="text-center" style="width:1%">#</th>
+            <th class="text-left">Description</th>
+            <th style="width:7%" class="text-center">Code</th>
+            <th style="width:7%" class="text-center">Fee</th>
+            <th style="width:5%" class="text-center">Qty</th>
+            <th style="width:7%">Co-payment</th>
+            <th style="width:7%">Patient Pay</th>
+            <th style="width:7%" style="width:10%">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let invoice of claim_list;let i=index">
+          <td class="text-center">{{ i + 1 }}</td>
+          <td class="text-left">{{ invoice.PROCEDURE_CODE_NAME }}</td>
+          <td class="text-center">{{ invoice.PROCEDURE_CODE}} </td>
+          <td class="text-right">{{ invoice.RATE}}</td>
+          <td class="text-center">{{ invoice.QUANTITY }}</td>  
+          <td class="text-right"> {{ invoice.CO_PAYMENT}}&nbsp;{{ invoice.CO_PAYMENT_TYPE}}</td>
+          <td class="text-right"> {{invoice.PATIENT_PAYABLE  | number : '1.2-2'}}</td>     
+          <td class="text-right">{{invoice.TOTAL  | number : '1.2-2'}}</td>  
+        </tr>
+      </tbody>
+    </table>
+    <div>&nbsp;</div>
+    <div class="pull-right">
+      <table cellspacing="0" cellpadding="0" class="table-sml">
+        <tbody>
+          <tr> 
+              <td style="text-align: right">Gross Total&nbsp;&nbsp;&nbsp;:</td>
+              <td style="text-align: right;width:10%">{{ claim_gross_total | number : '1.2-2'}}</td>
+          </tr>
+          <tr>
+              <td style="text-align: right">Net Total&nbsp;&nbsp;&nbsp;:</td>
+              <td style="text-align: right;width:10%">{{ claim_net_total  | number : '1.2-2'}}</td>
+          </tr>
+          <tr *ngIf="convertParseFloat(invoice_data.claim_discount) > 0">
+            <td style="text-align: right">Discount&nbsp;&nbsp;&nbsp;:</td>
+            <td style="text-align: right;width:10%">{{ invoice_data.claim_discount  | number : '1.2-2'}}</td>
+          </tr>
+          <tr>
+              <td style="text-align: right">Patient Payable&nbsp;&nbsp;&nbsp;:</td>
+              <td style="text-align: right;width:10%">{{ claim_patienttotal  | number : '1.2-2'}}</td>
+          </tr>
+          <tr>
+              <td style="text-align: right">Amount to be Claimed&nbsp;&nbsp;&nbsp;:</td>
+              <td style="text-align: right;width:10%">{{ claim_bill_total  | number : '1.2-2'}}</td>
+          </tr>
+        </tbody>
+        <div class="clearfix"></div>
+      </table>
+      <div style="margin-bottom:50px"></div>
+      <div class="clearfix"></div>
+      <label class="pull-right" style="font-size: 15px;">Signature</label>
+    </div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <hr>
+    <div class="footer"><label>Thank you!</label></div>
+  </main>
+  <div class="clearfix"></div>
+</div>
+
+<ng-template #printcashBill let-modal>
+  <div class="modal-header">       
+    <div class="pull-right text-right">
+      <h5 class="modal-title" id="modal-basic-title">
+        Invoice Details 
+      </h5>
+    </div> 
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="col-lg-12 ">
+    <div class="clearfix"></div>
+    <table class="col-lg-12 borderless">
+      <tr> 
+        <td width="50%" class="text-left"></td>
+        <td width="50%" class="text-right">
+          <button  title="Print" printSectionId="printcashBill"  [useExistingCss]="true" class="btn   btn-info btn-sm ng-star-inserted" ngxPrint>
+            <i class="fa fa-print"></i>&nbsp;Print&nbsp;
+          </button>
+        </td>
+      </tr>
+    </table>
+  </div>  
+  <div class="modal-body">      
+    <div class="tab-pane active">
+      <div class="tab-content">
+        <div  class="panel-body">
+          <div class="col-lg-12" id="printcashBill">
+            <table class="col-lg-12 borderless">
+              <tr> 
+                <td width="30%" class="text-left">
+                  <ng-container *ngIf="institution.INSTITUTION_LOGO">
+                    <img  [src]="logo_path+institution.INSTITUTION_LOGO" height="150px" width="auto"  >
+                  </ng-container>
+                </td>
+                <td width="70%" class="text-right">
+                  <ng-container  *ngIf="institution">
+                    <h5 class="name"><b>{{institution.INSTITUTION_NAME}}</b></h5>
+                    <div style="line-height: 1em;"><label style="font-size: 15px;">{{institution.INSTITUTION_ADDRESS}}</label></div>
+                    <div style="line-height: 1em;"><label style="font-size: 15px;">{{institution.INSTITUTION_CITY}},&nbsp;{{institution.INSTITUTION_COUNTRY_NAME}}</label></div>
+                    <div style="line-height: 1em;"><label style="font-size: 15px;">Ph :&nbsp;{{institution.INSTITUTION_PHONE_NO}}</label></div>
+                    <div style="line-height: 1em;"><label style="font-size: 15px;">Email :&nbsp;{{institution.INSTITUTION_EMAIL}}</label></div>
+                  </ng-container >
+                </td>
+              </tr>
+            </table>
+            <div class="clearfix"></div>
+            <div class="clearfix"></div>
+            <div class="clearfix"></div>
+            <h3 class="text-center">INVOICE</h3>
+            <br>
+            <div class="main" style="text-align: center;margin-right: 10%;margin-left: 10%">
+              <table class="table tbl table-bordered text-left" *ngIf="patient_details.ins_data">
+                <tr>
+                  <td style="font-size: 15px;">Insurance Company Name</td>
+                  <td style="font-size: 15px;" >{{ patient_details.ins_data.INSURANCE_PAYERS_NAME }}</td>
+                </tr>
+                <tr>
+                  <td style="font-size: 15px;">Network/TPA</td>
+                  <td style="font-size: 15px;">{{ patient_details.ins_data.INS_NETWORK_NAME }} </td>
+                </tr>
+              </table>
+            </div>
+            <div>&nbsp;</div>
+            <main>
+              <div class="" *ngIf="patient_details.patient_data">
+                <table class="col-lg-12 borderless" style="border: none;font-size: 14px;">
+                    <tr> 
+                      <td width="10%" class="text-left"> Patient #</td>
+                      <td width="70%" class="text-left">{{patient_details.patient_data.OP_REGISTRATION_NUMBER}} </td>
+                      <td width="10%" class="text-left ">Invoice #</td>
+                      <td width="20%" class="text-right">{{cash_invoice_number}}</td>
+                    </tr>
+                    <tr>
+                      <td width="10%" class="text-left" >Name</td>
+                      <td width="70%"class="text-left" >{{ gender_sur[patient_details.patient_data.GENDER] }}
+                          {{ patient_details.patient_data.FIRST_NAME }}
+                          {{ patient_details.patient_data.MIDDLE_NAME }}
+                          {{ patient_details.patient_data.LAST_NAME }}
+                      </td>
+                    <td width="10%" class="text-left">Payment Type</td>
+                    <td width="20%" class="text-right">Cash</td>
+                  </tr>
+                  <tr>
+                    <td width="10%" class="text-left">Gender</td>
+                    <td width="70%" class="text-left">{{ gender[patient_details.patient_data.GENDER] }}</td>
+                    <td width="10%" class="text-left">Visit Date</td>
+                    <td width="20%" class="text-right">{{ formatDate(patient_details.patient_data.CREATED_DATE) }}</td>
+                  </tr>
+                  <tr>
+                    <td width="10%" class="text-left">DOB</td>
+                    <td width="70%" class="text-left">{{ formatDate(patient_details.patient_data.DOB) }}</td>
+                    <td width="10%" class="text-left" *ngIf="patient_details.ins_data">Policy #</td>
+                    <td width="20%" class="text-right" *ngIf="patient_details.ins_data">{{ patient_details.ins_data.OP_INS_POLICY_NO }}</td>
+                  </tr> 
+                  <tr *ngIf="patient_details.ins_data">
+                      <td width="10%" class="text-left">Insurance</td>
+                      <td width="50%" class="text-left">{{ patient_details.ins_data.INSURANCE_PAYERS_NAME }}</td>
+                      <td width="10%" class="text-left">Member #</td>
+                      <td width="20%" class="text-right">{{ patient_details.ins_data.OP_INS_MEMBER_ID }}</td>
+                  </tr> 
+                </table>
+              </div>
+              <div>&nbsp;</div>
+              <table  class="printtable table-hover table-striped table-bordered" >
+                <thead >
+                  <tr>
+                    <th style="width:1%">#</th>
+                    <th class="text-left">Description</th>
+                    <th style="width:7%">Code</th>
+                    <th style="width:3%">Price(AED)</th> 
+                    <th style="width:5%">Qty</th>
+                    <th style="width:3%">Gross(AED)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let invoice of cash_list;let i=index">
+                    <td class="text-center">{{ i + 1 }}</td>
+                    <td class="text-left">{{ invoice.PROCEDURE_CODE_NAME }}</td>
+                    <td class="text-center">{{ invoice.PROCEDURE_CODE}} </td>
+                    <td class="text-right">{{ invoice.RATE}}</td>
+                    <td class="text-center">{{ invoice.QUANTITY }}</td> 
+                    <td class="text-right"> {{invoice.TOTAL_PATIENT_PAYABLE | number : '1.2-2'}}</td> 
+                  </tr>
+                </tbody>
+              </table>
+              <div>&nbsp;</div>
+              <div class="pull-right">
+                <table cellspacing="0" cellpadding="0" class="table-sml">
+                  <tbody>
+                    <tr> 
+                        <td style="text-align: right">Gross Total&nbsp;&nbsp;&nbsp;:</td>
+                        <td style="text-align: right;width:10%">{{ cash_gross_total | number : '1.2-2'}}</td>
+                    </tr>
+                    <tr *ngIf="invoice_data.cash_discount > 0">
+                      <td style="text-align: right">Discount&nbsp;&nbsp;&nbsp;:</td>
+                      <td style="text-align: right;width:10%">{{ invoice_data.cash_discount  | number : '1.2-2'}}</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right">Patient Payable&nbsp;&nbsp;&nbsp;:</td>
+                        <td style="text-align: right;width:10%">{{ cash_patienttotal  | number : '1.2-2'}}</td>
+                    </tr>
+                  </tbody>
+                  <div class="clearfix"></div>
+                </table>
+                <div style="margin-bottom:50px"></div>
+                <div class="clearfix"></div>
+                <label class="pull-right" style="font-size: 15px;">Signature</label>
+              </div>
+              <div class="clearfix"></div>
+              <div class="clearfix"></div>
+              <div class="clearfix"></div>
+              <div class="clearfix"></div>
+              <div class="clearfix"></div>
+              <hr>
+              <div class="footer"><label>Thank you!</label></div>
+            </main>
+            <div class="clearfix"></div>
+          </div>
+        </div>
+        </div>
+      </div>
+  </div>
+</ng-template>    
+
+
+<ng-template #printclaimBill let-modal>
+  <div class="modal-header">       
+    <div class="pull-right text-right">
+      <h5 class="modal-title" id="modal-basic-title">
+        Invoice 
+      </h5>
+    </div> 
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="col-lg-12 ">
+    <div class="clearfix"></div>
+    <table class="col-lg-12 borderless">
+      <tr> 
+        <td width="50%" class="text-left"></td>
+        <td width="50%" class="text-right">
+          <button [useExistingCss]="true" class="btn pull-right btn-info btn-sm" type="button" printSectionId="printclaimBill" ngxPrint> <i class="fa fa-print"></i>&nbsp;Print </button>
+        </td>
+      </tr>
+    </table>
+  </div>  
+  <div class="modal-body">      
+    <div class="tab-pane active">
+      <div class="tab-content">
+        <div  class="panel-body">
+          <div class="col-lg-12" id="printclaimBill">
+            <table class="col-lg-12 borderless">
+              <tr> 
+                <td width="30%" class="text-left">
+                  <ng-container *ngIf="institution.INSTITUTION_LOGO">
+                    <img  [src]="logo_path+institution.INSTITUTION_LOGO" height="100px" width="auto"  >
+                  </ng-container>
+                </td>
+                <td width="70%" class="text-right">
+                  <ng-container  *ngIf="institution">
+                    <h5 class="name"><b>{{institution.INSTITUTION_NAME}}</b></h5>
+                    <div style="line-height: 1em;"><label style="font-size: 15px;">{{institution.INSTITUTION_ADDRESS}}</label></div>
+                    <div style="line-height: 1em;"><label style="font-size: 15px;">{{institution.INSTITUTION_CITY}},&nbsp;{{institution.INSTITUTION_COUNTRY_NAME}}</label></div>
+                    <div style="line-height: 1em;"><label style="font-size: 15px;">Ph :&nbsp;{{institution.INSTITUTION_PHONE_NO}}</label></div>
+                    <div style="line-height: 1em;"><label style="font-size: 15px;">Email :&nbsp;{{institution.INSTITUTION_EMAIL}}</label></div>
+                  </ng-container >
+                </td>
+              </tr>
+            </table>
+            <div class="clearfix"></div>
+            <div class="clearfix"></div>
+            <div class="clearfix"></div>
+            <h3 class="text-center">INVOICE</h3>
+            <br>
+            <div class="main" style="text-align: center;margin-right: 10%;margin-left: 10%">
+              <table class="table tbl table-bordered text-left" *ngIf="patient_details.ins_data">
+                <tr>
+                  <td style="font-size: 15px;">Insurance Company Name</td>
+                  <td style="font-size: 15px;" >{{ patient_details.ins_data.INSURANCE_PAYERS_NAME }}</td>
+                </tr>
+                <tr>
+                  <td style="font-size: 15px;">Network/TPA</td>
+                  <td style="font-size: 15px;">{{ patient_details.ins_data.INS_NETWORK_NAME }} </td>
+                </tr>
+              </table>
+            </div>
+            <div>&nbsp;</div>
+            <main>
+              <div class="" *ngIf="patient_details.patient_data">
+                <table class="col-lg-12 borderless" style="border: none;font-size: 14px;">
+                    <tr> 
+                      <td width="10%" class="text-left"> Patient #</td>
+                      <td width="70%" class="text-left">{{patient_details.patient_data.OP_REGISTRATION_NUMBER}} </td>
+                      <td width="10%" class="text-left ">Invoice #</td>
+                      <td width="20%" class="text-right">{{claim_invoice_number}}</td>
+                    </tr>
+                    <tr>
+                      <td width="10%" class="text-left" >Name</td>
+                      <td width="70%"class="text-left" >{{ gender_sur[patient_details.patient_data.GENDER] }}
+                          {{ patient_details.patient_data.FIRST_NAME }}
+                          {{ patient_details.patient_data.MIDDLE_NAME }}
+                          {{ patient_details.patient_data.LAST_NAME }}
+                      </td>
+                    <td width="10%" class="text-left">Payment Type</td>
+                    <td width="20%" class="text-right">Cash</td>
+                  </tr>
+                  <tr>
+                    <td width="10%" class="text-left">Gender</td>
+                    <td width="70%" class="text-left">{{ gender[patient_details.patient_data.GENDER] }}</td>
+                    <td width="10%" class="text-left">Visit Date</td>
+                    <td width="20%" class="text-right">{{ formatDate(patient_details.patient_data.CREATED_DATE) }}</td>
+                  </tr>
+                  <tr>
+                    <td width="10%" class="text-left">DOB</td>
+                    <td width="70%" class="text-left">{{ formatDate(patient_details.patient_data.DOB) }}</td>
+                    <td width="10%" class="text-left" *ngIf="patient_details.ins_data">Policy #</td>
+                    <td width="20%" class="text-right" *ngIf="patient_details.ins_data">{{ patient_details.ins_data.OP_INS_POLICY_NO }}</td>
+                  </tr> 
+                  <tr *ngIf="patient_details.ins_data">
+                      <td width="10%" class="text-left">Insurance</td>
+                      <td width="50%" class="text-left">{{ patient_details.ins_data.INSURANCE_PAYERS_NAME }}</td>
+                      <td width="10%" class="text-left">Member #</td>
+                      <td width="20%" class="text-right">{{ patient_details.ins_data.OP_INS_MEMBER_ID }}</td>
+                  </tr> 
+                </table>
+              </div>
+              <div>&nbsp;</div>
+              <table  class="printtable table-hover table-striped table-bordered" >
+                <thead >
+                  <tr>
+                      <th class="text-center" style="width:1%">#</th>
+                      <th class="text-left">Description</th>
+                      <th style="width:7%" class="text-center">Code</th>
+                      <th style="width:7%" class="text-center">Fee</th>
+                      <th style="width:5%" class="text-center">Qty</th>
+                      <th style="width:7%">Co-payment</th>
+                      <th style="width:7%">Patient Pay</th>
+                      <th style="width:7%" style="width:10%">Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let invoice of claim_list;let i=index">
+                    <td class="text-center">{{ i + 1 }}</td>
+                    <td class="text-left">{{ invoice.PROCEDURE_CODE_NAME }}</td>
+                    <td class="text-center">{{ invoice.PROCEDURE_CODE}} </td>
+                    <td class="text-right">{{ invoice.RATE}}</td>
+                    <td class="text-center">{{ invoice.QUANTITY }}</td>  
+                    <td class="text-right"> {{ invoice.CO_PAYMENT}}&nbsp;{{ invoice.CO_PAYMENT_TYPE}}</td>
+                    <td class="text-right"> {{invoice.PATIENT_PAYABLE  | number : '1.2-2'}}</td>     
+                    <td class="text-right">{{invoice.TOTAL  | number : '1.2-2'}}</td>  
+                  </tr>
+                </tbody>
+              </table>
+              <div>&nbsp;</div>
+              <div class="pull-right">
+                <table cellspacing="0" cellpadding="0" class="table-sml">
+                  <tbody>
+                    <tr> 
+                        <td style="text-align: right">Gross Total&nbsp;&nbsp;&nbsp;:</td>
+                        <td style="text-align: right;width:10%">{{ claim_gross_total | number : '1.2-2'}}</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right">Net Total&nbsp;&nbsp;&nbsp;:</td>
+                        <td style="text-align: right;width:10%">{{ claim_net_total  | number : '1.2-2'}}</td>
+                    </tr>
+                    <tr *ngIf="invoice_data.claim_discount > 0">
+                      <td style="text-align: right">Discount&nbsp;&nbsp;&nbsp;:</td>
+                      <td style="text-align: right;width:10%">{{ invoice_data.claim_discount  | number : '1.2-2'}}</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right">Patient Payable&nbsp;&nbsp;&nbsp;:</td>
+                        <td style="text-align: right;width:10%">{{ claim_patienttotal  | number : '1.2-2'}}</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right">Amount to be Claimed&nbsp;&nbsp;&nbsp;:</td>
+                        <td style="text-align: right;width:10%">{{ claim_bill_total  | number : '1.2-2'}}</td>
+                    </tr>
+                  </tbody>
+                  <div class="clearfix"></div>
+                </table>
+                <div style="margin-bottom:50px"></div>
+                <div class="clearfix"></div>
+                <label class="pull-right" style="font-size: 15px;">Signature</label>
+              </div>
+              <div class="clearfix"></div>
+              <div class="clearfix"></div>
+              <div class="clearfix"></div>
+              <div class="clearfix"></div>
+              <div class="clearfix"></div>
+              <hr>
+              <div class="footer"><label>Thank you!</label></div>
+            </main>
+            <div class="clearfix"></div>
+          </div>
+        </div>
+        </div>
+      </div>
+  </div>
+</ng-template> 
+
+<ng-template #confirm_claim let-modal >
+  <div class="modal-header">
+    <h5 class="modal-title">Confirm...</h5>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="clearfix"></div>
+      <label style="font-size: 14px;" class="text-left">Once finalized the invoice, not able to modify the details later.Please confirm... </label>
+      <div class="clearfix"></div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-sm btn-danger" (click)="modal.dismiss('Cross click')">Cancel</button>
+      <button type="button" class="btn btn-sm btn-success" (click)="generateclaimPatientBill();modal.dismiss('Cross click');">Continue</button>
+    </div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+</ng-template>  
+
+<ng-template #confirm_cash let-modal >
+  <div class="modal-header">
+    <h5 class="modal-title">Confirm...</h5>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="clearfix"></div>
+    <label style="font-size: 14px;" class="text-left">Once finalized the invoice, not able to modify the details later.Please confirm...</label>
+    <div class="clearfix"></div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-sm btn-danger" (click)="modal.dismiss('Cross click')">Cancel</button>
+    <button type="button" class="btn btn-sm btn-success" (click)="generatecashPatientBill();modal.dismiss('Cross click');">Continue</button>
+  </div>
+  <div class="clearfix"></div>
+  <div class="clearfix"></div>
+</ng-template>  
+
+
+<ng-template #remove_cash let-modal> 
+  <div class="modal-body">
+    <label style="font-size: 14px;" class="text-left">Do you want to remove item from cash invoice ? </label>
+  </div>
+  <div class="form-group text-center col-lg-12">
+    <button type="button" class="btn btn-sm btn-danger" (click)="modal.dismiss('Cross click')">No</button>&nbsp;
+    <button type="button" class="btn btn-sm btn-primary" (click)="removeToCash();modal.dismiss('Cross click');">Yes</button>
+  </div>
+  <div class="clearfix"></div>
+  <div class="clearfix"></div>
+</ng-template> 
+
+<ng-template #remove_claim let-modal >
+  <div class="modal-body">
+    <label style="font-size: 14px;" class="text-left">Do you want to remove item from credit invoice ? </label>
+  </div>
+  <div class="form-group text-center col-lg-12">
+    <button type="button" class="btn btn-sm btn-danger" (click)="modal.dismiss('Cross click')">No</button>&nbsp;
+    <button type="button" class="btn btn-sm btn-primary" (click)="removeToClaim();modal.dismiss('Cross click');">Yes</button>
+  </div>
+  <div class="clearfix"></div>
+  <div class="clearfix"></div>
+</ng-template> 

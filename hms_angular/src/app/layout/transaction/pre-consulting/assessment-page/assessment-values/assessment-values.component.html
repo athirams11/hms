@@ -1,0 +1,188 @@
+<fieldset class="form-group">
+  <legend>Notes</legend> 
+      <form class="inner_body">
+        <div class="form-group">
+          <div class="row ">
+              <div class="col-md-6">
+                <div class="row">
+                  <label  class="col-12 text-left">Patient ID</label>
+                  <div class="col-12">
+                    <input class="form-control form-control-sm" [value]="selected_visit.PATIENT_NO" readonly="readonly" type="text" name="p_id" id="p_id">
+                  </div>
+                </div>
+            </div>
+              <div class="col-6">
+                <div class="row">
+                  <label for="p_type" class="col-12 text-left">Patient Name</label>
+                    <div class="col-12">
+                      <input class="form-control form-control-sm" [value]="selected_visit.FIRST_NAME+' '+selected_visit.MIDDLE_NAME+' '+selected_visit.LAST_NAME" readonly="readonly" type="text" name="p_name" id="p_name">
+                    </div>
+                </div>
+              </div>
+              <div class="clearfix"></div>
+              <div class="clearfix"></div>
+              <div class="col-6">
+                <div class="row">
+                    <label for="p_type" class="col-12 text-left">Mobile </label>
+                    <div class="col-12">
+                      <input class="form-control form-control-sm" [value]="selected_visit.MOBILE_NO" readonly="readonly" type="text" name="mobile" id="mobile">
+                    </div>
+                </div>
+              </div>
+              <div class="col-6 ">
+                  <div class="row">
+                      <label for="p_type" class="col-12 text-left">Doctor Name</label>
+                      <div class="col-12">
+                        <input class="form-control form-control-sm" [value]="selected_visit.DOCTOR_NAME" readonly="readonly" type="text" name="doc_name" id="doc_name">
+                      </div>
+                  </div>
+              </div>
+              <div class="clearfix"></div>
+              <div class="clearfix"></div>
+              <div class="col-6 ">
+                  <div class="row">
+                      <label for="p_type" class="col-12 text-left">Next Of Kin</label>
+                      <div class="col-12">
+                        <input (change)="getEvent()" class="form-control form-control-sm" [(ngModel)]="notesData.next_of_kin" type="text" name="next_of_kin" id="next_of_kin">
+                      </div>
+                  </div>
+              </div>
+              <div class="col-6 ">
+                  <div class="row">
+                      <label for="p_type" class="col-12 text-left">Next Of Kin Mobile#</label>
+                      <div class="col-12">
+                        <input (change)="getEvent()" class="form-control form-control-sm" [(ngModel)]="notesData.next_of_kin_mobile" type="text" name="next_of_kin_mob" id="next_of_kin_mob">
+                      </div>
+                  </div>
+              </div>
+
+              <div class="clearfix"></div>
+              <div class="clearfix"></div>
+              
+              <!-- <div class="clearfix"></div>
+              <div class="clearfix"></div> -->
+              
+              <div class="col-md-6">
+                  <div class="row">
+                    <label  class="col-12 text-left">Chief Complaints</label>
+                    <div class="col-12">
+                        <textarea rows="3" (change)="getEvent()"  class="form-control form-control-sm" [(ngModel)]="notesData.chief_complaints" name="notesData.chief_compliaints" placeholder="Chief Complaints"></textarea>
+                    </div>
+                  </div>
+              </div>
+              <div class="col-md-6">
+                  <div class="row">
+                    <label  class="col-12 text-left">Lab Result</label>
+                    <div class="col-12">
+                        <textarea rows="3" (change)="getEvent()" class="form-control form-control-sm" [(ngModel)]="notesData.past_history" name="notesData.past_history" placeholder="Lab Result"></textarea>
+                    </div>
+                  </div>
+              </div>
+              <div class="clearfix"></div>
+              <div class="clearfix"></div>
+              <div class="col-md-6">
+                  <div class="row">
+                    <label  class="col-12 text-left">Nursing Notes</label>
+                    <div class="col-12">
+                        <textarea rows="3" (change)="getEvent()" class="form-control form-control-sm" [(ngModel)]="notesData.nursing_notes" name="notesData.nursing_notes" placeholder="Nursing Notes"></textarea>
+                    </div>
+                  </div>
+              </div>
+              <div class="col-md-6">
+                  <div class="row">
+                    <label class="col-12 text-left">Treatment Given</label>
+                    <div class="col-12">
+                        <textarea rows="3" (change)="getEvent()" class="form-control form-control-sm" [(ngModel)]="notesData.family_history" name="notesData.family_history" placeholder="Treatment Given"></textarea>
+                    </div>
+                  </div>
+              </div>
+              <div class="clearfix"></div>
+              <div class="clearfix"></div>
+              <div class="col-12">
+                <fieldset class="form-group ">
+                    <legend><h5>General Information</h5></legend>
+                      <div class="row">
+                          <div class="col-md-4" >
+                            <div calss="panel">
+                              <div class="panel-head">
+                                <a class="btn btn-info btn-sm">Mode Of Arrival</a>
+                              </div>
+                              <div class="panel-body text-left" style="padding-left: 15px;">
+                                <div class="form-check" *ngFor="let arr of mode_of_arrivel_list" >
+                                  <input (change)="getEvent()" class="form-check-input" [checked] = "notesData.mode_arrival == arr.DATA" (change)="changeArrivalMode(arr.DATA)" type="radio" name="mode_arrival" id="exampleRadios{{arr.MASTER_DATA_ID}}" value="{{arr.DATA}}" checked>
+                                  <label class="form-check-label" for="exampleRadios{{arr.MASTER_DATA_ID}}">
+                                      {{ arr.DATA }}
+                                  </label>
+                                </div>
+                                
+                                <input type="text" name="mode_arrival_other_value" [(ngModel)]="notesData.mode_arrival_other_value" [disabled]="notesData.mode_arrival != 'Other'" class="form-control form-com=ntrol-sm"/>
+                              </div> 
+                            </div> 
+                          </div>
+                          <div class="col-md-4">
+                            <div calss="panel">
+                              <div class="panel-head">
+                                <a class="btn btn-info btn-sm">Accompanied By</a>
+                              </div>
+                              <div class="panel-body text-left" style="padding-left: 15px;">
+                                <div class="form-check" *ngFor="let arr of accompanied_by_list" >
+                                  <input (change)="getEvent()" class="form-check-input" type="radio" name="accompaneed_by" [checked] = "notesData.accompanied_by == arr.DATA" (change)="changeAccompaniedBy(arr.DATA)" id="exampleRadios{{arr.MASTER_DATA_ID}}" value="{{arr.DATA}}" checked>
+                                  <label class="form-check-label" for="exampleRadios{{arr.MASTER_DATA_ID}}">
+                                      {{ arr.DATA }}
+                                  </label>
+                                </div>
+                                <input type="text" name="accompaneed_by_other_value" [(ngModel)]="notesData.accompanied_other_value" [disabled]="notesData.accompanied_by != 'Other'" class="form-control form-com=ntrol-sm"/>
+                              </div> 
+                            </div> 
+                          </div>  
+                          <div class="col-md-4">
+                            
+                            <div calss="panel">
+                                <div class="panel-head">
+                                  <a class="btn btn-info  btn-sm">Patient Waiting Time</a>
+                                </div>
+                                <div class="panel-body text-left" style="padding-left: 15px;padding-top:10px;">
+                                  
+                                    <div class="row">
+                                      <label  class="col-8 text-left">Patient has been informed About Waiting Time</label>
+                                      <div class="col-4">
+                                          <div class="form-check form-check-inline">
+                                            <input (change)="getEvent()" class="form-check-input" type="radio" [(ngModel)]="notesData.patient_waiting_time_informed" name="patient_waiting_time_informed" id="patient_waiting_time_informed_1" value="1">
+                                            <label class="form-check-label" for="patient_waiting_time_informed_1">Yes</label>
+                                          </div>
+                                          <div class="form-check form-check-inline">
+                                              <input (change)="getEvent()" class="form-check-input" type="radio" [(ngModel)]="notesData.patient_waiting_time_informed" name="patient_waiting_time_informed" id="patient_waiting_time_informed_2" value="2">
+                                              <label class="form-check-label" for="patient_waiting_time_informed_2">No</label>
+                                            </div>
+                                      </div>
+                                    </div>
+                                    <div class="row">
+                                        <label  class="col-7 text-left">Expected Waiting Time</label>
+                                        <div class="col-5">
+                                            <input type="text" (change)="getEvent()" [(ngModel)]="notesData.expected_waiting_time" name="exp_wait_time" class="form-control form-com=ntrol-sm"/>
+                                        </div>
+                                      </div>
+                                </div> 
+                              </div> 
+                          </div>
+                      </div>
+                </fieldset>
+              </div>
+              <div class="clearfix"></div>
+              <div class="clearfix"></div>
+              <div class="col-6">
+                <button *ngIf="user_rights.ADD == '1'" type="button" (click)="saveNursingNotes();" [disabled]="formatDate(todaysDate) != formatDate(selected_visit.CREATED_TIME)" class="btn btn-primary btn-sm">Save</button>&nbsp;
+                  <ng-container *ngIf="formatDate(todaysDate) != formatDate(selected_visit.CREATED_TIME) && notesData.nursing_notes != ''">
+                   &nbsp;&nbsp;<button class="btn btn-sm btn-info" type="button"  (click)="assessment(1)">Copy</button>
+                  </ng-container>
+                  <ng-container *ngIf="formatDate(todaysDate) == formatDate(selected_visit.CREATED_TIME) && isNotEmptyObject(copy_assessment_data) > 0">
+                    &nbsp;&nbsp;<button class="btn btn-sm btn-info" type="button"  (click)="assessment(2)">Paste</button>
+                  </ng-container>
+                <!-- //  -->
+              </div>
+              <div class="clearfix"></div>
+              <div class="clearfix"></div>         
+          </div>
+        </div>             
+      </form>
+    </fieldset>

@@ -1,0 +1,91 @@
+<nav class="navbar navbar-expand-lg fixed-top col-12">
+    <div class="col-2">
+        <a class="navbar-brand d-none d-sm-block" href="#"
+            style="font-variant: small-caps;font-size: 1.25em;font-family: 'Georgia'"><i class="fa fa-user-md"></i>
+            &nbsp;MediMate247</a>
+    </div>
+    <div class="col-8 text-center">
+        <ng-container *ngIf="institution != null">
+            <a class="navbar-brand d-none d-sm-block" style="  font-family: 'Georgia';font-size: 1.50em;"> {{
+                institution.INSTITUTION_NAME }} </a>
+        </ng-container>
+    </div>
+    <div class="col-2 text-center">
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item dropdown" ngbDropdown>
+                    <a href="javascript:void(0)" class="nav-link" ngbDropdownToggle *ngIf="userCredentials != null">
+                        <i class="fa fa-user"></i> &nbsp;&nbsp;{{ userCredentials.first_name
+                        }}&nbsp;{{userCredentials.last_name}}<b class="caret"></b>
+                    </a>
+                    <div class="dropdown-menu-right" ngbDropdownMenu>
+                        <a class="dropdown-item" style="font-size:16px" (click)="open(content);">
+                            {{ 'Change Password' | translate }}
+                        </a>
+                        <a class="dropdown-item" style="font-size:16px" [routerLink]="['/login']"
+                            (click)="onLoggedout()">
+                            <i class="fa fa-fw fa-power-off"></i> {{ 'Log Out' | translate }}
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div>&nbsp;&nbsp;&nbsp;</div>
+    <div>&nbsp;&nbsp;&nbsp;</div>
+</nav>
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <div class="pull-right text-right">
+            <h5 class="modal-title" id="modal-basic-title">
+                &nbsp;&nbsp;{{ userCredentials.first_name }}&nbsp;{{userCredentials.last_name}}
+            </h5>
+        </div>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="row container">
+            <label style="font-size:14px" class="col-4">
+                Current Password
+            </label>
+            <div class="col-8">
+                <input type="password" class="form-control pull-right form-control-sm" [(ngModel)]="current_password"
+                    name="confirm_password">
+            </div>
+        </div>
+
+        <div class="clearfix"></div>
+        <div class="row container">
+            <label style="font-size:14px" class="col-4">
+                New Password
+            </label>
+            <div class="col-8">
+                <input type="password" class="form-control pull-right form-control-sm" [(ngModel)]="new_password"
+                    name="confirm_password">
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="row container">
+            <label style="font-size:14px" class="col-4">
+                Confirm Password
+            </label>
+            <div class="col-8">
+                <input type="password" class="form-control pull-right form-control-sm" [(ngModel)]="confirm_password"
+                    name="confirm_password">
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="clearfix"></div>
+        <div class="clearfix"></div>
+        <div class="row container">
+            <div class="col-6"></div>
+            <div class="col-6">
+                <button class="col-12 btn pull-right btn-primary btn-sm" (click)="changePassword()" type="button">Change
+                    Password </button>
+            </div>
+
+        </div>
+    </div>
+</ng-template>

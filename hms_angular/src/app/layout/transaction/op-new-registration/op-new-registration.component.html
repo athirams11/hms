@@ -1,0 +1,285 @@
+<div [@routerTransition]>
+    <app-page-header [heading]="'OP Registration'" [icon]="'fa fa-user-plus'">
+    </app-page-header>
+    <div class="row ">
+        <div class="col-lg-12">
+            <fieldset class="form-group row">
+                <legend>Search</legend>
+                <div class="row col-lg-12">
+                    <div class="form-group col-lg-6">
+                        <label for="p_type">Patient Number</label>
+                        <div class="input-group mb-3">
+                            <input maxlength="10" style="height:31px" [(ngModel)]="search_by_opnumber"
+                                class="form-control form-control-sm" type="text" name="op_number" id="op_number">
+                            <div class="input-group-append">
+                                <button style="height:31px;padding:7px" class="input-group-text"
+                                    (click)="keyDownFunction()">
+                                    <i class="fa fa-search"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-6">
+                        <label for="p_type">Phone Number</label>
+                        <div class="input-group mb-3">
+                            <input maxlength="20" (keydown)="validateNumber($event)" style="height:31px"
+                                class="form-control form-control-sm" type="text" (change)="open(content)"
+                                [(ngModel)]="search_by_pnonenumber" name="phonenumber" id="phonenumber">
+                            <div class="input-group-append">
+                                <button style="height:31px;padding:7px" class="input-group-text"
+                                    (click)="open(content)">
+                                    <i class="fa fa-search"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            <div class="clearfix"></div>
+            <fieldset class="form-group row">
+                <div class="row col-lg-12">
+                    <div class="col-lg-6">
+                        <div class="row">
+                            <label for="p_number" class="col-4">Patient Number</label>
+                            <div class="col-8">
+                                <input [readOnly]="true" [(ngModel)]="opData.patient_number"
+                                    class="form-control form-control-sm" type="text" name="p_number" id="p_number">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="row">
+                            <label for="date" class="col-2">Date</label>
+                            <div class="col-10">
+                                <input class="form-control form-control-sm" type="date"
+                                    [ngModel]="opData.dateVal | date:'yyyy-MM-dd'"
+                                    (ngModelChange)="opData.dateVal = $event" name="date" id="date">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset class="form-group row">
+                <legend>Basic Information</legend>
+                <div class="col-lg-12 row">
+                    <div class="col-lg-3">
+                        <div class="row">
+                            <label for="p_type" class="col-md-4">Name<span class="text-danger">&nbsp;*</span></label>
+                            <div class="col-md-8">
+                                <select [(ngModel)]="opData.gender"
+                                    class="form-control form-control-sm custom-select custom-select-sm"
+                                    placeholder="Mr/Ms" name="mr" id="mr">
+                                    <option value="1">
+                                        Mr
+                                    </option>
+                                    <option value="0">
+                                        Ms
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 ">
+                        <div class="row">
+                            <div class="col-12">
+                                <input maxlength="50" class="form-control form-control-sm" type="text"
+                                    [(ngModel)]="opData.f_name" placeholder="First Name" name="f_name" id="f_name">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 ">
+                        <div class="row">
+                            <div class="col-12">
+                                <input maxlength="50" class="form-control form-control-sm" type="text"
+                                    [(ngModel)]="opData.m_name" placeholder="Middle Name" name="m_name" id="m_name">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 ">
+                        <div class="row">
+                            <div class="col-12">
+                                <input maxlength="50" class="form-control form-control-sm" type="text"
+                                    [(ngModel)]="opData.l_name" placeholder="Last Name" name="l_name" id="l_name">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="clearfix"></div>
+                    <div class="col-lg-6">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="row">
+                                    <label for="p_type" class="col-4">Gender<span
+                                            class="text-danger">&nbsp;*</span></label>
+                                    <div class="col-8">
+                                        <select [(ngModel)]="opData.gender"
+                                            class="form-control form-control-sm custom-select custom-select-sm"
+                                            placeholder="Male/Female" name="gender" id="gender">
+                                            <option value="1">
+                                                Male
+                                            </option>
+                                            <option value="0">
+                                                Female
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="row">
+                                    <label for="p_type" class="col-3">DOB<span
+                                            class="text-danger">&nbsp;*</span></label>
+                                    <div class="col-9">
+                                        <input [(ngModel)]="opData.birthdate" (change)="CalculateAge()"
+                                            class="form-control form-control-sm" type="date" placeholder="DOB"
+                                            name="dob" id="dob" [max]="getToday()">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="row">
+                            <div class="col-lg-4 ">
+                                <div class="row">
+                                    <label for="p_type" class="col-4">Age</label>
+                                    <div class="col-8">
+                                        <input [(ngModel)]="opData.age" readonly="readonly"
+                                            class="form-control form-control-sm" type="number" name="age" id="age">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 ">
+                                <div class="row">
+                                    <label for="p_type" class="col-4">Month</label>
+                                    <div class="col-8">
+                                        <input [(ngModel)]="opData.months" readonly="readonly"
+                                            class="form-control form-control-sm" type="number" name="month" id="month">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 ">
+                                <div class="row">
+                                    <label for="p_type" class="col-4">Days</label>
+                                    <div class="col-8">
+                                        <input [(ngModel)]="opData.days" readonly="readonly"
+                                            class="form-control form-control-sm" type="number" name="days" id="days">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="clearfix"></div>
+                    <div class="col-lg-6 ">
+                        <div class="row">
+                            <label for="p_type" class="col-2">Mobile&nbsp;No<span
+                                    class="text-danger">&nbsp;*</span></label>
+                            <div class="col-10">
+                                <input (keydown)="validateNumber($event)" class="form-control form-control-sm"
+                                    maxlength="20" type="text" [(ngModel)]="opData.mobile_no" name="mobile_no"
+                                    id="mobile_no">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="row">
+                            <label for="p_type" class="col-2">Email</label>
+                            <div class="col-10  ">
+                                <input maxlength="70" class="form-control form-control-sm" type="email"
+                                    [(ngModel)]="opData.email" name="email" id="email">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="clearfix"></div>
+                </div>
+            </fieldset>
+
+            <fieldset class="form-group row">
+                <legend>Other Information</legend>
+
+                <div class="col-lg-12 row">
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <label for="p_type" class="col-1">Address<span class="text-danger">&nbsp;*</span></label>
+                            <div class="col-11">
+                                <textarea maxlength="100" class="form-control form-control-sm" type="text"
+                                    [(ngModel)]="opData.address" name="address" id="address"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="clearfix"></div>
+                    <div class="col-lg-4">
+                        <div class="row">
+                            <label for="p_type" class="col-3">Country</label>
+                            <div class="col-9">
+                                <input maxlength="30" class="form-control form-control-sm" type="text"
+                                    [(ngModel)]="opData.fax" name="fax" id="fax">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 ">
+                        <div class="row">
+                            <label for="p_type" class="col-3">State</label>
+                            <div class="col-9">
+                                <input maxlength="30" class="form-control form-control-sm" type="text"
+                                    [(ngModel)]="opData.res_no" name="res_no" id="res_no">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 ">
+                        <div class="row">
+                            <label for="p_type" class="col-3">City</label>
+                            <div class="col-9">
+                                <input maxlength="30" class="form-control form-control-sm" type="text"
+                                    [(ngModel)]="opData.city" name="city" id="city">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="clearfix"></div>
+                </div>
+            </fieldset>
+            <br>
+            <button *ngIf="user_rights.ADD == '1'" type="button" class="btn btn-primary btn-small"
+                (click)="addNewOpRegistration()">Save</button>
+        </div>
+    </div>
+</div>
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Patient List</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form>
+            <div class="form-group">
+                <table class="table tbl table-hover table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Patient Name</th>
+                            <th width="10%">Age</th>
+                            <th>Patient No.</th>
+                            <th width="7%">Action</th>
+                        </tr>
+                        <tr *ngIf="(pat_list | json) == '[]'">
+                            <td colspan="12" class="text-center">No data to show</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let list of pat_list">
+                            <td>{{list.name}}</td>
+                            <td class="text-center">{{list.age}}</td>
+                            <td>{{list.OP_no}}</td>
+                            <td class="text-center"><button
+                                    (click)="getPatientDetails(list.OP_no);modal.close('Save click');"
+                                    class="btn btn-sm btn-info"><i class="fa fa-check"></i></button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </form>
+    </div>
+</ng-template>

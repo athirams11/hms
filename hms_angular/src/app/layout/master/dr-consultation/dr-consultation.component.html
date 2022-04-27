@@ -1,0 +1,358 @@
+<div [@routerTransition]>
+  <app-page-header [heading]="'Doctors Schedule'" [icon]="'fa-clock-o'"></app-page-header>
+  <div>
+    <div *ngIf="success_message != ''" [innerHTML]="success_message" class="alert alert-success"></div>
+    <div *ngIf="failed_message != ''" [innerHTML]="failed_message" class="alert alert-danger"></div>
+    <form role="form">
+      <fieldset class="form-group row">
+        <div class="row col-lg-12">
+          <div class="form-group col-lg-4" >
+            <label for="p_type">Doctor's Name</label><span class="text-danger">&nbsp;*</span>
+            <ng-multiselect-dropdown style="font-size: 13px;height:31px"
+                [placeholder]="'Select Doctor'"
+                [data]="doctors_list"
+                [(ngModel)]="doc_data"
+                [settings]="dropdownSettings"
+                (onSelect)="onItemSelect($event)"
+                (onSelectAll)="onSelectAll($event)"
+                name="doctor">
+            </ng-multiselect-dropdown>
+          </div>
+          <div class="form-group col-lg-4" >
+            <label for="p_type">Specialized In</label><span class="text-danger">&nbsp;*</span>
+            <select class="form-control form-control-sm custom-select custom-select-sm" [(ngModel)]="drSchedule.sel_spec_in" name="spec_in" id="spec_in">
+              <option value="">Select Specialisation</option>
+              <option *ngFor="let specilized of specialized_in" value="{{specilized.OPTIONS_ID}}">{{specilized.OPTIONS_NAME}}</option>
+            </select>
+          </div>
+          <div class="form-group col-lg-3" >
+            <label for="p_type">Avg. Consult Time (Minutes)</label>
+              <input class="form-control form-control-sm" type="number" [(ngModel)]="drSchedule.avg_con_t" name="avg_con_t" id="avg_con_t">
+          </div> 
+            <div class="clearfix"></div>
+            <div class="clearfix"></div>
+        </div>
+      </fieldset>
+        
+      <fieldset class="form-group row">
+        <legend>Consultation Information</legend>
+        <div class="col-lg-12">
+          <div class="card-body table-responsive">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th style="width:15%;vertical-align: middle;" class="text-center">Day</th>
+                  <th>
+                    <div class="text-center row">
+                      <div class="col-12">Slot 1</div>
+                      <div class="col-6">From</div>
+                      <div class="col-6">To</div>
+                    </div>
+                  </th>
+                  <th>
+                    <div class="text-center row">
+                      <div class="col-12">Slot 2</div>
+                      <div class="col-6">From</div>
+                      <div class="col-6">To</div>
+                    </div>
+                  </th>
+                  <th>
+                    <div class="text-center row">
+                      <div class="col-12">Slot 3</div>
+                      <div class="col-6">From</div>
+                      <div class="col-6">To</div>
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">
+                    <div class=" row">
+                      <label class="col-md-12">
+                        <input type="checkbox" value="1" [checked]="!drSchedule.time_table.sun.de_select" (change)="handleSelected($event,'sun')" id="day_sun" >&nbsp;&nbsp; Sunday
+                      </label>
+                    </div>
+                  </th>
+                  <td>
+                    <div class=" row">
+                      <div class="col-6">
+                        <input [disabled]="drSchedule.time_table.sun.de_select" class="form-control form-control-sm" type="time" [(ngModel)]="drSchedule.time_table.sun.slot_1.from" name="sun_slot_1_from" id="sun_slot_1_from">
+                      </div>
+                      <div class="col-6">
+                          <input [disabled]="drSchedule.time_table.sun.de_select" class="form-control form-control-sm" type="time" [(ngModel)]="drSchedule.time_table.sun.slot_1.to" name="sun_slot_1_to" id="sun_slot_1_to">
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class=" row">
+                      <div class="col-6">
+                        <input [disabled]="drSchedule.time_table.sun.de_select" class="form-control form-control-sm" type="time" [(ngModel)]="drSchedule.time_table.sun.slot_2.from" name="sun_slot_2_from" id="sun_slot_2_from">
+                      </div>
+                      <div class="col-6">
+                          <input  [disabled]="drSchedule.time_table.sun.de_select"class="form-control form-control-sm" type="time" [(ngModel)]="drSchedule.time_table.sun.slot_2.to" name="sun_slot_2_to" id="sun_slot_2_to">
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class=" row">
+                      <div class="col-6">
+                        <input [disabled]="drSchedule.time_table.sun.de_select" class="form-control form-control-sm" type="time" [(ngModel)]="drSchedule.time_table.sun.slot_3.from" name="sun_slot_3_from" id="sun_slot_3_from">
+                      </div>
+                      <div class="col-6">
+                          <input [disabled]="drSchedule.time_table.sun.de_select" class="form-control form-control-sm" type="time" [(ngModel)]="drSchedule.time_table.sun.slot_3.to" name="sun_slot_3_to" id="sun_slot_3_to">
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">
+                    <div class=" row">
+                      <label class="col-md-12">
+                        <input  type="checkbox" value="1" [checked]="!drSchedule.time_table.mon.de_select" (change)="handleSelected($event,'mon')" id="day_mon" >&nbsp;&nbsp; Monday
+                      </label>
+                    </div>
+                  </th>
+                  <td>
+                    <div class=" row">
+                      <div class="col-6">
+                        <input [disabled]="drSchedule.time_table.mon.de_select" class="form-control form-control-sm" type="time" [(ngModel)]="drSchedule.time_table.mon.slot_1.from" name="mon_slot_1_from" id="mon_slot_1_from">
+                      </div>
+                      <div class="col-6">
+                          <input [disabled]="drSchedule.time_table.mon.de_select" class="form-control form-control-sm" type="time" [(ngModel)]="drSchedule.time_table.mon.slot_1.to" name="mon_slot_1_to" id="mon_slot_1_to">
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class=" row">
+                      <div class="col-6">
+                        <input [disabled]="drSchedule.time_table.mon.de_select" class="form-control form-control-sm" type="time" [(ngModel)]="drSchedule.time_table.mon.slot_2.from" name="mon_slot_2_from" id="mon_slot_2_from">
+                      </div>
+                      <div class="col-6">
+                          <input [disabled]="drSchedule.time_table.mon.de_select" class="form-control form-control-sm" type="time" [(ngModel)]="drSchedule.time_table.mon.slot_2.to" name="mon_slot_2_to" id="mon_slot_2_to">
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class=" row">
+                      <div class="col-6">
+                        <input [disabled]="drSchedule.time_table.mon.de_select" class="form-control form-control-sm" type="time" [(ngModel)]="drSchedule.time_table.mon.slot_3.from" name="mon_slot_3_from" id="mon_slot_3_from">
+                      </div>
+                      <div class="col-6">
+                          <input [disabled]="drSchedule.time_table.mon.de_select" class="form-control form-control-sm" type="time" [(ngModel)]="drSchedule.time_table.mon.slot_3.to" name="mon_slot_3_to" id="mon_slot_3_to">
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">
+                    <div class=" row">
+                      <label class="col-md-12">
+                        <input type="checkbox" value="1" [checked]="!drSchedule.time_table.tue.de_select" (change)="handleSelected($event,'tue')" id="day_tue"  >&nbsp;&nbsp; Tuesday
+                      </label>
+                    </div>
+                  </th>
+                  <td>
+                    <div class=" row">
+                      <div class="col-6">
+                        <input [disabled]="drSchedule.time_table.tue.de_select" class="form-control form-control-sm" type="time" [(ngModel)]="drSchedule.time_table.tue.slot_1.from" name="tue_slot_1_from" id="tue_slot_1_from">
+                      </div>
+                      <div class="col-6">
+                          <input [disabled]="drSchedule.time_table.tue.de_select" class="form-control form-control-sm" type="time" [(ngModel)]="drSchedule.time_table.tue.slot_1.to" name="tue_slot_1_to" id="tue_slot_1_to">
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class=" row">
+                      <div class="col-6">
+                        <input [disabled]="drSchedule.time_table.tue.de_select" class="form-control form-control-sm" type="time" [(ngModel)]="drSchedule.time_table.tue.slot_2.from" name="tue_slot_2_from" id="tue_slot_2_from">
+                      </div>
+                      <div class="col-6">
+                          <input [disabled]="drSchedule.time_table.tue.de_select" class="form-control form-control-sm" type="time" [(ngModel)]="drSchedule.time_table.tue.slot_2.to" name="tue_slot_2_to" id="tue_slot_2_to">
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class=" row">
+                      <div class="col-6">
+                        <input [disabled]="drSchedule.time_table.tue.de_select" class="form-control form-control-sm" type="time" [(ngModel)]="drSchedule.time_table.tue.slot_3.from" name="tue_slot_3_from" id="tue_slot_3_from">
+                      </div>
+                      <div class="col-6">
+                          <input [disabled]="drSchedule.time_table.tue.de_select" class="form-control form-control-sm" type="time" [(ngModel)]="drSchedule.time_table.tue.slot_3.to" name="tue_slot_3_to" id="tue_slot_3_to">
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">
+                    <div class=" row">
+                      <label class="col-md-12">
+                        <input type="checkbox" value="1" [checked]="!drSchedule.time_table.wed.de_select" (change)="handleSelected($event,'wed')" id="day_wed" >&nbsp;&nbsp; Wednessday
+                      </label>
+                    </div>
+                  </th>
+                  <td>
+                    <div class=" row">
+                      <div class="col-6">
+                        <input [disabled]="drSchedule.time_table.wed.de_select" class="form-control form-control-sm" type="time" [(ngModel)]="drSchedule.time_table.wed.slot_1.from" name="wed_slot_1_from" id="wed_slot_1_from">
+                      </div>
+                      <div class="col-6">
+                          <input [disabled]="drSchedule.time_table.wed.de_select" class="form-control form-control-sm" type="time" [(ngModel)]="drSchedule.time_table.wed.slot_1.to" name="wed_slot_1_to" id="wed_slot_1_to">
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class=" row">
+                      <div class="col-6">
+                        <input [disabled]="drSchedule.time_table.wed.de_select" class="form-control form-control-sm" type="time" [(ngModel)]="drSchedule.time_table.wed.slot_2.from" name="wed_slot_2_from" id="wed_slot_2_from">
+                      </div>
+                      <div class="col-6">
+                          <input [disabled]="drSchedule.time_table.wed.de_select" class="form-control form-control-sm" type="time" [(ngModel)]="drSchedule.time_table.wed.slot_2.to" name="wed_slot_2_to" id="wed_slot_2_to">
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class=" row">
+                      <div class="col-6">
+                        <input [disabled]="drSchedule.time_table.wed.de_select" class="form-control form-control-sm" type="time" [(ngModel)]="drSchedule.time_table.wed.slot_3.from" name="wed_slot_3_from" id="wed_slot_3_from">
+                      </div>
+                      <div class="col-6">
+                          <input [disabled]="drSchedule.time_table.wed.de_select" class="form-control form-control-sm" type="time" [(ngModel)]="drSchedule.time_table.wed.slot_3.to" name="wed_slot_3_to" id="wed_slot_3_to">
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">
+                    <div class=" row">
+                      <label class="col-md-12">
+                        <input type="checkbox" value="1" [checked]="!drSchedule.time_table.thu.de_select" (change)="handleSelected($event,'thu')" id="day_thu" >&nbsp;&nbsp; Thursday
+                      </label>
+                    </div>
+                  </th>
+                  <td>
+                    <div class=" row">
+                      <div class="col-6">
+                        <input [disabled]="drSchedule.time_table.thu.de_select" class="form-control form-control-sm" type="time" [(ngModel)]="drSchedule.time_table.thu.slot_1.from" name="thu_slot_1_from" id="thu.slot_1_from">
+                      </div>
+                      <div class="col-6">
+                          <input [disabled]="drSchedule.time_table.thu.de_select" class="form-control form-control-sm" type="time" [(ngModel)]="drSchedule.time_table.thu.slot_1.to" name="thu_slot_1_to" id="thu_slot_1_to">
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class=" row">
+                      <div class="col-6">
+                        <input [disabled]="drSchedule.time_table.thu.de_select" class="form-control form-control-sm" type="time" [(ngModel)]="drSchedule.time_table.thu.slot_2.from" name="thu_slot_2_from" id="thu_slot_2_from">
+                      </div>
+                      <div class="col-6">
+                          <input [disabled]="drSchedule.time_table.thu.de_select" class="form-control form-control-sm" type="time" [(ngModel)]="drSchedule.time_table.thu.slot_2.to" name="thu_slot_2_to" id="thu_slot_2_to">
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class=" row">
+                      <div class="col-6">
+                        <input [disabled]="drSchedule.time_table.thu.de_select" class="form-control form-control-sm" type="time" [(ngModel)]="drSchedule.time_table.thu.slot_3.from" name="thu_slot_3_from" id="thu_slot_3_from">
+                      </div>
+                      <div class="col-6">
+                          <input [disabled]="drSchedule.time_table.thu.de_select" class="form-control form-control-sm" type="time" [(ngModel)]="drSchedule.time_table.thu.slot_3.to" name="thu_slot_3_to" id="thu_slot_3_to">
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">
+                    <div class=" row">
+                      <label class="col-md-12">
+                        <input type="checkbox" value="1" [checked]="!drSchedule.time_table.fri.de_select" (change)="handleSelected($event,'fri')" id="day_fri" >&nbsp;&nbsp; Friday
+                      </label>
+                    </div>
+                  </th>
+                  <td>
+                    <div class=" row">
+                      <div class="col-6">
+                        <input [disabled]="drSchedule.time_table.fri.de_select" class="form-control form-control-sm" type="time" [(ngModel)]="drSchedule.time_table.fri.slot_1.from" name="fri_slot_1_from" id="fri_slot_1_from">
+                      </div>
+                      <div class="col-6">
+                          <input [disabled]="drSchedule.time_table.fri.de_select" class="form-control form-control-sm" type="time" [(ngModel)]="drSchedule.time_table.fri.slot_1.to" name="fri_slot_1_to" id="fri_slot_1_to">
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class=" row">
+                      <div class="col-6">
+                        <input [disabled]="drSchedule.time_table.fri.de_select" class="form-control form-control-sm" type="time" [(ngModel)]="drSchedule.time_table.fri.slot_2.from" name="fri_slot_2_from" id="fri_slot_2_from">
+                      </div>
+                      <div class="col-6">
+                          <input [disabled]="drSchedule.time_table.fri.de_select" class="form-control form-control-sm" type="time" [(ngModel)]="drSchedule.time_table.fri.slot_2.to" name="fri_slot_2_to" id="fri_slot_2_to">
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class=" row">
+                      <div class="col-6">
+                        <input [disabled]="drSchedule.time_table.fri.de_select" class="form-control form-control-sm" type="time" [(ngModel)]="drSchedule.time_table.fri.slot_3.from" name="fri_slot_3_from" id="fri_slot_3_from">
+                      </div>
+                      <div class="col-6">
+                          <input [disabled]="drSchedule.time_table.fri.de_select" class="form-control form-control-sm" type="time" [(ngModel)]="drSchedule.time_table.fri.slot_3.to" name="fri_slot_3_to" id="fri_slot_3_to">
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">
+                    <div class=" row">
+                      <label class="col-md-12">
+                        <input type="checkbox" value="1" [checked]="!drSchedule.time_table.sat.de_select" (change)="handleSelected($event,'sat')" id="day_sat" >&nbsp;&nbsp; Saturday
+                      </label>
+                    </div>
+                  </th>
+                  <td>
+                    <div class=" row">
+                      <div class="col-6">
+                        <input [disabled]="drSchedule.time_table.sat.de_select" class="form-control form-control-sm" type="time" [(ngModel)]="drSchedule.time_table.sat.slot_1.from" name="sat_slot_1_from" id="sat_slot_1_from">
+                      </div>
+                      <div class="col-6">
+                          <input [disabled]="drSchedule.time_table.sat.de_select" class="form-control form-control-sm" type="time" [(ngModel)]="drSchedule.time_table.sat.slot_1.to" name="sat_slot_1_to" id="sat_slot_1_to">
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class=" row">
+                      <div class="col-6">
+                        <input [disabled]="drSchedule.time_table.sat.de_select" class="form-control form-control-sm" type="time" [(ngModel)]="drSchedule.time_table.sat.slot_2.from" name="sat_slot_2_from" id="sat_slot_2_from">
+                      </div>
+                      <div class="col-6">
+                          <input [disabled]="drSchedule.time_table.sat.de_select" class="form-control form-control-sm" type="time" [(ngModel)]="drSchedule.time_table.sat.slot_2.to" name="sat_slot_2_to" id="sat_slot_2_to">
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class=" row">
+                      <div class="col-6">
+                        <input [disabled]="drSchedule.time_table.sat.de_select" class="form-control form-control-sm" type="time" [(ngModel)]="drSchedule.time_table.sat.slot_3.from" name="sat_slot_3_from" id="sat_slot_3_from">
+                      </div>
+                      <div class="col-6">
+                          <input [disabled]="drSchedule.time_table.sat.de_select" class="form-control form-control-sm" type="time" [(ngModel)]="drSchedule.time_table.sat.slot_3.to" name="sat_slot_3_to" id="sat_slot_3_to">
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </fieldset>
+      <div class="form-group row" style= "padding: 20px;">
+        <div class="row col-lg-12">
+          <div class="col-lg-6">
+            <div class="row">
+              <button *ngIf="enable_action == true && (user_rights.ADD == '1' || user_rights.EDIT == '1' )" class="btn btn-sm btn-primary float-right" type="button" (click)="addNewOpRegistration()" mdbBtn color="primary" mdbWavesEffect>Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

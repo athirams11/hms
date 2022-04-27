@@ -1,0 +1,50 @@
+.page_notfound .page_notfound-404 h1 {
+    font-family: montserrat,sans-serif;
+    font-size: 204px;
+    font-weight: 1000;
+    color: #262626;
+    text-transform: uppercase;
+    letter-spacing: -27px;
+}
+.page_notfound .page_notfound-404 {
+    position: relative;
+    height: 240px;
+}
+.page_notfound .page_notfound-404 h1 > span {
+    text-shadow: -8px 0 0 #fff;
+}
+.page_notfound .page_notfound-404 h1 {
+   
+    position: absolute;
+    left: 50%;
+    top: 61%;
+    -webkit-transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+    transform: translate(-50%,-50%);
+    font-size: 252px;
+    font-weight: 900;
+    margin: 0;
+        margin-left: 0px;
+    color: #262626;
+    text-transform: uppercase;
+    letter-spacing: -40px;
+    margin-left: -20px;
+}
+#page_notfound .page_notfound {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+    transform: translate(-50%,-50%);
+}
+.page_notfound {
+    max-width: 520px;
+    width: 100%;
+    line-height: 1.4;
+    text-align: center;
+}
+#notfound {
+    position: relative;
+    height: 100vh;
+}

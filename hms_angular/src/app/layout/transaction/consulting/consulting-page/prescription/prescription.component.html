@@ -1,0 +1,616 @@
+<ng-template #rt let-r="result" let-t="term">
+  <ngb-highlight [result]="r.SCIENTIFIC_CODE+' - '+r.SCIENTIFIC_NAME" [term]="t"></ngb-highlight>
+</ng-template>
+<ng-template #rtt let-r="result" let-t="term">
+  <ngb-highlight [result]="r.DDC_CODE+' - '+r.TRADE_NAME+' - '+r.SCIENTIFIC_CODE+' - '+r.SCIENTIFIC_NAME" [term]="t">
+  </ngb-highlight>
+</ng-template>
+<ng-template #r let-r="result" let-t="term">
+  <ngb-highlight [result]="r.CODE+' - '+r.DESCRIPTION" [term]="t"></ngb-highlight>
+</ng-template>
+<fieldset class="form-group" *ngIf="diagnosis_data && diagnosis_data.length > 0 || other_diagnosis != ''">
+  <legend>Diagnosis</legend>
+  <div class="container form-group">
+    <table class="table sm-tbl table-hover table-striped table-bordered">
+      <thead>
+        <tr>
+          <th class="text-left">Diagnosis</th>
+          <th class="text-left" width="10%">ICD</th>
+          <th class="text-center" width="15%">Level</th>
+          <th class="text-center" width="15%">Type</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let daignosis of diagnosis_data">
+          <td>{{daignosis.DIAGNOSIS_NAME}}</td>
+          <td>{{daignosis.DIAGNOSIS_CODE}}</td>
+          <td class="text-center">{{daignosis.DIAGNOSIS_LEVEL_NAME}}</td>
+          <td class="text-center">{{daignosis.DIAGNOSIS_TYPE_NAME}}</td>
+        </tr>
+        <tr *ngIf="other_diagnosis != ''">
+          <td colspan="4">
+            <span>Other diagnosis </span>&nbsp;: &nbsp;{{other_diagnosis}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</fieldset>
+<fieldset class="form-group">
+  <legend>Prescribe</legend>
+  <div class="container form-group">
+    <label>Generic Name / Trade Name</label>
+    <input [disabled]="formatDate(todaysDate) != formatDate(selected_visit.CREATED_TIME)" (change)="getEvent()"
+      style="height: 31px;" id="typeahead-http" [ngModelOptions]="{standalone: true}" type="text" class="form-control"
+      [resultTemplate]="rtt" [class.is-invalid]="searchFailed" [inputFormatter]="formatter"
+      [(ngModel)]="prescription_data.generic_data" (selectItem)="set_item_medicine($event)"
+      [ngbTypeahead]="generic_search" placeholder="Search Generic Name or Trade Name...." />
+    <div class="clearfix"></div>
+    <table class="table tbl borderless">
+      <thead>
+        <tr>
+          <th class="text-left" width="10%">Use(#Units)</th>
+          <th class="text-left" width="7%">Frequency</th>
+          <th class="text-left" width="10%"></th>
+          <th class="text-left" width="10%">Duration</th>
+          <th class="text-left" width="10%">Total Qty</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div class="input-group">
+              <input (change)="getEvent()" class="form-control form-control-sm" type="text"
+                [(ngModel)]="prescription_data.uom_arr" (focusout)="totalQty()" (focusout)="instruction()"
+                name="uom_arr">
+              <div class="input-group-append">
+                <span class="input-group-text ig-c">
+                  {{dosage}}
+                </span>
+              </div>
+            </div>
+          </td>
+          <td>
+            <input (change)="getEvent()" class="form-control form-control-sm" type="text"
+              [(ngModel)]="prescription_data.frequency_arr" (focusout)="totalQty()" (focusout)="instruction()"
+              name="frequency_arr">
+          </td>
+          <td>
+            <select (change)="getEvent()" [(ngModel)]="prescription_data.frequency" (focusout)="totalQty()"
+              (focusout)="instruction()" class=" form-control form-control-sm custom-select custom-select-sm"
+              name="type">
+              <option value="">Select Frequency</option>
+              <option *ngFor="let type of frequency" value="{{ type.MASTER_DATA_ID }}">{{ type.DATA }}</option>
+            </select>
+          </td>
+          <td>
+            <div class="input-group">
+              <input (change)="getEvent()" class="form-control form-control-sm" type="text"
+                [(ngModel)]="prescription_data.strength_arr" name="strength_arr" (focusout)="totalQty()"
+                (focusout)="instruction()">
+              <div class="input-group-append">
+                <span class="input-group-text ig-c">
+                  <ng-container>Days(s)</ng-container>
+                </span>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="input-group">
+              <input (change)="getEvent()" class="form-control form-control-sm" type="text"
+                [(ngModel)]="prescription_data.total_quantity_arr" name="total_quantity_arr">
+              <div class="input-group-append">
+                <span class="input-group-text ig-c">
+                  <ng-container>{{dosage}}</ng-container>
+                </span>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <table class="borderless">
+      <tbody>
+        <tr>
+          <td colspan="3" class="text-left" style="width:10%;">Instruction</td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <textarea style="width:90%;" [disabled]="formatDate(todaysDate) != formatDate(selected_visit.CREATED_TIME)"
+              (change)="getEvent()" class="form-control  form-control-sm" [(ngModel)]="prescription_data.instructions"
+              [ngModelOptions]="{standalone: true}">
+            </textarea>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          </td>
+          <td style="width:10%;">
+            <button [disabled]="formatDate(todaysDate) != formatDate(selected_visit.CREATED_TIME) || eRxReferenceNo > 0"
+              (change)="getEvent()" class="btn btn-info pull-right btn-sm text-right" type="button"
+              (click)="addDrug(prescription_data);">
+              <i class="fa fa-plus">&nbsp;Add Drug</i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <table class="table sm-tbl table-hover table-striped table-bordered">
+      <thead>
+        <tr>
+          <th class="text-center">#</th>
+          <th class="text-left">Drug</th>
+          <th class="text-center">Frequency</th>
+          <th class="text-center">Duration (Days)</th>
+          <th class="text-center">Total Qty</th>
+          <th class="text-left" width="25%">Instructions</th>
+          <th width="10%">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="prescribed_data.length == 0">
+          <td colspan="9" class="text-center">No prescription added</td>
+        </tr>
+        <tr *ngFor="let prescriptions of prescribed_data;let i = index">
+          <td class="text-left">{{i+1}}</td>
+          <td class="text-left" style="font-size:12px;">{{prescriptions.generic_name}}</td>
+          <td class="text-center">{{prescriptions.frequency_arr}}
+            <ng-container *ngIf="prescriptions.frequency == 17">Day(s)</ng-container>
+            <ng-container *ngIf="prescriptions.frequency == 18">Hour(s)</ng-container>
+            <ng-container *ngIf="prescriptions.frequency == 19">Per week(s)</ng-container>
+          </td>
+          <td class="text-center">{{prescriptions.strength_arr}}</td>
+          <td class="text-center">{{prescriptions.total_quantity_arr}}</td>
+          <td class="text-left">{{prescriptions.instructions}}</td>
+          <td class="text-center">
+            <button [disabled]="formatDate(todaysDate) != formatDate(selected_visit.CREATED_TIME)" alt="Delete data"
+              title="Delete data" type="button" class="btn btn-sm" (click)="deleterow(prescriptions)" type="button"><i
+                class="text-danger fa fa-trash"></i></button>&nbsp;
+            <button [disabled]="formatDate(todaysDate) != formatDate(selected_visit.CREATED_TIME)" alt="Edit data"
+              title="Edit data" type="button" class="btn btn-sm" (click)="editrow(prescriptions,i)" type="button"><i
+                class="text-warning fa fa-edit"></i></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <button [disabled]="formatDate(todaysDate) != formatDate(selected_visit.CREATED_TIME) || eRxReferenceNo > 0"
+      class="btn btn-primary btn-sm ng-star-inserted" type="button" (click)="savePrescription()"> Save </button>
+    <ng-container
+      *ngIf="formatDate(todaysDate) != formatDate(selected_visit.CREATED_TIME) && prescribed_data.length > 0">
+      &nbsp;&nbsp;<button class="btn btn-sm btn-info" type="button" (click)="copy_prescription(1)">Copy</button>
+    </ng-container>
+    <ng-container
+      *ngIf="formatDate(todaysDate) == formatDate(selected_visit.CREATED_TIME) && get_prescribed_data.length > 0">
+      &nbsp;&nbsp;<button class="btn btn-sm btn-info" type="button"
+        (click)="confirm_copy_prescription(2,content)">Paste</button>
+    </ng-container>
+    <button *ngIf="print_data.length > 0" style="margin:5px;" title="Print"
+      [disabled]="print_data.length == 0 && doctor_prescription_id == 0" printSectionId="print-section"
+      [useExistingCss]="true" class="btn btn-primary pull-right btn-sm" ngxPrint>
+      Print
+    </button>
+    <button *ngIf="print_data.length > 0" style="margin:5px;" title="View"
+      [disabled]="print_data.length == 0 && doctor_prescription_id == 0" class="btn btn-primary pull-right btn-sm"
+      (click)="open(view)">
+      View
+    </button>
+  </div>
+</fieldset>
+
+
+
+<fieldset class="form-group" *ngIf="(previous_list | json) != '[]'">
+  <legend>Previous Prescription</legend>
+  <div class="container form-group">
+    <table class="col-lg-12 borderless">
+      <tr>
+        <td width="60%" class="text-left"></td>
+        <td width="40%" class="text-right">
+          <div class="input-group mb-3 pull-left">
+            Search by date &nbsp;&nbsp;
+            <input style="height:31px" class="form-control form-control-sm" type="date"
+              [ngModel]="dateVal | date:'yyyy-MM-dd'" (ngModelChange)="dateVal = $event" name="date" id="date"
+              [max]="getToday()" (change)="getPrevioussearchlist()">
+            <div class="input-group-append">
+              <button style="height:31px;padding:7px" class="input-group-text" (click)="clear_search()">
+                <i *ngIf="dateVal != ''" class="fa fa-close"></i>
+                <i *ngIf="dateVal == ''" class="fa fa-search"></i>
+              </button>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </table>
+    <table class="table sm-tbl table-hover table-striped table-bordered">
+      <thead>
+        <tr *ngIf="(previous_list | json) == '[]'">
+          <td colspan="6" class="text-center">No details available</td>
+        </tr>
+      </thead>
+      <ng-container *ngFor="let prescribe of previous_list;let i=index">
+        <thead>
+          <tr>
+            <th class="text-center" width="1%">
+              <button class="btn btn-xs btn-light" title="Duplicate"
+                (click)="getPreviousCopyData(prescribe.PRESCRIPTION);confirmCopyPrescribe(duplicate,2)"><i
+                  class="fa fa-clone text-info"></i></button>
+            </th>
+            <!-- <th class="text-left">{{ start + i + 1}}</th> -->
+            <th colspan="5" class="text-left">
+              <span class="text-left" *ngIf="prescribe.VISIT_DATE  != null">
+                {{formatDateTime(prescribe.VISIT_DATE)}}
+              </span>
+              <span style="vertical-align: middle" *ngIf="prescribe.DOCTORS_NAME != null" class="pull-right"
+                style="margin-right: 10px;">
+                Dr.{{prescribe.DOCTORS_NAME}}
+              </span>
+            </th>
+
+          </tr>
+          <tr class="text-center" style="background-color:#cdd8e9;font-weight: bolder;">
+            <td class="text-center">#</td>
+            <td class="text-left">Drug</td>
+            <td class="text-center" width="7%">Frequency</td>
+            <td class="text-center" width="7%">Duration (Days)</td>
+            <td class="text-center" width="7%">Qty</td>
+            <td class="text-left" width="30%">Instruction</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of prescribe.PRESCRIPTION;let j=index">
+            <td class="text-center">{{ j+1 }}</td>
+            <td style="font-size:12px;">{{ data.TRADE_NAMES}}</td>
+            <td class="text-center">{{ data.FREQUENCY}}
+              <ng-container *ngIf="data.FREQUENCY_TYPE == 17">Day(s)</ng-container>
+              <ng-container *ngIf="data.FREQUENCY_TYPE == 18">Hour(s)</ng-container>
+              <ng-container *ngIf="data.FREQUENCY_TYPE == 19">Per week(s)</ng-container>
+            </td>
+            <td class="text-center">{{ data.STRENGTH}} </td>
+            <td class="text-center">{{ data.TOTAL_QUANTITY}}</td>
+            <td>{{ data.INSTRUCTION}}</td>
+          </tr>
+        </tbody>
+      </ng-container>
+    </table>
+    <ngb-pagination *ngIf="(previous_list | json) != '[]'" [disabled]="dateVal != ''"
+      class="d-flex justify-content-center" [(page)]="page" [pageSize]="p" [collectionSize]="collection"
+      [directionLinks]="true" [boundaryLinks]="true" aria-label="Default pagination" [maxSize]="3"
+      (pageChange)="getPreviousPrescription(page-1)">
+    </ngb-pagination>
+    <pre>Current page : {{page}}</pre>
+    <pre>Total records : {{collection}}</pre>
+  </div>
+</fieldset>
+
+
+<ng-template #view let-modal>
+  <div class="modal-header">
+    <div class="pull-right text-right">
+      <h5 class="modal-title" id="modal-basic-title">
+        MEDICAL PRESCRIPTION
+      </h5>
+    </div>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="col-lg-12 ">
+    <div class="clearfix"></div>
+    <table class="col-lg-12 borderless">
+      <tr>
+        <td width="50%" class="text-left"></td>
+        <td width="50%" class="text-right">
+          <button title="Print" printSectionId="print-section" [useExistingCss]="true" class="btn  btn-info btn-sm"
+            ngxPrint>
+            <i class="fa fa-print"></i>&nbsp;Print&nbsp;
+          </button>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div class="modal-body">
+    <div class="tab-pane active">
+      <div class="tab-content">
+        <div class="panel-body">
+          <table class="col-lg-12 borderless">
+            <tr>
+              <td width="30%" class="text-left">
+                <ng-container *ngIf="institution && institution.INSTITUTION_LOGO">
+                  <img [src]="logo_path+institution.INSTITUTION_LOGO" height="100px" width="auto">
+                </ng-container>
+              </td>
+              <td width="70%" class="text-right" style="font-size: 15px;">
+                <ng-container *ngIf="institution">
+                  <h5 class="name"><b>{{institution.INSTITUTION_NAME}}</b></h5>
+                  <div style="line-height: 1em;"><label
+                      style="font-size: 15px;">{{institution.INSTITUTION_ADDRESS}}</label></div>
+                  <div style="line-height: 1em;"><label
+                      style="font-size: 15px;">{{institution.INSTITUTION_CITY}},&nbsp;{{institution.INSTITUTION_COUNTRY_NAME}}</label>
+                  </div>
+                  <div style="line-height: 1em;"><label style="font-size: 15px;">Ph
+                      :&nbsp;{{institution.INSTITUTION_PHONE_NO}}</label></div>
+                  <div style="line-height: 1em;"><label style="font-size: 15px;">Email
+                      :&nbsp;{{institution.INSTITUTION_EMAIL}}</label></div>
+                </ng-container>
+              </td>
+            </tr>
+          </table>
+          <div class="clearfix"></div>
+          <div class="clearfix"></div>
+          <div class="clearfix"></div>
+          <hr>
+          <h5 class="text-center">MEDICAL PRESCRIPTION</h5>
+          <hr>
+          <table class="col-md-12 table-borderless font">
+            <tr>
+              <td class="text-left" width="10%">Patient Name</td>
+              <td class="text-left" width="80%">:&nbsp;{{ selected_visit.FIRST_NAME }} {{ selected_visit.MIDDLE_NAME }}
+                {{ selected_visit.LAST_NAME }} </td>
+              <td class="text-left" width="7%">Patient No</td>
+              <td class="text-left" width="70%">:&nbsp;{{ selected_visit.OP_REGISTRATION_NUMBER }}</td>
+            </tr>
+            <tr>
+              <td class="text-left" width="10%">Age</td>
+              <td class="text-left" width="80%">:
+                <ng-container *ngIf="selected_visit.AGE == 0">{{ selected_visit.MONTHS }}&nbsp;Months</ng-container>
+                <ng-container *ngIf="selected_visit.AGE > 0">{{ selected_visit.AGE }}y</ng-container>
+              </td>
+              <td class="text-left" width="10%">Visit Date</td>
+              <td class="text-left" width="70%">:&nbsp;{{ formatDate(selected_visit.VISIT_DATE) }}</td>
+            </tr>
+            <tr>
+              <td class="text-left" width="10%">Phone No</td>
+              <td class="text-left" width="80%">:&nbsp;{{ selected_visit.MOBILE_NO }} </td>
+
+            </tr>
+
+            <tr>
+              <td *ngIf="diagnosis_data && diagnosis_data.length > 0 || other_diagnosis != ''" class="text-left"
+                style="vertical-align: top;" width="10%">Diagnosis </td>
+              <td *ngIf="diagnosis_data && diagnosis_data.length > 0 || other_diagnosis != ''" class="text-left"
+                style="vertical-align: top;" width="70%">
+                :
+                <ng-container *ngFor="let daignosis of diagnosis_data;let i=index">
+                  <ng-container *ngIf="i > 0">&nbsp;</ng-container>
+                  {{daignosis.DIAGNOSIS_CODE}} - {{daignosis.DIAGNOSIS_NAME}}<br>
+                </ng-container>
+                <ng-container *ngIf="other_diagnosis != ''">
+                  <!-- <ng-container *ngIf="diagnosis_data && diagnosis_data.length == 0">&nbsp;</ng-container> -->
+                  <ng-container *ngIf="diagnosis_data && diagnosis_data.length > 0">&nbsp;&nbsp;</ng-container>
+                  <label style="vertical-align: top;" class=" text-left"
+                    [innerHTML]="other_diagnosis | nl2br : true"></label>
+                </ng-container>
+              </td>
+            </tr>
+          </table>
+          <div class="clearfix"></div>
+          <div class="clearfix"></div>
+          <div class="clearfix"></div>
+          <table class="printtable">
+            <thead>
+              <tr>
+                <th width="1%">#</th>
+                <th class="text-left">Generic Name</th>
+                <!-- <th>Form</th> -->
+                <!-- <th width="7%">Dosage</th> -->
+                <th width="7%">Frequency</th>
+                <th width="7%">Durations</th>
+                <th width="7%">Total Qty</th>
+                <th class="text-left">Instruction</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of print_data;let i = index">
+                <td class="text-center">{{i+1}}</td>
+                <td class="text-left">{{data.TRADE_NAMES}}</td>
+                <!-- <td>{{data.DESCRIPTION}}</td>
+                <td>{{data.DOSAGE}}</td> -->
+                <td class="text-center">{{data.FREQUENCY}}
+                  <ng-container *ngIf="data.FREQUENCY_TYPE == 17">Day(s)</ng-container>
+                  <ng-container *ngIf="data.FREQUENCY_TYPE == 18">Hour(s)</ng-container>
+                  <ng-container *ngIf="data.FREQUENCY_TYPE == 19">Per week(s)</ng-container>
+                </td>
+                <td class="text-center">{{data.STRENGTH}}</td>
+                <td class="text-center">{{data.TOTAL_QUANTITY}}</td>
+                <td class="text-left">{{data.INSTRUCTION}}</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="clearfix"></div>
+          <div class="clearfix"></div>
+          <div class="clearfix"></div>
+          <div class="clearfix"></div>
+          <div class="clearfix"></div>
+          <table class="col-md-12 table-borderless font">
+            <tr>
+              <td class="text-left" width="10%">Doctor Name</td>
+              <td class="text-left" width="60%">:&nbsp;{{ selected_visit.DOCTOR_NAME }} </td>
+              <td class="text-right" width="50%">Dr. Signature & Stamp</td>
+            </tr>
+            <tr>
+              <td class="text-left" width="10%">Department</td>
+              <td class="text-left" width="60%">:&nbsp;{{ selected_visit.DEPARTMENT_NAME }}</td>
+            </tr>
+          </table>
+        </div>
+        <div style="margin-bottom:100px;"></div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="col-lg-12 text-center" style="font-size: 12px;">
+      This is an electronically generated printout.No signature is required.<br>
+      If you have a reaction to any of the medications, please stop taking the medicine and report to the hospital or
+      call your doctor.</div>
+  </div>
+</ng-template>
+
+<div id="print-section" style="display: none;">
+  <div class="header-space">&nbsp;</div>
+  <!-- <div class="header col-md-12">
+      <div class="col-md-12 text-center">
+        <ng-container  *ngIf="institution">
+            <h5 class="name"><b>{{institution.INSTITUTION_NAME}}</b></h5>
+            <div style="line-height: 0.5em;"><label>{{institution.INSTITUTION_ADDRESS}}</label></div>
+            <div style="line-height: 0.5em;"><label>{{institution.INSTITUTION_CITY}},&nbsp;{{institution.INSTITUTION_COUNTRY_NAME}}</label></div>
+            <div style="line-height: 0.5em;"><label>Ph :&nbsp;{{institution.INSTITUTION_PHONE_NO}}</label></div>
+            <div style="line-height: 0.5em;"><label>Email :&nbsp;{{institution.INSTITUTION_EMAIL}}</label></div>
+        </ng-container>
+      </div>
+    </div>   -->
+  <table class="col-lg-12 borderless">
+    <tr>
+      <td width="30%" class="text-left">
+        <ng-container *ngIf="institution && institution.INSTITUTION_LOGO">
+          <img [src]="logo_path+institution.INSTITUTION_LOGO" height="100px" width="auto">
+        </ng-container>
+      </td>
+      <td width="70%" class="text-right">
+        <ng-container *ngIf="institution">
+          <h5 class="name"><b>{{institution.INSTITUTION_NAME}}</b></h5>
+          <div style="line-height: 1em;"><label style="font-size: 15px;">{{institution.INSTITUTION_ADDRESS}}</label>
+          </div>
+          <div style="line-height: 1em;"><label
+              style="font-size: 15px;">{{institution.INSTITUTION_CITY}},&nbsp;{{institution.INSTITUTION_COUNTRY_NAME}}</label>
+          </div>
+          <div style="line-height: 1em;"><label style="font-size: 15px;">Ph
+              :&nbsp;{{institution.INSTITUTION_PHONE_NO}}</label></div>
+          <div style="line-height: 1em;"><label style="font-size: 15px;">Email
+              :&nbsp;{{institution.INSTITUTION_EMAIL}}</label></div>
+        </ng-container>
+      </td>
+    </tr>
+  </table>
+  <div class="footer col-lg-12 text-center" style="font-size: 12px;">
+    <hr>This is an electronically generated printout.No signature is required.<br>
+    If you have a reaction to any of the medications, please stop taking the medicine and report to the hospital or call
+    your doctor.
+  </div>
+  <div class="clearfix"></div>
+  <div class="clearfix"></div>
+  <div class="clearfix"></div>
+  <hr>
+  <h5 class="text-center">MEDICAL PRESCRIPTION</h5>
+  <!-- <div class="clearfix"></div> -->
+  <hr>
+  <table class="col-md-12 table-borderless font">
+    <tr>
+      <td class="text-left" width="10%">Patient Name</td>
+      <td class="text-left" width="80%">:&nbsp;{{ selected_visit.FIRST_NAME }} {{ selected_visit.MIDDLE_NAME }} {{
+        selected_visit.LAST_NAME }} </td>
+      <td class="text-left" width="7%">Patient No</td>
+      <td class="text-left" width="70%">:&nbsp;{{ selected_visit.OP_REGISTRATION_NUMBER }}</td>
+    </tr>
+    <tr>
+      <td class="text-left" width="10%">Age</td>
+      <td class="text-left" width="80%">:
+        <ng-container *ngIf="selected_visit.AGE == 0">{{ selected_visit.MONTHS }}&nbsp;Months</ng-container>
+        <ng-container *ngIf="selected_visit.AGE > 0">{{ selected_visit.AGE }}y</ng-container>
+      </td>
+      <td class="text-left" width="10%">Visit Date</td>
+      <td class="text-left" width="70%">:&nbsp;{{ formatDate(selected_visit.VISIT_DATE) }}</td>
+    </tr>
+    <tr>
+      <td class="text-left" width="10%">Phone No</td>
+      <td class="text-left" width="80%">:&nbsp;{{ selected_visit.MOBILE_NO }} </td>
+
+    </tr>
+
+    <tr>
+      <td *ngIf="diagnosis_data && diagnosis_data.length > 0 || other_diagnosis != ''" class="text-left"
+        style="vertical-align: top;" width="10%">Diagnosis </td>
+      <td *ngIf="diagnosis_data && diagnosis_data.length > 0 || other_diagnosis != ''" class="text-left"
+        style="vertical-align: top;" width="70%">
+        :
+        <ng-container *ngFor="let daignosis of diagnosis_data;let i=index">
+          <ng-container *ngIf="i > 0">&nbsp;</ng-container>
+          {{daignosis.DIAGNOSIS_CODE}} - {{daignosis.DIAGNOSIS_NAME}}<br>
+        </ng-container>
+        <ng-container *ngIf="other_diagnosis != ''">
+          <!-- <ng-container *ngIf="diagnosis_data && diagnosis_data.length == 0">&nbsp;</ng-container> -->
+          <ng-container *ngIf="diagnosis_data && diagnosis_data.length > 0">&nbsp;&nbsp;</ng-container>
+          <label style="vertical-align: top;" class=" text-left" [innerHTML]="other_diagnosis | nl2br : true"></label>
+        </ng-container>
+      </td>
+    </tr>
+  </table>
+  <div class="clearfix"></div>
+  <div class="clearfix"></div>
+  <div class="clearfix"></div>
+  <table class="printtable">
+    <thead>
+      <tr>
+        <th width="1%">#</th>
+        <th class="text-left">Generic Name</th>
+        <!-- <th>Form</th> -->
+        <!-- <th width="7%">Dosage</th> -->
+        <th width="7%">Frequency</th>
+        <th width="7%">Durations</th>
+        <th width="7%">Total Qty</th>
+        <th class="text-left">Instruction</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of print_data;let i = index">
+        <td class="text-center">{{i+1}}</td>
+        <td class="text-left">{{data.TRADE_NAMES}}</td>
+        <!-- <td>{{data.DESCRIPTION}}</td>
+        <td>{{data.DOSAGE}}</td> -->
+        <td class="text-center">{{data.FREQUENCY}}
+          <ng-container *ngIf="data.FREQUENCY_TYPE == 17">Day(s)</ng-container>
+          <ng-container *ngIf="data.FREQUENCY_TYPE == 18">Hour(s)</ng-container>
+          <ng-container *ngIf="data.FREQUENCY_TYPE == 19">Per week(s)</ng-container>
+        </td>
+        <td class="text-center">{{data.STRENGTH}}</td>
+        <td class="text-center">{{data.TOTAL_QUANTITY}}</td>
+        <td class="text-left">{{data.INSTRUCTION}}</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="clearfix"></div>
+  <div class="clearfix"></div>
+  <div class="clearfix"></div>
+  <div class="clearfix"></div>
+  <div class="clearfix"></div>
+  <table class="col-md-12 table-borderless font">
+    <tr>
+      <td class="text-left" width="10%">Doctor Name</td>
+      <td class="text-left" width="60%">:&nbsp;{{ selected_visit.DOCTOR_NAME }} </td>
+      <td class="text-right" width="50%">Dr. Signature & Stamp</td>
+    </tr>
+    <tr>
+      <td class="text-left" width="10%">Department</td>
+      <td class="text-left" width="60%">:&nbsp;{{ selected_visit.DEPARTMENT_NAME }}</td>
+    </tr>
+  </table>
+</div>
+
+<ng-template #content let-modal>
+  <div class="modal-body">
+    <label style="font-size: 14px;" class="text-left">If you paste the copied data, the current data will be reseted. Do
+      you want to paste the copy data ?</label>
+  </div>
+  <div class="form-group text-center col-lg-12">
+    <button type="button" class="btn  btn-sm btn-success"
+      (click)="copy_prescription(2);modal.dismiss('Cross click')">Yes</button>&nbsp;&nbsp;
+    <button type="button" class="btn  btn-sm btn-warning text-light" (click)="modal.dismiss('Cross click')">No</button>
+  </div>
+  <div class="clearfix"></div>
+  <div class="clearfix"></div>
+</ng-template>
+
+
+<ng-template #duplicate let-modal>
+  <div class="modal-body">
+    <label style="font-size: 14px;" class="text-left">If you paste the copied data, the current data will be reseted. Do
+      you want to paste the copy data ?</label>
+  </div>
+  <div class="form-group text-center col-lg-12">
+    <button type="button" class="btn  btn-sm btn-success"
+      (click)="copyPreviousData();modal.dismiss('Cross click')">Yes</button>&nbsp;&nbsp;
+    <button type="button" class="btn  btn-sm btn-warning text-light" (click)="modal.dismiss('Cross click')">No</button>
+  </div>
+  <div class="clearfix"></div>
+  <div class="clearfix"></div>
+</ng-template>

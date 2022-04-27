@@ -1,0 +1,422 @@
+<form class="inner_body">
+  <fieldset class="form-group ">
+    <legend>Filter</legend>
+    <div class="row col-lg-12">
+        <div class="col-5">
+          <div class=" row">
+          <label for="p_type" class="col-3">Company</label>
+          <div class="col-9">
+            <select class="form-control form-control-sm custom-select custom-select-sm"[(ngModel)]="appData.insCompany"  name="insCompany" id="insCompany">
+            <option value="">Select company</option>
+            <option *ngFor="let co_pay of ins_com_pay" value="{{ co_pay.INSURANCE_PAYERS_ID }}" >{{ co_pay.INSURANCE_PAYERS_ECLAIM_LINK_ID }} - {{ co_pay.INSURANCE_PAYERS_NAME }}</option>                                  <option  value="" ></option>
+            </select>
+          </div>
+          </div>
+        </div>
+        <div class="col-5">
+          <div class=" row">
+            <label for="p_type" class="col-3">Network</label>
+            <div class="col-9">
+              <select class="form-control form-control-sm custom-select custom-select-sm"[(ngModel)]="appData.insNetwork"  name="insNetwork" id="insNetwork">                                 
+              <option value="">Select network</option>
+              <option *ngFor="let network of networks" value="{{ network.INS_NETWORK_ID }}" >{{ network.INS_NETWORK_NAME }}</option>
+              <option  value="" ></option>
+              </select>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <div class="row col-lg-12">
+      <div class="col-5">
+        <div class=" row">
+        <label for="p_type" class="col-3">TPA</label>
+        <div class="col-9">
+          <select class="form-control form-control-sm custom-select custom-select-sm"[(ngModel)]="appData.tpa"  name="insCompany" id="insCompany">
+          <option value="">Select TPA</option>
+          <option *ngFor="let valdat of network_name" value="{{ valdat.TPA_ID }}" >{{ valdat.TPA }}</option>
+          </select>
+        </div>
+        </div>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <div class="row col-lg-12">
+      <div class="col-5">
+        <div class=" row">
+          <label class="col-sm-3" >From</label>
+          <div class="col-sm-9">                                      
+            <input class="form-control form-control-sm" type="date" [ngModel] ="appData.fromDateval | date:'yyyy-MM-dd'" (ngModelChange)="appData.fromDateval = $event" name="fromdate" id="fromdate"> 
+          </div>
+        </div>
+      </div>
+      <div class="col-5">
+        <div class=" row">
+          <label class="col-sm-3">To</label>
+          <div class="col-sm-9">
+            <input class="form-control form-control-sm" type="date"  [ngModel] ="appData.toDateval | date:'yyyy-MM-dd'" (ngModelChange)=" appData.toDateval = $event" name="todate" id="todate">                     
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="row col-lg-12">
+      <div class="col-10"></div>
+      <div class="col-2">
+        <button type="button" class="btn btn-info btn-sm"(click)="unClaimedInvoiceList();">Search</button>
+      </div>
+    </div>
+  </fieldset>     
+  <fieldset class="form-group" style="width:100%">
+    <legend> Credit invoice <label class="high-light"></label></legend>
+    <div class="container" >
+      <div style="width:100%;">
+        <div class="pull-left" style="width: 60%;">
+          <div class="row">
+            <div class="col-9">     
+              <div class="input-group mb-3">
+                <input style="height:31px;" id="typeahead-http" type="text" class="form-control" [(ngModel)]="appData.search_text" (keyup)="unClaimedInvoiceList($event)" (keypress)="unClaimedInvoiceList($event)"  (paste)= "unClaimedInvoiceList($event)"  name="search_text" placeholder="Patient name / Membership id...">
+                <div class="input-group-append">
+                  <!-- <span class="input-group-text">@example.com</span> -->
+                  <button style="height:31px;padding:7px" class="input-group-text" (click)="clear_search()">
+                    <i *ngIf="appData.search_text != ''"  class="fa fa-close"></i>
+                    <i *ngIf="appData.search_text == ''" class="fa fa-search"></i></button>
+                </div>
+              </div>   
+              <div class="invalid-feedback">Sorry, suggestions could not be loaded.</div>
+              <ng-container *ngIf="status == 'Failed' && appData.search_text "><span  [hidden]="this.status == 'Success'" style="color:red;font-size:13px;"> Sorry, suggestions could not be loaded.</span></ng-container>
+              <!-- <ng-container *ngIf="this.status === 'Failed'"><span  [hidden]="this.status == 'Success'" style="color:red;font-size:13px;"> Sorry, suggestions could not be loaded.</span></ng-container> -->
+            </div>
+          </div>
+        </div>
+        <button  *ngIf="user_rights.ADD=='1'"  class="btn-primary btn pull-right btn-sm pull-right" (click)="opens(content);setFile()">Generate claim file</button>
+      </div>
+      <div class="clearfix"></div> 
+      <table class="table tbl table-hover table-striped table-bordered">
+        <thead>
+          <tr class="text-center">
+            <th class="text-center" width="1%"><input type="checkbox" value=""(click)="selectAll()"[disabled]="selectall_satat == 1"></th>
+            <th class="text-center" width="1%" [hidden]=true>#</th>
+            <th class="text-center"  width="2%">EMR</th>
+            <th class="text-center"  width="10%">Patient Name</th>
+            <th class="text-center"  width="6%">Invoice</th>
+            <th class="text-center"  width="6%">Date</th>
+            <th class="text-center" >Company</th>
+            <th class="text-center"  width="7%">Network</th>
+            <th class="text-center"  width="7%">Member no</th>
+            <th class="text-center"  width="6%">Gross amount</th>
+            <th class="text-center"  width="6%">Patient amount</th>
+            <th class="text-center"  width="6%">Insurance amount</th>
+            <th class="text-center"  width="1%">verify</th>
+          </tr>
+          <tr *ngIf="unclaimed_list.length === 0">
+            <td colspan="13" class="text-center">No details available</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let list of unclaimed_list; let i=index">
+              <td class="text-center"><input type="checkbox" name="list.BILLING_ID"[checked]="checkall==1" (click)="select(list,i,checkall,('value'))"[disabled]="ins_company != 0 && ins_company != list.OP_INS_PAYER"></td>
+              
+              <td class="text-center" hidden>{{i+1}}</td>
+              <td class="text-center">{{list.OP_REGISTRATION_NUMBER}}</td>
+              <td>{{list.FIRST_NAME }} {{list.MIDDLE_NAME}} {{list.LAST_NAME}}</td>
+              <td class="text-center">{{list.BILLING_INVOICE_NUMBER}}</td>
+              <td class="text-center">{{formatDate(list.BILLING_DATE)}}</td>
+              <td>{{list.INSURANCE_PAYERS_NAME}}</td>
+              <td>{{list.INS_NETWORK_NAME}}</td>
+              <td>{{list.OP_INS_MEMBER_ID}}</td>
+              <td class="text-right">{{list.BILLED_AMOUNT}}</td>
+              <td class="text-right">{{list.PAID_BY_PATIENT}}</td>
+              <td class="text-right">{{list.INSURED_AMOUNT}}</td>
+              <td class="text-center" *ngIf="list.VERIFICATION_STATUS !='1'"><button *ngIf="user_rights.EDIT=='1'" [hidden]="list.VERIFICATION_STATUS =='1'" title="Verify" class="btn btn-xs btn-info" (click)="open(content2);setbill(list)"><i class="fa fa-check"></i></button></td>
+              <td class="text-center" *ngIf="list.VERIFICATION_STATUS =='1'">Verified</td>
+              <!--  -->
+            </tr>
+        </tbody>
+      </table>
+
+    <ngb-pagination 
+    [disabled]="appData.search_text"
+    class="d-flex justify-content-center"
+    [(page)]="page"
+    [pageSize]="pc"
+    [collectionSize]="collection"
+    [directionLinks]="true"
+    [boundaryLinks]="true"
+    [(page)]="page" aria-label="Default pagination"
+    [maxSize]="3"
+    (pageChange)="unClaimedInvoiceList(page-1)">
+  </ngb-pagination>
+  <pre>Current page : {{page}}</pre>
+  <pre>Total records : {{collection}}</pre>
+    </div>
+  </fieldset>   
+<!-- --------------------------------------------------------------------------------- -->
+<ng-template #content let-modal>
+  <div class="modal-header">       
+    <div class="pull-right ">
+      <h4 class="modal-title" id="modal-basic-title">
+      Generate Claim File
+      </h4>
+    </div>     
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">      
+    <div class="row container ">             
+      <div class="col-12">
+        <div class=" row">
+          <label for="p_type" class="col-3">File name</label>
+          <div class="col-9">
+              <input class="form-control" type="text" [(ngModel)]="popup_box" name="popup_box">
+          </div>
+        </div>
+        <div class="clearfix"></div>
+        <button  *ngIf="user_rights.ADD=='1'" class="btn-primary btn pull-right btn-sm ng-star-inserted" (click)="SubmissioniFleList();modal.dismiss('Cross click')">Generate file</button>
+      </div>
+    </div>
+  <!-- <app-patient-bill [assessment_id]="assessment_id" [selected_visit]="selected_visit" [patient_id]="patient_id" [assessment_list]="assesment_list"></app-patient-bill> -->
+  </div>
+</ng-template>
+<!-- ..............................content - 2................................. -->
+<ng-template #content2 let-modal>
+  <div class="modal-header">       
+    <div class="pull-right ">
+      <h4 class="modal-title" id="modal-basic-title">
+      Varify Claim File
+      </h4>
+    </div>     
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">      
+    <fieldset class="form-group ">
+      <legend>Varify Patient Details</legend>
+      <div class="row col-lg-12">
+        <div class="col-6">
+          <div class=" row">
+          <label for="p_type" class="col-3">Name</label>
+          <div class="col-9">
+            <input [(ngModel)]="varification_data.name" name="name" class="form-control form-control-sm" type="text">
+          </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class=" row"style="position:relative;">
+            <label for="p_type" class="col-3">Patient no</label>
+            <div class="col-9">
+              <input  [(ngModel)]="varification_data.patient_no" name="patient_no" class="form-control form-control-sm" disabled type="text">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+      <div class="row col-lg-12">
+        <div class="col-6">
+          <div class=" row">
+          <label for="p_type" class="col-3">TPA / Receiver</label>
+          <div class="col-9">
+            <input [(ngModel)]="varification_data.tpa_reciever" name="tpa" class="form-control form-control-sm" disabled type="text">
+          </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class=" row">
+            <label for="p_type" class="col-3">Insurance Co. / Payer</label>
+            <div class="col-9">
+              <input class="form-control form-control-sm" name="payer" [(ngModel)]="varification_data.ins_co_payer" disabled  type="text">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+      <div class="row col-lg-12">
+        <div class="col-6">
+          <div class=" row">
+          <label for="p_type" class="col-3">Network</label>
+          <div class="col-9">
+            <input class="form-control form-control-sm" name="network" type="text" disabled [(ngModel)]="varification_data.network">
+          </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class=" row">
+            <label for="p_type" class="col-3">Member ID</label>
+            <div class="col-9">
+              <input class="form-control form-control-sm" name="member" type="text"[(ngModel)]="varification_data.member_id">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+      <div class="row col-lg-12">
+        <div class="col-6">
+          <div class=" row">
+          <label for="p_type" class="col-3">Policy Number</label>
+          <div class="col-9">
+            <input class="form-control form-control-sm" name="policy_no" type="text" [(ngModel)]="varification_data.policy_no">
+          </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class=" row">
+            <label for="p_type" class="col-3">Claim amount</label>
+            <div class="col-9">
+              <input class="form-control form-control-sm" name="amount" disabled type="text" [(ngModel)]="varification_data.claim_amount">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+      <div class="row col-lg-12">
+        <div class="col-10">
+          <button  (click)="savePatientData()" class="btn btn-primary btn-sm">Save</button>
+        </div>
+        <div class="col-2">
+            <button type="button" (click)="varifyPatientData()" class="pull-right btn btn-success btn-sm">Save & varify</button>
+      </div>
+      </div>
+    </fieldset>     
+    <fieldset class="form-group" >
+      <legend> Patient Billing Details</legend>
+      
+      <div class="col-lg-12 container">
+        <div class="clearfix"></div>
+        <div class="clearfix"></div>
+        <table class=" col-lg-12 table tbl table-hover table-striped table-bordered">
+          <thead>
+            <tr>
+              <th width="1%" class="text-center">Sl#</th>
+              <th width="20%" class="text-center">Description</th>
+              <th width="4%" class="text-center">Code</th>
+              <th width="3%" class="text-center">Price(AED)</th> 
+              <th width="3%" class="text-center">Qty</th>
+              <th width="5%" class="text-center">Gross(AED)</th>
+              <th width="5%" class="text-center">Co-payment</th>
+              <th width="5%" class="text-center">Patient Pay</th>
+              <th width="5%" class="text-center">Total</th>
+              <th width="10%" class="text-center">Prior authorisation</th>
+              <!-- <th>Result value</th> -->
+            </tr>
+            <tr *ngIf="table_invoice_list == '[]'">
+                <td colspan="10" class="text-center">No details available</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let invoice of table_invoice_list;let i=index">
+              <td class="text-center">{{ i + 1 }}</td>
+              <td class="text-left">{{ invoice.DESCRIPTION }}</td>
+              <td class="text-center">{{ invoice.PROCEDURE_CODE}} </td>
+              <td class="text-right">{{ invoice.RATE}}</td>
+              <td class="text-center">{{ invoice.QUANTITY }}</td>  
+              <td class="text-right">{{ invoice.RATE * invoice.QUANTITY | number : '1.2-2'}}</td>  
+              <td class="text-right"> {{ invoice.CO_PAYMENT + invoice.CO_PAYMENT_TYPE }}</td>
+              <td class="text-right"> {{invoice.TOTAL_PATIENT_PAYABLE | number : '1.2-2'}}</td>     
+              <td class="text-right">{{invoice.TOTAL  | number : '1.2-2'}}</td>  
+              <td>
+                <input class="form-control form-control-sm" type="text" [(ngModel)]="prior_authorisation[i]" name="prior_authorisation{{i}}">
+              </td>
+              <!-- <td>
+                <button class="btn btn-primary btn-sm"(click)="open(content3);">Get value</button>
+              </td> -->
+              <!-- <td>
+                  <button class="btn btn-primary btn-sm"(click)="saveBillresult(i)">Save</button>
+              </td> -->
+            </tr>
+          </tbody>
+        </table>
+        <div class="row col-lg-12"> 
+          <div class="col-2">
+            <button class="btn btn-info pull-left btn-sm"(click)="opened(content3);getLabInvestigationResults();">Result values</button>
+          </div>
+          <div class="col-10">
+            <button class="btn btn-primary btn-sm pull-right"(click)="saveBillresult()">Save</button>
+          </div>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+      <div class="col-lg-12 container pull-right">
+        <table cellspacing="0" cellpadding="0" class="table table-sm table-striped ">
+          <tbody *ngIf="invoice_list != '[]'">
+            <tr> 
+                <td  style="text-align: right">Gross Total:</td>
+                <td style="text-align: right;width:10%">{{ gross_total | number : '1.2-2'}}</td>
+            </tr>
+            <tr>
+                <td   style="text-align: right">Net Total:</td>
+                <td style="text-align: right;width:10%">{{ net_total  | number : '1.2-2'}}</td>
+            </tr>
+            <tr>
+                <td   style="text-align: right">Patient Payable:</td>
+                <td style="text-align: right;width:10%">{{ patient_payable_total  | number : '1.2-2'}}</td>
+            </tr>
+            <tr>
+                <td   style="text-align: right">Amount to be Claimed:</td>
+                <td style="text-align: right;width:10%">{{ bill_total  | number : '1.2-2'}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="clearfix"></div>
+      <div class="clearfix"></div>
+    </fieldset>
+  </div>
+  </ng-template>
+</form>
+
+  <!-- -------------------------------content-3---------------------------------------------------- -->
+  <ng-template #content3 let-modal>
+    <div class="modal-header">       
+      <div class="pull-right">
+        <h4 class="modal-title" id="modal-basic-title">
+          Select result value
+        </h4>
+      </div>     
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">      
+      <fieldset class="form-group ">
+        <legend>Result Values</legend>     
+        <table class="table tbl table-hover table-striped table-bordered">
+          <thead>
+            <tr>
+              <th style="text-align: center;width: 5%">Sl no</th>
+              <th style="text-align: center;width: 15%">CPT</th>
+              <th style="text-align: center;width: 40%">Test</th>
+              <th style="text-align: center;width: 40%">Result</th>
+              <!-- <th>Edit</th> -->
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="lab_investigation_result==''">
+                <td colspan="5" class="text-center">No data available</td>
+            </tr>
+            <tr *ngFor="let result of lab_investigation_result;let i =index">                          
+              <td class="text-center">{{ i + 1 }}</td>
+              <td>{{ result.PROCEDURE_CODE }}</td>
+              <td>{{ result.CODE }}</td>
+              <td *ngIf="result.EDIT !=false">
+                <input type="text"class="form-control form-control-sm" type="text" [(ngModel)]="lab_investigation_result_value[i]" name="lab_investigation_result_value{{i}}">
+              </td>
+              <td *ngIf="result.EDIT == false">{{result.VALUE}}</td>
+              <!-- <td>{{ result.EDIT }}</td> -->
+            </tr>
+          </tbody>
+        </table>
+        <div class="row col-12 container">
+        <div class="col-lg-11"></div>                             
+        <div class="col-lg-1"style="pull-rightt">
+          <button class="btn btn-primary btn-sm"(click)="saveLabInvestigationResults()">Save</button>
+        </div>
+      </div>
+      </fieldset>
+    </div>
+  </ng-template>

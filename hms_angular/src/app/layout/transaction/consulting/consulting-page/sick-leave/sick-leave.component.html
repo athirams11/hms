@@ -1,0 +1,241 @@
+<div class="panel-heading" style="background-color: #036896;
+        margin-bottom: 5px;
+        padding: 1px 9px; margin-top: 15px;
+        color: #fff;">
+    Sick Leave</div>
+<fieldset class="form-group row">
+    <legend>New Patient Sick Leave</legend>
+    <div class="row col-lg-12">
+        <div class="form-group col-lg-12">
+            <label for="p_type">Sick Reason</label><span class="text-danger">&nbsp;*</span>
+            <textarea class="form-control form-control-sm" [(ngModel)]="sickLeave.sickReason" name="sickReason"
+                id="sickReason"></textarea>
+        </div>
+        <div class="clearfix"></div>
+        <div class="form-group col-lg-4">
+            <label for="p_type">Issued Date</label><span class="text-danger">&nbsp;*</span>
+            <input class="form-control form-control-sm" type="date" [ngModel]="sickLeave.issueddate | date:'yyyy-MM-dd'"
+                (ngModelChange)="sickLeave.issueddate = $event" name="issueddate" id="issueddate">
+        </div>
+        <div class="form-group col-lg-4">
+            <label for="p_type">From Date</label><span class="text-danger">&nbsp;*</span>
+            <input class="form-control form-control-sm" type="date"
+                [ngModel]="sickLeave.sickFromdate | date:'yyyy-MM-dd'" (ngModelChange)="sickLeave.sickFromdate = $event"
+                name="sickFromdate" id="sickFromdate" (change)="getNumberOfDays()">
+        </div>
+        <div class="form-group col-lg-4">
+            <label for="p_type">To Date</label><span class="text-danger">&nbsp;*</span>
+            <input class="form-control form-control-sm" type="date" [ngModel]="sickLeave.sickTodate | date:'yyyy-MM-dd'"
+                (ngModelChange)="sickLeave.sickTodate = $event" name="sickTodate" id="sickTodate"
+                (change)="getNumberOfDays()">
+        </div>
+        <div class="clearfix"></div>
+        <div class="form-group col-lg-4">
+            <label for="p_type">Number of days&nbsp;:&nbsp;&nbsp;{{sickLeave.duration}}</label>
+        </div>
+        <div class="form-group col-lg-12">
+            <div class="clearfix"></div>
+            <div class="clearfix"></div>
+            <div class="clearfix"></div>
+            <button type="button" class="btn btn-primary btn-sm" title="Save"
+                (click)="savePatientSickLeave()">Save</button>&nbsp;&nbsp;
+            <button type="button" class="btn btn-danger btn-sm" title="Clear" (click)="clear_sick()">Clear</button>
+            <!-- <button *ngIf="sickLeave.patient_sick_leave_id > 0" type="button" class="btn pull-right btn-sm btn-info" title="Print" printSectionId="certificates"  [useExistingCss]="true" ngxPrint>Print</button> -->
+        </div>
+    </div>
+    <div class="row col-lg-12" style="padding-top: 20px;">
+        <div class="form-group col-lg-12">
+            <table class="table tbl table-striped table-bordered">
+                <thead>
+                    <tr class="text-center">
+                        <th width="2%">#</th>
+                        <th width="10%">Certificate#</th>
+                        <th width="10%">Issued Date</th>
+                        <th width="10%">Start Date</th>
+                        <th width="10%">End Date</th>
+                        <th width="10%">No. Of Days</th>
+                        <th width="5%">Action</th>
+                    </tr>
+                    <tr *ngIf="(sick_data | json) == '[]'">
+                        <td colspan="7" class="text-center">No details available</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let sick of sick_data;let i=index">
+                        <td class="text-center">{{ i + 1 }}</td>
+                        <td class="text-center">{{sick.CERTIFICATE_NUMBER }}</td>
+                        <td class="text-center">{{ formatDate(sick.ISSUED_DATE) }}</td>
+                        <td class="text-center">{{ formatDate(sick.FROM_DATE) }}</td>
+                        <td class="text-center">{{ formatDate(sick.TO_DATE) }}</td>
+                        <td class="text-center">{{ sick.DURATION }}</td>
+                        <td class="text-center">
+                            <button class="btn btn-xs btn-info" title="View"
+                                (click)="getPatientSickLeave(sick.PATIENT_ID,sick.PATIENT_SICK_LEAVES_ID,content)"><i
+                                    class="fa fa-eye"></i></button>&nbsp;&nbsp;
+                            <!-- <button  title="Print"  printSectionId="certificate"  [useExistingCss]="true" class="btn btn-xs btn-primary" ngxPrint>
+                                <i class="fa fa-print"></i>
+                            </button> -->
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</fieldset>
+
+
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <div class="pull-right text-right">
+            <h5 class="modal-title" id="modal-basic-title">
+                Patient sick leave certificate
+            </h5>
+        </div>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="col-lg-12 ">
+        <div class="clearfix"></div>
+        <table class="col-lg-12 borderless">
+            <tr>
+                <td width="50%" class="text-left"></td>
+                <td width="50%" class="text-right">
+                    <!-- <button class="btn btn-primary btn-sm" (click)="exportAs()"><i class="fa fa-file-pdf-o"></i>&nbsp;PDF&nbsp;</button>&nbsp;&nbsp;    -->
+                    <button class="btn btn-primary btn-sm" (click)="downloadFile()"><i
+                            class="fa fa-file-pdf-o"></i>&nbsp;PDF&nbsp;</button>&nbsp;&nbsp;
+                    <button title="Print" printSectionId="certificate" [useExistingCss]="true"
+                        class="btn btn-info btn-sm" ngxPrint>
+                        <i class="fa fa-print"></i>&nbsp;Print&nbsp;
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="modal-dialog">
+        <div class="modal-body">
+            <div class="tab-pane active">
+                <div class="tab-content">
+                    <div class="panel-body margin" id="certificate">
+                        <div class="clearfix"></div>
+                        <div class=" col-lg-12">
+                            <table class="col-lg-12 borderless">
+                                <tr>
+                                    <td width="30%" class="text-left">
+                                        <ng-container *ngIf="institution && institution.INSTITUTION_LOGO">
+                                            <img [src]="logo_path+institution.INSTITUTION_LOGO" height="100px"
+                                                width="auto">
+                                        </ng-container>
+                                    </td>
+                                    <td width="70%" class="text-right" style="font-size: 15px;">
+                                        <div *ngIf="institution">
+                                            <h5 class="name"><b>{{institution.INSTITUTION_NAME}}</b></h5>
+                                            <div style="line-height: 0.75em;"><label
+                                                    style="font-size: 15px;">{{institution.INSTITUTION_ADDRESS}}</label>
+                                            </div>
+                                            <div style="line-height: 0.75em;"><label
+                                                    style="font-size: 15px;">{{institution.INSTITUTION_CITY}},&nbsp;{{institution.INSTITUTION_COUNTRY_NAME}}</label>
+                                            </div>
+                                            <div style="line-height: 0.75em;"><label style="font-size: 15px;">Ph
+                                                    :&nbsp;{{institution.INSTITUTION_PHONE_NO}}</label></div>
+                                            <div style="line-height: 0.75em;"><label style="font-size: 15px;">Email
+                                                    :&nbsp;{{institution.INSTITUTION_EMAIL}}</label></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                            <div class="clearfix"></div>
+                            <div class="clearfix"></div>
+                            <div class="clearfix"></div>
+                            <h4 class="text-center" style="font-weight: bold;"><span class="doubleUnderline">WORK
+                                    FITNESS</span></h4>
+                            <div class="clearfix"></div>
+                            <div class="clearfix"></div>
+                            <div class="clearfix"></div>
+                            <table class="col-lg-12 borderless" style="border: none;">
+                                <tr style="font-size: 15px;">
+                                    <td style="font-size: 15px;" width="50%" class="text-left">No &nbsp; :&nbsp;&nbsp;{{
+                                        sick_certificate_data.CERTIFICATE_NUMBER }}</td>
+                                    <td style="font-size: 15px;" width="50%" class="text-right">Date &nbsp;
+                                        :&nbsp;&nbsp;{{ formatByDate(sick_certificate_data.ISSUED_DATE) }}</td>
+                                </tr>
+                            </table>
+                            <div class="clearfix"></div>
+                            <div class="clearfix"></div>
+                            <div class="clearfix"></div>
+                            <table class="col-lg-12 borderless" style="border: none;">
+                                <tr>
+                                    <td style="font-size: 15px;line-height: 170%;">
+                                        Please be advised that
+                                        <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            {{ gender_sur[sick_certificate_data.GENDER] }}{{
+                                            sick_certificate_data.PATIENT_NAME }}
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>
+                                        has attended the clinic and the following was observed
+                                        <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            {{ sick_certificate_data.SICK_REASON }}
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>
+                                        Fit for/was given sick leave for
+                                        <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                                            {{ sick_certificate_data.DURATION }}&nbsp;Days
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>
+                                        &nbsp;From&nbsp;
+                                        <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                                            {{ formatByDate(sick_certificate_data.FROM_DATE) }}
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>
+
+                                        &nbsp;To &nbsp;
+                                        <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                                            {{ formatByDate(sick_certificate_data.TO_DATE) }}
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center">
+                                        <div class="clearfix"></div>
+                                        <div class="clearfix"></div>
+                                        <div class="clearfix"></div>
+                                        <div class="clearfix"></div>
+                                        <div class="clearfix"></div>
+                                        <div class="clearfix"></div>
+                                        <span style="font-weight: bold;font-size: 16px;">Signature & Stamp of
+                                            Doctor</span>
+                                        <div style="margin-top:120px"></div>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table class="col-lg-12 borderless" style="border: none;">
+                                <tr>
+                                    <td class="text-left" style="text-justify: auto;font-size: 15px;">
+                                        <span>
+                                            I hereby declare that I have been well explained
+                                            regarding the procedure of sick leave as per the rules
+                                            and regulations set by MOH and DOHMS.
+                                            I confirm that this certificate will be used for internal
+                                            administrative pupose of our office/company and I
+                                            undertake all liability and legal responsibility for
+                                            same.<br><br><br>
+                                            Date :
+                                            <span class="pull-right" style="margin-right: 70px;">
+                                                Patient Sign
+                                                :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            </span>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</ng-template>

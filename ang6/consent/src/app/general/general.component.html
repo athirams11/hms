@@ -1,0 +1,152 @@
+<div class="container-fluid-sm container-lg mt-3">
+	<mat-card>
+		<mat-card-title><h5>Patient Details</h5></mat-card-title>
+		<mat-card-content>
+			<div class="row">
+				<div class="col-md-12 ">
+					<div class="row">
+						<div class="col-6">
+							<ngx-select-dropdown  class="col-12 form-control form-control-sm size" [config]="configer" [options]="patients" name="opnumber" [multiple]="false" (change)="getPatientDetails($event)" [(ngModel)]="patient_nodata"></ngx-select-dropdown>
+						</div>
+						<div class="col-6 float-md-right d-none d-md-block text-right">
+							Date : {{ dateVal | date:'dd-MM-yyyy H:mm a' }}						</div>
+					</div>
+					<!-- <mat-form-field class="col-6">
+						<input matInput [(ngModel)]="opnumber" (change)="getPatientDetails()" placeholder="OP Number">
+						<mat-icon class="cursor-pointer" matSuffix (click)="getPatientDetails()">search</mat-icon>
+					</mat-form-field>
+					<div class="float-md-right d-none d-md-block ">
+						Date : {{ dateVal | date:'dd-MM-yyyy H:mm a' }}
+					</div> -->
+				</div>
+				<div class="col-md-12 mergin-top-10" *ngIf="patient_data != null  && patient_data != ''">
+					<mat-card >
+						<mat-card-content>
+							<div class="row">
+								<div *ngIf="patient_data != null  && patient_data != ''" class="col-lg-12">
+									<mat-card-subtitle class="text-purple mb-1 pt-2">Name</mat-card-subtitle>
+									<mat-card-content>{{ patient_gender }}. {{ patient_name }}</mat-card-content>
+									<mat-divider></mat-divider>
+									<mat-card-subtitle class="text-purple mb-1 pt-2">Dob</mat-card-subtitle>
+									<mat-card-content>{{ patient_dob }}</mat-card-content>
+									<mat-divider></mat-divider>
+									<mat-card-subtitle class="text-purple mb-1 pt-2">Address.</mat-card-subtitle>
+									<mat-card-content>{{ patient_address }}</mat-card-content>
+									<mat-divider></mat-divider>
+								
+									
+									<mat-card-subtitle class="text-purple mb-1 pt-2">Phone No.</mat-card-subtitle>
+									<mat-card-content>{{ patient_no }}</mat-card-content>
+									<mat-divider></mat-divider>
+									<mat-card-subtitle class="text-purple mb-1 pt-2">Nationality.</mat-card-subtitle>
+									<mat-card-content>{{ patient_nationality }}</mat-card-content>
+									<mat-divider></mat-divider>
+									<mat-card-subtitle class="text-purple mb-1 pt-2">National Id.</mat-card-subtitle>
+									<mat-card-content>{{ patient_nationalid }}</mat-card-content>
+									
+								</div>
+							</div>
+
+						</mat-card-content>
+					</mat-card>
+				</div>
+				
+
+				
+				
+			</div>
+			
+		</mat-card-content>
+	</mat-card>
+</div>
+<div class="container-fluid-sm container-lg mt-3" *ngIf="lang == 1">
+	<mat-toolbar color="primary" class="text-center  mb-2 rounded-top">
+		<span>{{ title }}</span> 
+		<span class="example-spacer"></span>
+    	<button (click)="changeLang(2)" class="text-left" mat-raised-button>مشاهدة النسخة العربية</button>
+	</mat-toolbar>
+
+
+	<mat-card>
+	   
+	    <mat-card-content>
+	
+		  	<div class="row">
+		      	<div class="list-group">
+					<ng-container *ngFor="let cond of condetions">
+						
+							<div [innerHTML]="cond.en | nl2br" class="list-group-item align-items-start"></div>
+						
+					</ng-container>
+				</div>
+				
+			</div>
+			
+		</mat-card-content>
+	</mat-card>
+</div>
+<div class="container-fluid-sm container-lg mt-3" *ngIf="lang == 2">
+	<mat-toolbar color="primary" class="text-center  mb-2 rounded-top">
+    	<button (click)="changeLang(1)" mat-raised-button>View English</button>
+		<span class="example-spacer"></span>
+		<span class="text-left">{{ title_ar }}</span> 
+	</mat-toolbar>
+
+	<mat-card>
+
+		<mat-card-content>		  	
+		  	<div class="row">
+				<div class="list-group">
+					<ng-container *ngFor="let cond of condetions">
+						
+						<div [innerHTML]="cond.ar | nl2br" class="list-group-item align-items-start text-right"></div>
+						
+					</ng-container>
+				</div>
+			</div>
+			
+		</mat-card-content>
+	</mat-card>
+
+</div>
+<div class="container-fluid-sm container-lg mt-3">
+	<mat-card>
+		<mat-card-content>
+			<div class="container-fluid">
+					
+				<div class="row">
+					
+					<div class="col-lg-6">
+					</div>
+					<div class="col-lg-6 " #signdiv>
+						<div class="text-center" >
+							(Sign Below)
+						</div>
+						<div class="text-center">
+							<signature-pad class="" [options]="signaturePadOptions" (onBeginEvent)="drawStart()" (onEndEvent)="drawComplete($event)"></signature-pad>
+							<br>
+							<button  type="button" (click)="drawClear()" class="btn btn-default btn-sm" >Clear Signature</button>
+						</div>
+																		 
+					</div>
+					
+				</div>
+							
+						
+			</div>
+		</mat-card-content>
+	</mat-card>
+	<mat-card>
+		
+		<mat-card-content *ngIf="patient_visit != null">
+			<div class="row">
+				
+				<div class="col-lg-12">
+																	 
+						<button  type="button" (click)="saveConsent()" class="float-right btn btn-success btn-sm" >Submit</button>
+				</div>
+			</div>
+			
+		</mat-card-content>
+	</mat-card>
+</div>

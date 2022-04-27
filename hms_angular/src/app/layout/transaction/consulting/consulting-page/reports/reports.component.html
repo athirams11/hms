@@ -1,0 +1,45 @@
+
+<form #ReportForm="ngForm" (ngSubmit)="saveReportsAndNotes(ReportForm)" >
+    <fieldset class="form-group">
+        <legend><label class="high-light">Reports and Notes</label></legend>
+            <div class="container  row">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th style="width:20%;">Reports and notes</th>
+                            <th style="width:60%;">Details</th>
+                            <th style="width:1%;"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr >    
+                            <td style="width:20%;"><h6>Investigation Requested</h6></td>
+                            <td style="width:60%;"><textarea class="form-control" [(ngModel)]="report_data.investigation_requested"  name="report_data.investigation_requested"></textarea></td>
+                            <td style="width:1%;"><button alt="Clear data" title="Clear data" type="button" class="btn btn-success btn-sm remove" type="button" (click)="deleteValue()"><i  class="fa fa-trash"></i></button>
+                        </tr>
+                    </tbody>        
+                </table>
+            </div>
+            <div class="row container"><h4>Vitals</h4></div>
+                <div class="container row form-group">
+                    <table class="table table-condensed">
+                        <thead>
+                        <tr>
+                            <th><label>Date & Time</label></th>
+                            <th *ngFor="let vitals of vital_params"><label>{{ vitals.SHORT_FORM }}({{ vitals.SYMBOL }})</label></th>
+                        </tr>
+                        </thead>        
+                        <tbody>
+                            <tr *ngFor="let details of vital_values">
+                                <td>{{ formatDate(details.DATE_TIME)}}</td>
+                                <td *ngFor="let details_data of details.param_values;let i = index">{{ details_data.PARAMETER_VALUE }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>    
+            <div style="padding-top: 50px">
+                 <button  class="btn btn-primary btn-sm ng-star-inserted pull-right" type="submit">Save</button>&nbsp;&nbsp;&nbsp;&nbsp;
+            </div>
+    </fieldset>
+ </form>
+            

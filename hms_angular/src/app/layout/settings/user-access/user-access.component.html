@@ -1,0 +1,56 @@
+<div [@routerTransition]>
+  <app-page-header [heading]="'User Access'" [icon]="'fa-edit'"></app-page-header>
+  <form role="form">
+    <fieldset class="form-group row" *ngIf="user_rights.APPROVE == '1'">
+      <div class="row col-lg-12">
+        <div class="form-group col-lg-6" >
+          <label for="p_type">User Group</label><span class="text-danger">&nbsp;*</span>
+          <select [(ngModel)]="sel_user_group" (change)="getGroupAccess()" class="form-control form-control-sm custom-select custom-select-sm" name="sel_user_group" id="sel_user_group">
+            <option value="">Select User Group</option>
+            <option *ngFor="let gr of user_groups" value="{{ gr.USER_ACCESS_GROUP_ID }}" >{{ gr.USER_ACCESS_GROUP_NAME }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+      <div class="clearfix"></div>
+      <div class="col-lg-12">
+        <table *ngIf="(user_access_list | json) != '[]'" class="table  table-bordered " >
+          <tbody>
+            <tr *ngFor="let module_group of user_access_list">
+              <td>
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input type="checkbox" (change)="changeGroup(module_group.MODULE_GROUP_ID,!+module_group.MODULE_GROUP_ACCESS)" class="form-check-input" [checked]="+module_group.MODULE_GROUP_ACCESS" name="optradio">&nbsp;{{ module_group.MODULE_GROUP_NAME }}
+                  </label>
+                </div>
+                <table class="sm-tbl table table-hover table-striped table-bordered">
+                  
+                  <thead>
+                    <tr>
+                      <th >
+                        Modules
+                      </th>
+                      <th width="10%" class="text-center" *ngFor="let tp of user_access_types" >
+                        {{ tp.USER_ACCESS_TYPE_NAME }}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let module of module_group.sub_menu" [class.text-muted]="!+module_group.MODULE_GROUP_ACCESS">
+                      <td>
+                        {{ module.MODULE_NAME }}
+                      </td>
+                      <td  class="text-center" *ngFor="let val of createArray(module.MODULE_ACCESS_RIGHTS); let i = index"> 
+                        <input [disabled]="!+module_group.MODULE_GROUP_ACCESS" (change)="changeAccessRights(module.MODULE_ID,!+val,i,module.MODULE_ACCESS_RIGHTS)" type="checkbox" [checked]="+val" >
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </fieldset>
+  </form>
+</div>

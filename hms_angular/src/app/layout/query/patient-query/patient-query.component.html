@@ -1,0 +1,54 @@
+<div [@routerTransition]>
+  <app-page-header [heading]="'Patients List'" [icon]="'fa-clock-o'"></app-page-header>
+  <!-- <div *ngIf="patient_list !=0"> -->
+    <div class="form-group">
+      <div class="col-lg-12 ">
+        <table class="col-lg-12 borderless">
+          <tr> 
+            <td width="40%" class="text-left">
+                <div class="input-group mb-3 pull-left">
+                  <input id="typeahead-http" style="height:34px" type="text" class="form-control" 
+                  [(ngModel)]="search_patient" (keyup)="getPatient()" (keypress)="getPatient()"  
+                  (paste)= "getPatient()"  name="search_text" 
+                  placeholder="Patient name / Patient no ...">
+                  <div class="input-group-append">
+                    <button style="padding: 7px;height:34px" class="input-group-text" (click)="clear_search()">
+                      <i *ngIf="search_patient != ''"  class="fa fa-close"></i>
+                      <i *ngIf="search_patient == ''" class="fa fa-search"></i>
+                    </button>
+                  </div>
+                </div>  
+                <!-- <div class="invalid-feedback">
+                  No results found
+                </div> -->
+              <ng-container *ngIf="status == 'Failed' && search_patient ">
+                <label [hidden]="this.status == 'Success'" style="color:red;font-size:13px;"> 
+                  No results found</label>
+              </ng-container> 
+            </td>
+            <td width="50%" class="text-right" style="vertical-align: top;"></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <app-list-table [patient_list] = "patient_list" [start]="start" [data] = "0"></app-list-table>
+    <ngb-pagination 
+      [disabled]=""
+      class="d-flex justify-content-center"
+      [(page)]="page"
+      [pageSize]='p'
+      [collectionSize]="collection"
+      [directionLinks]="true"
+      [boundaryLinks]="true"
+      [(page)]="page" aria-label="Default pagination"
+      [maxSize]="3"
+      (pageChange)="getPatientList(page-1)">
+    </ngb-pagination>
+    <div class="form-group">
+      <div class="col-lg-12 ">
+        <pre>Current page : {{page}}</pre>
+        <pre>Total records : {{collection}}</pre>
+      </div>
+    </div>
+  <!-- </div> -->
+</div>

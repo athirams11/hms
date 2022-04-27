@@ -1,0 +1,182 @@
+<fieldset class="form-group row" >
+  <legend>Nursing Assessment List <label class="high-light"></label></legend>
+  <div class=" col-lg-12" >
+    <div class="input-group-append pull-right">
+      &nbsp; &nbsp; <i  class="fa fa-search"></i>
+    </div>
+    <input type="text"  class="form-control form-control-sm"  class="pull-right" [(ngModel)]="term">  
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <table class="table tbl table-hover table-striped table-bordered">
+      <thead>
+          <tr>
+              <th class="text-left" style="width:25%;">Patient Name</th>
+              <th style="width:10%;">Patient No.</th>
+              <th style="width:5%;">Age</th>
+              <th style="width:7%;">Gender</th>
+              <!-- <th style="width:7%;">Nationality</th> -->
+              <!-- <th style="width:7%;">Type</th> -->
+              <th style="width:10%;">Start.Time</th>
+              <th class="text-left" style="width:25%;">Doctor</th>
+              
+              <!-- <th style="width:5%;">Type</th> -->
+              <th class="text-left" style="width:15%;">Dept</th>
+              <th style="width:10%;">Phone No.</th>
+              <th class="text-center" style="min-width:15%;">Action</th>
+          </tr>
+          <tr *ngIf="(visit_list | json) == '[]'"><td colspan="12" class="text-center">No visits to show</td></tr>
+      </thead>
+      
+      <tbody *ngIf="(visit_list) != '[]'">
+          <tr  *ngFor="let visit of visit_list| filter:term"  
+          style="cursor: pointer;" (mouseover)="showTpa(visit)" (mouseout)="hideTpa(visit)" title="{{text}}"
+          [class.text-success]="visit.STAT == 1">
+              <td>{{ visit.FIRST_NAME }} {{ visit.MIDDLE_NAME }} {{ visit.LAST_NAME }}</td>
+              <td>{{ visit.PATIENT_NO }} </td>
+              <td class="text-center">
+                <ng-container *ngIf="visit.AGE > 0">{{ visit.AGE }}y</ng-container> 
+                <ng-container *ngIf="visit.AGE == 0 && visit.MONTHS > 0">{{ visit.MONTHS }}m</ng-container> 
+                <ng-container *ngIf="visit.AGE == 0 && visit.MONTHS == 0 && visit.DAYS > 0">{{ visit.DAYS }}d</ng-container> 
+              </td>
+              <td class="text-center"><span *ngIf="visit.GENDER == 1">Male</span><span *ngIf="visit.GENDER == 0">Female</span></td>
+              <!-- <td class="text-center">{{ visit.COUNTRY_ISO3 }}</td>  -->
+              <!-- <td class="text-center"><span *ngIf="visit.GENDER == 1">New</span><span *ngIf="visit.GENDER == 2">New</span></td>-->
+              <td class="text-center">{{ formatTime(visit.START_TIME) }}</td>
+              <td class="text-left">{{ visit.DOCTOR_NAME }} </td>
+              <!-- <td class="text-center"><button *ngIf="visit.OP_REGISTRATION_TYPE == 1" class="btn btn-xs btn-link"><i class="fa fa-umbrella"></i></button></td> -->
+              <td>{{ visit.DEPARTMENT_NAME }}</td>
+              <td>{{ visit.MOBILE_NO }} </td>
+              <td style="min-width:100px;"class="text-center">
+                <button title="Assessment Details" (click)="setAssessment(visit);setPatient(visit.PATIENT_ID);open(content);" alt="Attach data"  class="btn btn-sm btn-xs btn-info"><i class="fa fa-file-text-o"></i></button>&nbsp;
+                <button *ngIf="user_rights.EDIT=='1' && visit.STAT != 1" title="Finish Assessment"  alt="Finish Assessment"  class="btn btn-sm btn-xs btn-success"
+                    mwlConfirmationPopover
+                    [popoverTitle]="popoverTitle"
+                    [popoverMessage]="popoverMessage"
+                    closeOnOutsideClick="true"
+                    placement="left"
+                    (confirm)="alertbox(visit)"
+                    (cancel)="cancelClicked = true">
+                    <i class="fa fa-check"></i>
+                  </button>
+              </td>
+              
+          </tr>
+      </tbody>
+      
+    </table>
+  </div>
+</fieldset>
+<ng-template #content let-modal>
+    <div class="modal-header">
+      <div class="pull-right text-right">
+        <h6 class="modal-title" id="modal-basic-title" style="vertical-align: top;">
+          Name : {{ selected_visit.FIRST_NAME }} {{ selected_visit.MIDDLE_NAME }} {{ selected_visit.LAST_NAME }}
+        </h6>
+      </div>
+      <div class="pull-right text-right">
+        <button alt="previous"  title="previous" (click)="getPreviousAssessmentDetails(selected_visit)" class="pull-left btn btn-link">
+          <i style="vertical-align: top;" class="fa fa-chevron-left"></i>
+        </button>
+        <ng-container *ngIf="selected_visit.CREATED_TIME != null"> Assessment Date & Time : 
+          <select style="font-size: 14px;"  [(ngModel)]="assessment_id"  (change)="getAssessmentDetails()">
+            <option style="font-size: 14px;" *ngFor="let data of visit_details"  value="{{data.NURSING_ASSESSMENT_ID}}" >
+               {{formatDateTime(data.CREATED_TIME)}} - {{data.DOCTOR_NAME}}
+            </option>
+          </select>
+        </ng-container>
+        <!-- <ng-container *ngIf="selected_visit.DISCOUNT_SITE_ID > 0">
+          <i class="fa fa-bell bounce  text-danger pull-right" title="Notification" (click)="getDiscountTreatmentDetails(discount)"></i>
+        </ng-container> -->
+        <!-- <div class="screenAlert-icon screenAlert-info scaleInfo">
+          <i class="fa fa-bell text-danger pull-right"></i>
+        </div> -->
+        <button alt="next" (click)="getNextAssessmentDetails(selected_visit)" title="next" class="pull-right btn btn-link">
+          <i style="vertical-align: top;" class="fa fa-chevron-right"></i>
+        </button>
+      </div>
+      <!-- <button *ngIf="selected_visit.STAT != 1"  style="margin-left:20px;vertical-align: bottom;"
+      title="Finish Assessment"  alt="Finish Assessment"  
+      class="btn btn-sm btn-xs  btn-success" (click)="confirm(confirms)">
+          Finish Assessment
+      </button> -->
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <app-assessment-page (finishAssessment)="onFinishAssessment($event,confirms)" 
+        (showDiscount)="onshowDiscount($event,discount)"
+        [assessment_id]="assessment_id" [selected_visit]="selected_visit" [patient_id]="patient_id"></app-assessment-page>
+    </div>
+    
+  </ng-template>
+  <ng-template #alert let-modal>
+    <div class="modal-header">
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+    </div>
+    
+  </ng-template>
+
+
+<ng-template #confirms let-modal >
+  <div class="clearfix"></div>
+  <div class="clearfix"></div>
+  <div class="form-group text-left col-lg-12">
+    <label style="font-size: 14px;" class="text-left">Are you sure the assessment completed ?</label>
+  </div>
+  <div class="form-group text-center col-lg-12">
+    <button type="button" class="btn  btn-sm btn-success"  (click)="completeAssessment(selected_visit,1);modal.dismiss('Cross click')">Yes</button>&nbsp;&nbsp;
+    <button type="button" class="btn  btn-sm btn-warning text-light" (click)="modal.dismiss('Cross click')">No</button>
+  </div>
+  <div class="clearfix"></div>
+  <div class="clearfix"></div>
+</ng-template>
+
+
+<ng-template #discount let-modal>
+  <div class="modal-header">
+    <div class="pull-right ">
+      <h5 class="modal-title" id="modal-basic-title">
+        Available Treatment List
+      </h5>
+    </div>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <label aria-hidden="true">&times;</label>
+    </button>
+  </div>
+  <div class="modal-body discount">
+    <div class="col-lg-12">
+        <div class="clearfix"></div>
+        <div class="form-group row">
+            <div class="container form-group col-lg-12" >
+                <table class="table sm-tbl table-hover table-striped table-bordered">
+                    <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th class="text-center">Code</th>
+                        <th class="text-left">CPT / CDT Name</th>
+                        <th class="text-center">Rate</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngIf="discountDetails.length == 0">
+                        <td colspan="9" class="text-center">No CPT/CDT added</td>
+                    </tr>
+                    <tr *ngFor="let discounted of discountDetails;let i = index">
+                        <td class="text-center">{{i+1}}</td>
+                        <td class="text-center">{{discounted.CPT_CODE}}</td> 
+                        <td class="text-left" style="font-size:12px;">{{discounted.CPT_NAME}}</td>
+                        <td class="text-center">{{discounted.CPT_RATE}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <button class="btn btn-sm btn-danger pull-right" (click)="modal.dismiss('Cross click')">Close</button>
+    </div>
+  </div>
+</ng-template>

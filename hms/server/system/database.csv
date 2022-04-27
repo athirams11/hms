@@ -1,0 +1,9 @@
+"MODULE_GROUP_ID";"MODULE_GROUP_NAME";"MODULE_GROUP_ICON";"MODULE_GROUP_PATH";"MODULE_GROUP_ORDER";"MODULE_GROUP_STATUS";"MODULE_GROUP_ACCESS_STAGE"
+1;"Master";"fa fa-dashboard";"/master";2;1;5
+2;"Transaction";"fa fa-table";"/transaction";3;1;5
+3;"Reports";"fa fa-file";"/reports";8;0;5
+4;"Query";"fa fa-search-plus";"/query";5;1;5
+5;"Utilities";"fa fa-cogs";"/utilities";6;0;5
+6;"Settings";"fa fa-cogs";"/settings";7;1;5
+7;"Dashboard";"fa fa-home";"/dashboards";1;1;5
+8;"Claim process";"fa fa-exchange";"/claim-process";4;1;5

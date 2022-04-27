@@ -1,0 +1,151 @@
+<form class="inner_body">
+  <fieldset class="form-group ">
+      <legend>Filter</legend>
+      <div class="row col-lg-12">
+          <div class="col-4">
+            <div class=" row">
+            <label for="p_type" class="col-3">Transaction ID</label>
+            <div class="col-9">
+              <select class="form-control form-control-sm custom-select custom-select-sm"[(ngModel)]="search.transactionid"  name="transaction_id" id="transaction_id">
+              <option value="">Select Transaction ID</option>
+              <option *ngFor="let data of transactionid_list" value="{{ data.SEARCH_TRANSACTION_PARAM }}" >{{data.SEARCH_TRANSACTION_DESCRIPTION }}</option>    
+              </select>
+            </div>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class=" row">
+              <label for="p_type" class="col-3">Transaction Status</label>
+              <div class="col-9">
+                <select class="form-control form-control-sm custom-select custom-select-sm"[(ngModel)]="search.transactionStatus"  name="transactionStatus" id="transactionStatus">                                 
+                <option value="">Select Transaction Status</option>
+                <option *ngFor="let list of transactionStatus_list" value="{{ list.SEARCH_TRANSACTION_PARAM }}" >{{ list.SEARCH_TRANSACTION_DESCRIPTION }}</option>
+                <!-- <option  value="" ></option> -->
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="col-4">
+              <div class=" row">
+              <label for="p_type" class="col-3">Direction</label>
+              <div class="col-9">
+                <select class="form-control form-control-sm custom-select custom-select-sm"[(ngModel)]="search.direction"  name="directions">
+                <option value="">Select Direction</option>
+                <option *ngFor="let data of direction_list" value="{{data.SEARCH_TRANSACTION_PARAM}}" >{{ data.SEARCH_TRANSACTION_DESCRIPTION }}</option>
+                </select>
+              </div>
+              </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="clearfix"></div>
+        <div class="clearfix"></div>
+        <div class="row col-lg-12">
+            <!-- <div class="col-5">
+              <div class=" row">
+              <label for="p_type" class="col-3">Direction</label>
+              <div class="col-9">
+                <select class="form-control form-control-sm custom-select custom-select-sm"[(ngModel)]="search.direction"  name="directions">
+                <option value="">Select Direction</option>
+                <option *ngFor="let data of direction_list" value="{{data.SEARCH_TRANSACTION_PARAM}}" >{{ data.SEARCH_TRANSACTION_DESCRIPTION }}</option>
+                </select>
+              </div>
+              </div>
+            </div> -->
+            <div class="col-4">
+              <div class=" row">
+                <label for="p_type" class="col-3">File name</label>
+                <div class="col-9">
+                  <input type="text"class="form-control form-control-sm"[(ngModel)] ="search.file_name" name="file">
+                </div>
+              </div>
+            </div>
+            <div class="col-4">
+                <div class=" row">
+                  <label for="p_type" class="col-3">Min count</label>
+                  <div class="col-9">
+                    <input type="text"class="form-control form-control-sm"[(ngModel)] ="search.minRecordCount" name="max">
+                  </div>
+                </div>
+              </div>
+              <div class="col-4">
+                  <div class=" row">
+                    <label for="p_type" class="col-3">Max count</label>
+                    <div class="col-9">
+                      <input type="text"class="form-control form-control-sm"[(ngModel)] ="search.maxRecordCount" name="min">
+                    </div>
+                  </div>
+                </div>
+          </div>
+          <div class="clearfix"></div>
+          <div class="clearfix"></div>
+          <div class="clearfix"></div>
+        <div class="row col-lg-12">
+            <div class="col-4">
+                <div class=" row">
+                    <div class="col-3">
+                <label style="width:30%">From </label>
+                    </div>
+                <!-- <div class="col-sm-2"></div> -->
+                <div class="col-sm-9">                                      
+                  <input class="form-control form-control-sm" type="date" [ngModel] ="search.fromDateval | date:'yyyy-MM-dd'" name="fromdate" id="fromdate" (ngModelChange)="search.fromDateval = $event">
+                  <!-- (ngModelChange)="search.fromDateval = $event"  -->
+                  
+                </div>
+                </div>
+            </div>
+            <div class="col-6">
+              <div class=" row">
+                  <!-- <div class="col-sm-1"></div> -->
+                  <div class="col-2">
+                    <label>To</label>
+                  </div>
+                  <!-- <div class="col-sm-1"></div> -->
+                  <div class="col-sm-6">
+                    <input class="form-control form-control-sm" type="date"  [ngModel] ="search.toDateval | date:'yyyy-MM-dd'" name="todate" id="todate" (ngModelChange)="search.toDateval = $event">   
+                    <!-- (ngModelChange)=" search.toDateval = $event"                   -->
+                </div>
+              </div>
+          </div>
+
+          </div>
+          <div class="clearfix"></div>
+            <div class="row col-lg-12">
+                <div class="col-10"></div>
+                <div class="col-2">
+              <button type="button" class="btn btn-info btn-sm"(click)="searchTransactions();">Search</button>
+        </div>
+        </div>
+  </fieldset>     
+<fieldset class="form-group">
+  <legend> Search <label class="high-light"></label></legend>
+  <div class="container">
+    <table class="tbl table table-hover table-striped table-bordered" >
+      <thead>
+        <tr>
+            <th width=1%>#</th>
+            <th>File ID</th>
+            <th>File name</th>
+            <!-- <th>Sender ID</th> -->
+            <th>Receiver ID</th>
+            <th>Date</th>
+            <th>Status</th>
+        </tr>
+        <tr *ngIf="search_list == '[]'"><td colspan="14" class="text-center">No data to show</td></tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let list of search_list; let i=index">
+            <td>{{start+i+1}}</td>
+            <td>{{list['@FileID']}}</td>
+            <td>{{list['@FileName']}}</td>
+            <td>{{list['@ReceiverID']}}</td>
+            <td>{{list['@TransactionDate']}}</td>
+            <!-- <td>{{list['@RecordCount']}}</td> -->
+            <td>{{list['@IsDownloaded']}}</td>
+            <!-- <td>{{list.OP_INS_PAYER}}</td> -->
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</fieldset>
+</form>

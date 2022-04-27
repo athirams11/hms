@@ -1,0 +1,186 @@
+<ng-template #rt let-r="result" let-t="term">
+    <ngb-highlight [result]="r.OP_REGISTRATION_NUMBER+' - '+r.NAME" [term]="t"></ngb-highlight>
+  </ng-template>
+  <app-page-header [heading]="'Sample Collection'" [icon]="'fa fa-adjust'"style="height:100px;"></app-page-header>
+<fieldset class="form-group row" *ngIf="user_rights.ADD == '1'">
+    <legend>New</legend>
+    <div class="row col-lg-12">
+        <div class="form-group col-lg-4" >
+            <label for="p_type">MR.No</label><span class="text-danger">&nbsp;*</span>
+            <input  [readOnly]="true" class="form-control form-control-sm" type="text"[(ngModel)]="appdata.mrno" >
+        </div>
+        <!-- <div class="form-group col-lg-4" >
+            <label for="p_type" >Patient type</label><span class="text-danger">&nbsp;*</span>
+            <div class="input-group mb-3">
+                <select [(ngModel)]="appdata.sel_pay_type" class="form-control form-control-sm custom-select custom-select-sm" name="type" id="type">
+                    <option value="">Select Type</option>
+                    <option *ngFor="let type of types" value="{{ type.OPTIONS_ID }}" >{{ type.OPTIONS_NAME }}</option>
+                </select>
+            </div>
+        </div> -->
+        <div class="form-group col-lg-4" >
+            <label for="p_type" >Collected Date</label><span class="text-danger">&nbsp;*</span>
+            <input [(ngModel)]="appdata.collected_date"  class="form-control form-control-sm" type="date"  name="collected_date" id="collected_date" [max]="getToday()">
+        </div>
+        <div class="form-group col-lg-4" >
+            <label for="p_type">Patient Number</label><span class="text-danger">&nbsp;*</span>
+            <input style="height: 31px;"  [resultTemplate]="rt"  id="typeahead-http" type="text" class="form-control"  [class.is-invalid]="searchFailed"  (selectItem)="set_item($event)" [ngbTypeahead]="cptsearch"
+            [inputFormatter]="formatter"   placeholder="Patient No" [(ngModel)] ="p_no" />
+            <div style="height: 31px;" class="invalid-feedback" *ngIf="searchFailed">Sorry, suggestions could not be loaded.</div>
+            
+            <!-- <input class="form-control form-control-sm" type="text"[(ngModel)]="appdata.patient_no" > -->
+        </div>
+        <div class="form-group col-lg-4" >
+            <label for="p_type" >Doctor</label><span class="text-danger">&nbsp;*</span>
+            <div class="input-group mb-3">
+                <select [(ngModel)]="appdata.doctor" class="form-control form-control-sm custom-select custom-select-sm" name="doctor" id="doctor" (change)=lab();>
+                    <option value="">Select Doctor</option>
+                    <option *ngFor="let dr of dr_list" value="{{ dr.DOCTORS_ID }}" >{{ dr.DOCTORS_NAME }}</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group col-lg-4" >
+            <label for="p_type" >Test Name</label><span class="text-danger">&nbsp;*</span>
+            <div class="input-group mb-3">
+                <select [(ngModel)]="appdata.test" class="form-control form-control-sm custom-select custom-select-sm" name="test" id="test">
+                    <option value="">Select Test</option>
+                    <option *ngFor="let type of test_list" value="{{ type.CURRENT_PROCEDURAL_CODE_ID }}" >{{ type.DESCRIPTION }}</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group col-lg-4" >
+            <label for="p_type" >Sample Type</label><span class="text-danger">&nbsp;*</span>
+            <div class="input-group mb-3">
+                <select [(ngModel)]="appdata.sample_type" class="form-control form-control-sm custom-select custom-select-sm" name="sample_type" id="sample_type">
+                    <option value="">Select Type</option>
+                    <option *ngFor="let type of type_list" value="{{ type.SAMPLE_TYPE_ID }}" >{{ type.TYPE_NAME }}</option>
+                </select>
+            </div>
+        </div>
+        
+        <!-- <div class="form-group col-lg-4" >
+            <label for="p_type">Collection Type</label>
+            <br>
+            <label class="radio-inline">
+                <input  type="radio" (click)="selectStatus(1)" name="status" id="active" value="1" [checked]="appdata.collection_type == 1">&nbsp;&nbsp;In House &nbsp;&nbsp;
+            </label>
+            <label class="radio-inline">
+                <input  type="radio" (click)="selectStatus(0)" name="status" id="inactive" value="2" [checked]="appdata.collection_type == 2">&nbsp;&nbsp;Out Source
+            </label>
+        </div> -->
+        <!-- <div class="form-group col-lg-4" >
+            <label for="p_type" >Status</label>
+            <div class="input-group mb-3">
+                <select [(ngModel)]="appdata.status" class="form-control form-control-sm custom-select custom-select-sm" name="status" id="status">
+                    <option value="">Select Status</option>
+                    <option value="1">Sample Collected</option>
+                    <option value="2">Processing</option>
+                    <option value="3">Completed</option>
+                </select>
+            </div>
+        </div> -->
+        <div class="form-group col-lg-12" >
+            <label for="p_type" >Remarks</label>
+            <textarea class="form-control"  style="height: 120px;" 
+            [(ngModel)]="appdata.remarks" 
+            name="remarks">
+            </textarea>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <div class="row container">
+        <div class="col-lg-7 pull-right">
+            <button *ngIf="user_rights.ADD == '1'" (click)="savecollection();"  class="btn btn-primary btn-sm ng-star-inserted" type="button"  style="width:60px;height:30px;">&nbsp;Save&nbsp;</button>&nbsp;&nbsp;&nbsp;
+            <button *ngIf="user_rights.ADD == '1'" (click)="clearForm();" class="btn btn-danger btn-sm ng-star-inserted" type="button" style="width:60px;height:30px;">&nbsp;Clear&nbsp; </button>
+        </div>
+    </div>
+</fieldset>
+<fieldset class="form-group row">
+    <legend>List</legend>
+    <div class="col-lg-12 ">
+        <table class="col-lg-12 borderless">
+            <tr> 
+            <td width="40%" class="text-left">
+                <div class="input-group mb-3 pull-left">
+                    <input id="typeahead-http" style="height:31px" type="text" 
+                    class="form-control" [(ngModel)]="appdata.search" 
+                    (keypress)=" getSearchlist($event)"  
+                    (paste)= " getSearchlist($event)"  
+                    name="search_text" placeholder="Mr.No, Patient Number.... ">
+
+                    <div class="input-group-append">
+                        <button style="height:31px;padding:7px" class="input-group-text" (click)="clear_search()">
+                            <i *ngIf="appdata.search != ''"  class="fa fa-close"(onclick)="clear_search()"></i>
+                            <i *ngIf="appdata.search == ''" class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </div>  
+                <div class="invalid-feedback">Sorry, suggestions could not be loaded.</div>
+            </td>
+            <td width="50%" class="text-right" style="vertical-align: top;"></td>
+            </tr>
+        </table>
+    </div>
+    <div class="clearfix"></div>
+    <div class=" col-lg-12" >
+        <table class="table tbl table-hover table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th class="text-center" width="2%">#</th>
+                    <th>MR.No</th>
+                    <th>Patient Number</th>
+                    <th>Patient Name</th>
+                    <th>Collected Date</th>
+                    <th>Doctor Name</th>
+                    <th>Test Name</th>
+                    <th>Sample Type</th>
+                    <!-- <th>Collection Type</th> -->
+                    <th class="text-center" width="8%">Status</th>
+                    <th class="text-center" width="7%">Action</th>
+                    <!-- <th class="text-center" width="7%">Action</th> -->
+                </tr>
+                <tr *ngIf="(collection_list | json) == '[]'">
+                    <td colspan="8" class="text-center">No details available</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr  *ngFor="let data of collection_list;let i=index">
+                    <td class="text-center">{{start + i+1 }}</td>
+                    <td>{{ data.MR_NO}}</td>
+                    <td>{{ data.OP_REGISTRATION_NUMBER}}</td>
+                    <td>{{ data.FIRST_NAME}}</td>
+                    <td>{{ format_date(data.SAMPLE_COLLECTED_DATE)}}</td>
+                    <td>{{ data.DOCTORS_NAME}}</td>
+                    <td>{{ data.PROCEDURE_CODE_NAME}}</td>
+                    <td>{{ data.TYPE_NAME}}</td>
+                    <!-- <td class="text-center" *ngIf="data.COLLECTION_TYPE == 1">In House</td>
+                    <td class="text-center" *ngIf="data.COLLECTION_TYPE == 2">Out Source</td> -->
+                    <td class="text-center" *ngIf="data.CURRENT_STATUS == 1">Collected</td>
+                    <td class="text-center" *ngIf="data.CURRENT_STATUS == 2">Processing</td>
+                    <td class="text-center" *ngIf="data.CURRENT_STATUS == 3">Completed</td>
+                    <!-- <td class="text-center">
+                        <button *ngIf="user_rights.EDIT=='1'"  (click)="editCollection(data);"alt="Edit" title="Edit" class="btn btn-sm btn-default"><i class="fa fa-edit"></i></button>                      
+                    </td> -->
+                    <td class="text-center" width="10%">
+                        <button *ngIf="user_rights.EDIT=='1'"  (click)="edit(data);"alt="Edit" title="Edit" class="btn btn-sm btn-default"><i class="fa fa-edit"></i></button>
+                    </td>
+                </tr> 
+            </tbody>
+        </table>
+        <ngb-pagination 
+            [disabled]="appdata.search !=''"
+            class="d-flex justify-content-center"
+            [(page)]="page"
+            [pageSize]="p"
+            [collectionSize]="collection"
+            [directionLinks]="true"
+            [boundaryLinks]="true"
+            [(page)]="page" aria-label="Default pagination"
+            [maxSize]="2"
+            (pageChange)="getCollection(page-1)">
+        </ngb-pagination>
+        <pre>Current page : {{page}}</pre>
+        <pre>Total records : {{collection}}</pre>
+    </div>   
+</fieldset>

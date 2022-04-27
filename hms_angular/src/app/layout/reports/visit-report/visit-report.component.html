@@ -1,0 +1,78 @@
+<div>
+    <app-page-header [heading]="'Visit Report'" [icon]="'fa-weibo'"></app-page-header>
+    <fieldset class="row form-group">
+        <legend>Search</legend>
+        <div class="col-12 row container">
+        <div class="col-md-5">
+          <div class="row">
+            <label for="date" class="col-2">Date</label>
+            <div class="col-10">
+                <input class="form-control form-control-sm" type="date" [ngModel] ="visitdate | date:'yyyy-MM-dd'" (ngModelChange)="visitdate = $event" name="date" id="date">
+            </div>
+          </div>
+        </div>
+          <div class="col-md-2">
+            <div class="row">
+                <button type="button" (click)="getVisitListByDate();" class="btn btn-info btn-sm" >Search By Date</button>
+            </div>
+          </div> 
+        </div>
+    </fieldset>
+
+    <fieldset class="form-group row" >
+  <legend>Visit List <label class="high-light"></label></legend>
+  <div class=" col-lg-12" >
+      <div class="input-group-append pull-right">
+         &nbsp; &nbsp; <i  class="fa fa-search"></i>
+      </div>
+      <input type="text"  class="form-control form-control-sm"  class="pull-right" [(ngModel)]="term">  
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+      <table class="table tbl table-hover table-striped table-bordered">
+        <thead>
+            <tr>
+                <th >Patient Name</th>
+                <th class="text-center" style="width:10%;">Patient No.</th>
+                <th class="text-center" style="width:5%;">Age</th>
+                <th class="text-center" style="width:6%;">Gender</th>
+                <!-- <th class="text-center">Nationality</th> -->
+                <!-- <th style="width:7%;">Type</th> -->
+                <th class="text-center" style="width:8%;">Visit Time</th>
+                <th >Doctor</th>
+                <!-- <th class="text-center">Type</th> -->
+                <th style="width:10%;">Dept</th>
+                <th style="width:10%;">Phone No.</th>
+                <th class="text-center" width="5%">Report</th>
+            </tr>
+            <tr *ngIf="(visit_list | json ) == '[]'"><td colspan="12" class="text-center">No visits to show</td></tr>
+        </thead>
+        <tbody *ngIf="(visit_list ) != '[]'">
+            <tr  *ngFor="let visit of visit_list | filter:term" [class.text-danger]="visit.VISIT_STATUS == '2'">
+                <td>{{ visit.FIRST_NAME }} {{ visit.MIDDLE_NAME }} {{ visit.LAST_NAME }}</td>
+                <td class="text-center">{{ visit.PATIENT_NO }} </td>
+                <td class="text-center">
+                    <ng-container *ngIf="visit.AGE > 0">{{ visit.AGE }}y</ng-container> 
+                    <ng-container *ngIf="visit.AGE == 0 && visit.MONTHS > 0">{{ visit.MONTHS }}m</ng-container> 
+                    <ng-container *ngIf="visit.AGE == 0 && visit.MONTHS == 0 && visit.DAYS > 0">{{ visit.DAYS }}d</ng-container> 
+                </td>
+                <td class="text-center">
+                    <span *ngIf="visit.GENDER == 1">Male</span>
+                    <span *ngIf="visit.GENDER == 0">Female</span>
+                </td>
+                
+                <!-- <td class="text-center">{{ visit.COUNTRY_ISO3 }}</td> -->
+                <!-- <td class="text-center"><span *ngIf="visit.GENDER == 1">New</span><span *ngIf="visit.GENDER == 2">New</span></td> -->
+                <td class="text-center">{{ formatTime(visit.VISIT_TIME) }}</td>
+                <td class="text-left">{{ visit.DOCTOR_NAME }} </td>
+                <!-- <td class="text-center"><button *ngIf="visit.OP_REGISTRATION_TYPE == 1" class="btn btn-xs btn-link"><i class="fa fa-umbrella"></i></button></td> -->
+                <td>{{ visit.DEPARTMENT_NAME }}</td>
+                <td>{{ visit.MOBILE_NO }} </td>
+                <td class="text-center">  
+                    <button title="Download Pdf" (click)="pdfexport(visit.PATIENT_NO)" alt="Start Pre-consult" class="btn btn-sm  text-danger "><i class="fa fa-file-pdf-o" aria-hidden="true"></i></button>
+                    
+                </td>  
+            </tr>
+        </tbody>
+      </table>
+  </div>
+</fieldset>

@@ -1,0 +1,873 @@
+<div [@routerTransition]>
+    <app-page-header [heading]="'OP Visit Entry'" [icon]="'fa-edit'"></app-page-header>
+    <fieldset class="row form-group">
+        <legend>Search</legend>
+        <div class="col-12 row container">
+            <div class="form-group col-lg-4">
+                <label for="p_type">Patient Number</label>
+                <div class="input-group mb-3">
+                    <input maxlength="20" style="height:31px" [(ngModel)]="search_by_opnumber"
+                        class="form-control form-control-sm" type="text" name="op_number" id="op_number">
+                </div>
+            </div>
+            <div class="form-group col-lg-4">
+                <label for="p_type">From Date</label>
+                <div class="input-group mb-3">
+                    <input class="form-control form-control-sm" type="date" [ngModel]="dateVal | date:'yyyy-MM-dd'"
+                        (ngModelChange)="dateVal = $event" name="date" id="date">
+                </div>
+            </div>
+            <div class="form-group col-lg-4">
+                <label for="p_type">To Date</label>
+                <div class="input-group mb-3">
+                    <input class="form-control form-control-sm" type="date" [ngModel]="todate | date:'yyyy-MM-dd'"
+                        (ngModelChange)="todate = $event" name="todate" id="todate">
+                </div>
+            </div>
+            <div class="form-group col-lg-4">
+                <label for="p_type">Doctors</label>
+                <div class="input-group mb-3">
+                    <select [(ngModel)]="doctor_id" class="form-control form-control-sm custom-select custom-select-sm"
+                        name="doctor_id" id="doctor_id">
+                        <option value="">Select Type</option>
+                        <option *ngFor="let dr of doctor_list" value="{{ dr.DOCTORS_ID }}">{{ dr.DOCTORS_NAME }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group col-lg-2">
+                <label for="p_type"></label>
+                <div class="input-group mb-3">
+                    <button type="button" (click)="getAppointmentsByDate();getVisitListByDate();"
+                        class="btn btn-info btn-sm">Search</button>
+
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <app-appointment-list [filter]="filter_ap_list" [page]="'Visit'" [appoinment_list]="appoinment_list">
+    </app-appointment-list>
+    <form role="form">
+        <fieldset class="form-group row">
+            <legend>New Visit Entry</legend>
+            <div class="row col-lg-12">
+                <ng-container
+                    *ngIf="patient_details && patient_details.patient_data && patient_details.patient_data.OP_REGISTRATION_TYPE != 1">
+                    <label class="form-group col-lg-12 pull-right text-right">
+                        <input type="checkbox" name="checkbox" [(ngModel)]="have_voucher_or_coupon">
+                        <label class="text-success">&nbsp;&nbsp;Have a Voucher or Coupon Code ?</label>
+                    </label>
+                </ng-container>
+                <div class="form-group col-lg-3">
+                    <label for="p_type">Patient No</label><span class="text-danger">&nbsp;*</span>
+                    <input (keydown)="keyDownFunction($event,1)" class="form-control form-control-sm" type="text"
+                        name="p_number" [(ngModel)]="visitData.op_number">
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="p_type">Department</label><span class="text-danger">&nbsp;*</span>
+                    <select [(ngModel)]="visitData.department" (change)="getDrByDateDept()"
+                        class="form-control form-control-sm custom-select custom-select-sm" name="department">
+                        <option value="">Select Department</option>
+                        <option *ngFor="let spec of specialized_in" value="{{ spec.OPTIONS_ID }}">{{ spec.OPTIONS_NAME
+                            }}</option>
+                    </select>
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="p_type">Doctor</label><span class="text-danger">&nbsp;*</span>
+                    <select [(ngModel)]="visitData.visit_doctor"
+                        (change)="visitData.visit_doctor_name = $event.target['options'][$event.target['options'].selectedIndex].text;"
+                        class="form-control form-control-sm custom-select custom-select-sm" name="visit_doctor">
+                        <option value="">Select Dcotor</option>
+                        <option *ngFor="let dr of dr_list" value="{{ dr.DOCTORS_ID }}">{{ dr.DOCTORS_NAME }}</option>
+                    </select>
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="p_type">Phone No</label>
+                    <input (keydown)="keyDownFunction($event,3,content)" class="form-control form-control-sm"
+                        type="text" (keydown)="validateNumber($event)" [(ngModel)]="visitData.ph_no" name="ph_no"
+                        id="ph_no">
+                </div>
+                <!-- <div class="form-group col-lg-3" >
+                    <label for="p_type">EID No</label>
+                    <input (keydown)="keyDownFunction($event,2)" style="height:31px" [textMask]="{mask: national_id_mask}" placeholder="000-0000-0000000-0" [(ngModel)]="visitData.eid_number"  class="form-control form-control-sm" type="text"name="eid_number" id="eid_number">
+                </div> -->
+                <div class="form-group col-lg-3">
+                    <label for="p_type">Appoinment</label>
+                    <select [(ngModel)]="visitData.appoinment_id"
+                        class="form-control form-control-sm custom-select custom-select-sm" name="appoinment">
+                        <option value="">Select Appoinment</option>
+                        <ng-container *ngFor="let ap of appoinment_list">
+                            <option *ngIf="ap.APPOINTMENT_STATUS != '2' && ap.PATIENT_VISIT_LIST_ID == null"
+                                value="{{ ap.APPOINTMENT_ID }}">{{ ap.PATIENT_NAME }} : {{ ap.PATIENT_PHONE_NO }}
+                            </option>
+                        </ng-container>
+                    </select>
+                </div>
+                <div class="form-group col-lg-6">
+                    <label for="p_type">Visit Reason</label>
+                    <input [(ngModel)]="visitData.visit_reason" class="form-control form-control-sm" type="text"
+                        name="v_reason" id="v_reason">
+                </div>
+                <ng-container *ngIf="have_voucher_or_coupon">
+                    <div class="clearfix"></div>
+                    <div class="form-group col-lg-3">
+                        <label for="p_type">Please choose</label><br>
+                        <label class="radio-inline">
+                            <input type="radio" (click)="selectgiftcard(1)" name="giftcard" id="active" value="1"
+                                [checked]="visitData.giftcard == 1">&nbsp;&nbsp;Voucher&nbsp;&nbsp;
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" (click)="selectgiftcard(2)" name="giftcard" id="inactive" value="0"
+                                [checked]="visitData.giftcard == 2">&nbsp;&nbsp;Coupon Code&nbsp;&nbsp;
+                        </label>
+                    </div>
+                    <div class="form-group col-lg-3" *ngIf="visitData.giftcard != 0">
+                        <label for="p_type">Reference Code</label>
+                        <input maxlength="20" class="form-control form-control-sm" type="text" name="reference"
+                            [(ngModel)]="visitData.reference_code" placeholder="Reference code">
+                    </div>
+                    <div class="form-group col-lg-3">
+                        <label for="p_type">Discount Provider</label><span class="text-danger">&nbsp;*</span>
+                        <select class="form-control form-control-sm custom-select custom-select-sm"
+                            [(ngModel)]="visitData.discount_site" (change)="getCPTBySites(discount)"
+                            name="discount_site" id="discount_site">
+                            <option value=0>Select Provider</option>
+                            <option *ngFor="let discount of discount_sites" value="{{discount.DISCOUNT_SITES_ID}}">{{
+                                discount.DISCOUNT_SITES_NAME }}</option>
+                        </select>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="col-lg-1"></div>
+                    <div class="col-lg-10" *ngIf="dicountedCPTdata.length != 0">
+                        <div class="clearfix"></div>
+                        <div class="clearfix"></div>
+                        <div class="clearfix"></div>
+                        <div *ngFor="let discounted of dicountedCPTdata;let i = index" class="container">
+                            <div class="row main" style="border: 1px solid rgba(46, 236, 46, 0.329);
+                                background-color: rgba(87, 230, 87, 0.329);border-radius: 8px;">
+                                <div class="col-10">
+                                    <label>{{i+1}}.&nbsp;&nbsp;{{discounted.cptcode}} - {{discounted.cptname}}</label>
+                                </div>
+                                <div class="col-2">
+                                    <button alt="Delete data" title="Delete data" type="button"
+                                        class="btn btn-sm pull-right" (click)="deleterow(discounted)" type="button">
+                                        <i class="text-danger fa fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <!-- <table *ngIf="dicountedCPTdata.length != 0" class="table-style" style="width: 100%;">
+                            <tbody>
+                            <tr *ngFor="let discounted of dicountedCPTdata;let i = index">
+                                <td class="text-left"  width="100px">
+                                    <div style="background-color: rgba(87, 230, 87, 0.329);border-radius: 8px;width: 125%;font-size: 12px;">
+                                        <button class="btn btn-sm pull-left"  type="button" style="font-size: 12px;">
+                                        {{i+1}}.&nbsp;&nbsp;{{discounted.cptcode}} - {{discounted.cptname}}
+                                        </button>
+                                        <button alt="Delete data" title="Delete data" type="button" 
+                                        class="btn btn-sm pull-right" 
+                                        (click)="deleterow(discounted)" type="button">
+                                            <i class="text-danger fa fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table> -->
+                    </div>
+                    <div class="col-lg-1"></div>
+                </ng-container>
+
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-lg-12">
+                <button *ngIf="user_rights.ADD == '1'" type="button" (click)="addVisit(discount)"
+                    class="pull-right btn btn-sm btn-primary btn-small">Add Visit</button>
+            </div>
+        </fieldset>
+    </form>
+    <ng-container *ngIf="patient_details.patient_data">
+        <fieldset class="form-group row">
+            <ngb-tabset style="width: 100%;background-color: #e6f7fb;">
+                <ngb-tab title="Basic Information">
+                    <ng-template ngbTabContent>
+                        <div class="row" style="padding: 10px;">
+                            <div class="col-lg-4">
+                                <div class="col-lg-12">
+                                    <div class="row">
+                                        <label class="col-md-3">Name </label>
+                                        <label class="col-md-9">:
+                                            {{ gender_sur[patient_details.patient_data.GENDER] }}
+                                            {{ patient_details.patient_data.FIRST_NAME }}
+                                            {{ patient_details.patient_data.MIDDLE_NAME }}
+                                            {{ patient_details.patient_data.LAST_NAME }}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="clearfix"></div>
+                                <div class="col-lg-12">
+                                    <div class="row">
+                                        <label class="col-3">Gender </label>
+                                        <label class="col-9">:
+                                            {{ gender[patient_details.patient_data.GENDER] }}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="clearfix"></div>
+                                <div class="col-lg-12">
+                                    <div class="row">
+                                        <label class="col-3">DOB </label>
+                                        <label class="col-9">:
+                                            {{ formatDate(patient_details.patient_data.DOB) }}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="clearfix"></div>
+                                <div class="col-lg-12 ">
+                                    <div class="row">
+                                        <label class="col-3">Mobile&nbsp;No. </label>
+                                        <label class="col-9">:
+                                            {{ patient_details.patient_data.MOBILE_NO }}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="clearfix"></div>
+                                <div class="col-lg-12 ">
+                                    <div class="row">
+                                        <label class="col-3">Email </label>
+                                        <label class="col-9">:
+                                            {{ patient_details.patient_data.EMAIL_ID }}
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="clearfix"></div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="col-lg-12">
+                                    <div class=" row">
+                                        <label class="col-4">Payment&nbsp;Type </label>
+                                        <div class="col-8">:
+                                            <label>{{ patient_details.patient_data.PAY_TYPE }}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="clearfix"></div>
+                                <div class="clearfix"></div>
+                                <div class="clearfix"></div>
+                                <div class="clearfix"></div>
+                                <div class="clearfix"></div>
+                                <div class="col-lg-12">
+                                    <div class="row">
+                                        <div class="col-lg-4 ">
+                                            <div class="row">
+                                                <label class="col-4">Age </label>
+                                                <label class="col-8">:
+                                                    {{ patient_details.patient_data.AGE }}
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 ">
+                                            <div class="row">
+                                                <label class="col-4">Month</label>
+                                                <label class="col-8">:
+                                                    {{ patient_details.patient_data.MONTHS }}
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 ">
+                                            <div class="row">
+                                                <label class="col-4">Days</label>
+                                                <label class="col-8">:
+                                                    {{ patient_details.patient_data.DAYS }}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </ng-template>
+                </ngb-tab>
+                <ngb-tab title="Other Information">
+                    <ng-template ngbTabContent>
+                        <div class="row" style="padding: 10px;">
+                            <div class="col-lg-4">
+                                <div class="col-lg-12">
+                                    <div class="row">
+                                        <label class="col-4">Address </label>
+                                        <label class="col-8">:
+                                            {{ patient_details.patient_data.ADDRESS }}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="clearfix"></div>
+                                <div class="col-lg-12 ">
+                                    <div class="row">
+                                        <label class="col-4">PO&nbsp;Box No.</label>
+                                        <label class="col-8">:
+                                            {{ patient_details.patient_data.PO_BOX_NO }}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="clearfix"></div>
+                                <div class="col-lg-12">
+                                    <div class="row">
+                                        <label class="col-4">Country </label>
+                                        <label class="col-8">:
+                                            {{ patient_details.patient_data.COUNTRY_NAME }}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="clearfix"></div>
+                                <div class="col-lg-12 ">
+                                    <div class="row">
+                                        <label class="col-4">Nationality </label>
+                                        <label class="col-8">:
+                                            {{ patient_details.patient_data.NATIONALITY_NAME }}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="clearfix"></div>
+
+
+                            </div>
+                            <div class="col-md-4">
+                                <div class="col-lg-12 ">
+                                    <div class="row">
+                                        <label class="col-4">National Id </label>
+                                        <label class="col-8">:
+                                            {{ patient_details.patient_data.NATIONAL_ID }}
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="clearfix"></div>
+                                <div class="clearfix"></div>
+
+                                <div class="col-lg-12">
+                                    <div class="row">
+                                        <label class="col-4">Emirates </label>
+                                        <label class="col-8">:
+                                            {{ patient_details.patient_data.EMIRATES_NAME }}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="clearfix"></div>
+                                <div class="col-lg-12 ">
+                                    <div class="row">
+                                        <label class="col-4">Res No.</label>
+                                        <label class="col-8"> :
+                                            {{ patient_details.patient_data.RES_NO }}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="clearfix"></div>
+                                <div class="col-lg-12 ">
+                                    <div class="row">
+                                        <label class="col-4">City </label>
+                                        <label class="col-8">:
+                                            {{ patient_details.patient_data.CITY }}
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="clearfix"></div>
+                                <div class="clearfix"></div>
+
+                            </div>
+                            <div class="col-md-4">
+                                <div class="col-lg-12 ">
+                                    <div class="row">
+                                        <label class="col-4">Fax </label>
+                                        <label class="col-8">:
+                                            {{ patient_details.patient_data.FAX }}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="clearfix"></div>
+                                <div class="col-lg-12">
+                                    <div class="row">
+                                        <label class="col-4">Service</label>
+                                        <label class="col-8"> :
+                                            {{ patient_details.patient_data.SERVICE }}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="clearfix"></div>
+
+                                <div class="col-lg-12 ">
+                                    <div class="row">
+                                        <label class="col-4">Visa&nbsp;Status</label>
+                                        <label class="col-8"> :
+                                            {{ patient_details.patient_data.VISA_STATUS }}
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="clearfix"></div>
+                                <div class="clearfix"></div>
+
+                                <div class="col-lg-12 ">
+                                    <div class="row">
+                                        <label class="col-4">Source&nbsp;Of&nbsp;Info</label>
+                                        <div class="col-8">:
+                                            <label>{{ patient_details.patient_data.SOURCE_OF_INFO_NAME }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </ngb-tab>
+                <ngb-tab title="Insurance Details" *ngIf="patient_details.patient_data.OP_REGISTRATION_TYPE == 1">
+                    <ng-template ngbTabContent>
+                        <div class="row" style="padding: 10px;">
+                            <div class="col-lg-9 pull-right" style="padding-bottom: 10px;"></div>
+                            <div class="col-lg-3" style="padding-bottom: 10px;">
+                                <button *ngIf="user_rights.EDIT == '1'" [hidden]="edit_ins_data"
+                                    (click)="edit_ins_data = !edit_ins_data"
+                                    class="pull-right btn btn-sm btn-primary">Edit <i class="fa fa-edit"></i></button>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button *ngIf="user_rights.EDIT == '1'" [hidden]="!edit_ins_data"
+                                    (click)="edit_ins_data = !edit_ins_data;getPatientDetails()"
+                                    class="btn btn-sm btn-primary">Cancel <i class="fa fa-eraser"></i></button>
+                                <button *ngIf="user_rights.EDIT == '1'" [disabled]="!edit_ins_data"
+                                    [hidden]="!edit_ins_data" type="button" class="pull-right btn btn-primary btn-sm"
+                                    (click)="updateInsuranceDetails()">Update <i class="fa fa-floppy-o"></i></button>
+                            </div>
+                            <div class="col-lg-12" style="padding: 10px;"></div>
+                            <div class="col-lg-6 ">
+                                <div class="row">
+                                    <label for="p_type" class="col-4">TPA / Receiver<span
+                                            class="text-danger">&nbsp;*</span></label>
+                                    <div class="col-8">
+                                        <ngx-select-dropdown [disabled]="!edit_ins_data"
+                                            class="form-control form-control-sm size" [config]="config"
+                                            [options]="tpa_options" name="sel_tpa_receiver" [multiple]="false"
+                                            (change)="getTpa();getNetworks($event)" [(ngModel)]="tpa_data">
+                                        </ngx-select-dropdown>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 ">
+                                <div class="row">
+                                    <label for="p_type" class="col-4">Insurance Co. / Payer<span
+                                            class="text-danger">&nbsp;*</span></label>
+                                    <div class="col-8">
+                                        <ngx-select-dropdown [disabled]="!edit_ins_data"
+                                            class="form-control form-control-sm size" [config]="configs"
+                                            [options]="inscopay_options" name="sel_cpopay_receiver" [multiple]="false"
+                                            (change)="getInspayer($event); " [(ngModel)]="inscopay_data">
+                                        </ngx-select-dropdown>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="clearfix"></div>
+                            <div class="col-lg-6 ">
+                                <div class="row">
+                                    <label for="p_type" class="col-4">Network<span
+                                            class="text-danger">&nbsp;*</span></label>
+                                    <div class="col-8">
+                                        <select [disabled]="!edit_ins_data"
+                                            class="form-control form-control-sm custom-select custom-select-sm"
+                                            [(ngModel)]="patient_details.ins_data.OP_INS_NETWORK" name="network"
+                                            id="network">
+                                            <option value="">Select Network</option>
+                                            <option *ngFor="let network of networks"
+                                                value="{{ network.INS_NETWORK_ID }}">{{ network.INS_NETWORK_NAME }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 ">
+                                <div class="row">
+                                    <label class="col-4">Member ID<span class="text-danger">&nbsp;*</span></label>
+                                    <div class="col-8">
+                                        <input maxlength="70" [disabled]="!edit_ins_data"
+                                            class="form-control form-control-sm" type="text"
+                                            [(ngModel)]="patient_details.ins_data.OP_INS_MEMBER_ID" name="memebr_id"
+                                            id="memebr_id">
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="clearfix"></div>
+                            <div class="col-lg-6 ">
+                                <div class="row">
+                                    <label class="col-4">Policy Number<span class="text-danger">&nbsp;*</span></label>
+                                    <div class="col-8">
+                                        <input maxlength="70" [disabled]="!edit_ins_data"
+                                            class="form-control form-control-sm" type="text"
+                                            [(ngModel)]="patient_details.ins_data.OP_INS_POLICY_NO" name="policy_no"
+                                            id="policy_no">
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="clearfix"></div>
+                            <div class="col-lg-12 ">
+                                <div class="row">
+                                    <label for="ins_val_from" class="col-2">Valid From<span
+                                            class="text-danger">&nbsp;*</span></label>
+                                    <div class="col-4">
+                                        <input [disabled]="!edit_ins_data" type="date"
+                                            [(ngModel)]="patient_details.ins_data.OP_INS_VALID_FROM"
+                                            class="form-control form-control-sm" name="ins_val_from"
+                                            id="ins_val_from" />
+                                    </div>
+                                    <label for="ins_val_from" class="col-2">Valid To<span
+                                            class="text-danger">&nbsp;*</span></label>
+                                    <div class="col-4">
+                                        <input [disabled]="!edit_ins_data" type="date"
+                                            [(ngModel)]="patient_details.ins_data.OP_INS_VALID_TO"
+                                            class="form-control form-control-sm" name="ins_val_to" id="ins_val_to" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="clearfix"></div>
+                            <div class="col-lg-6 ">
+                                <div class="row">
+                                    <label class="col-4">Deductible</label>
+                                    <div class="col-5">
+                                        <label class="radio-inline">
+                                            <input [disabled]="!edit_ins_data" type="radio" name="deductible_type"
+                                                (click)="selectedDeductType('AED')" value="AED"
+                                                [(ngModel)]="patient_details.ins_data.OP_INS_DEDUCT_TYPE">&nbsp;&nbsp;Amount
+                                            &nbsp;&nbsp;
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input [disabled]="!edit_ins_data" type="radio" name="deductible_type"
+                                                (click)="selectedDeductType('%')" value="%"
+                                                [(ngModel)]="patient_details.ins_data.OP_INS_DEDUCT_TYPE">&nbsp;&nbsp;Percentage
+                                        </label>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="input-group">
+                                            <input [disabled]="!edit_ins_data" class="form-control form-control-sm"
+                                                type="text" [(ngModel)]="patient_details.ins_data.OP_INS_DEDUCTIBLE"
+                                                name="deductible" id="deductible">
+                                            <div class="input-group-append">
+                                                <label disabled="true"
+                                                    class="btn btn-sm btn-outline-secondary">{{patient_details.ins_data.OP_INS_DEDUCT_TYPE}}</label>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 ">
+                                <div class="row">
+                                    <div class="col-4">
+                                        <label class="checkbox-inline">
+                                            <input [disabled]="!edit_ins_data" type="checkbox"
+                                                name="deductible_rest_all"
+                                                [checked]="!!+patient_details.ins_data.OP_INS_IS_ALL"
+                                                (change)="patient_details.ins_data.OP_INS_IS_ALL = !+patient_details.ins_data.OP_INS_IS_ALL"
+                                                id="deductible_rest_all" value="1">&nbsp;&nbsp;Rest of all &nbsp;&nbsp;
+                                        </label>
+                                    </div>
+                                    <div class="col-5">
+                                        <label class="radio-inline">
+                                            <input
+                                                [disabled]="!(+patient_details.ins_data.OP_INS_IS_ALL) || !edit_ins_data"
+                                                type="radio" name="deductible_rest_type"
+                                                (click)="selectedRestAllType('AED')" value="AED"
+                                                [(ngModel)]="patient_details.ins_data.OP_INS_ALL_TYPE">&nbsp;&nbsp;Amount
+                                            &nbsp;&nbsp;
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input
+                                                [disabled]="!(+patient_details.ins_data.OP_INS_IS_ALL) || !edit_ins_data"
+                                                type="radio" name="deductible_rest_type"
+                                                (click)="selectedRestAllType('%')" value="%"
+                                                [(ngModel)]="patient_details.ins_data.OP_INS_ALL_TYPE">&nbsp;&nbsp;Percentage
+                                        </label>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="input-group">
+                                            <input
+                                                [disabled]="!(+patient_details.ins_data.OP_INS_IS_ALL) || !edit_ins_data"
+                                                class="form-control form-control-sm" type="text"
+                                                [(ngModel)]="patient_details.ins_data.OP_INS_ALL_VALUE"
+                                                name="rest_of_all" id="rest_of_all">
+                                            <div class="input-group-append">
+                                                <label disabled="true"
+                                                    class="btn btn-sm btn-outline-secondary">{{patient_details.ins_data.OP_INS_ALL_TYPE}}</label>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="clearfix"></div>
+                            <div class="col-lg-12 ">
+
+                                <div [hidden]="!(!+patient_details.ins_data.OP_INS_IS_ALL)" class="row">
+                                    <label class="col-2">Co-Ins</label>
+                                    <div class="col-3">
+                                        <select [disabled]="!edit_ins_data" #co_in_type
+                                            class="form-control form-control-sm custom-select custom-select-sm"
+                                            name="co_in_type">
+                                            <option value="">Select Co-Ins</option>
+                                            <option *ngFor="let co_type of co_in_types"
+                                                value="{{ co_type.OPTIONS_ID }}">{{ co_type.OPTIONS_NAME }}</option>
+
+                                        </select>
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="radio-inline">
+                                            <input [disabled]="!edit_ins_data" type="radio"
+                                                (click)="selectedCoinType('AED')" name="co_ins_ded_type"
+                                                id="co_ins_ded_type_am" value="AED" checked="">&nbsp;&nbsp;Amount
+                                            &nbsp;&nbsp;
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input [disabled]="!edit_ins_data" type="radio"
+                                                (click)="selectedCoinType('%')" name="co_ins_ded_type"
+                                                id="co_ins_ded_type_per" value="%">&nbsp;&nbsp;Percentage
+                                        </label>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="input-group">
+                                            <input [disabled]="!edit_ins_data" #deduct_val
+                                                class="form-control form-control-sm " type="number"
+                                                [value]="co_in_selects.deduct_val" name="co_ins_amt" id="co_ins_amt">
+                                            <div class="input-group-append">
+                                                <label disabled="true"
+                                                    class="btn btn-sm btn-outline-secondary">{{co_in_selects.deduct_type}}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="input-group">
+                                            <button [disabled]="!edit_ins_data" class="btn btn-sm btn-outline-secondary"
+                                                alt="Add" title="Add"
+                                                (click)="addSelectedCoinType(co_in_type.value,co_in_type.options[co_in_type.selectedIndex].text,co_in_selects.deduct_type,deduct_val.value)"><i
+                                                    class="fa fa-plus"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="clearfix"></div>
+                            <div class="col-lg-2 "></div>
+                            <div class="col-lg-6 ">
+                                <table class="table table-bordered table-hover table-light">
+                                    <tr *ngFor="let coIn of patient_details.co_ins; let in = index">
+                                        <td>{{coIn.COIN_NAME}}</td>
+                                        <td>{{coIn.COIN_VALUE}} <span
+                                                class="text-danger">{{coIn.COIN_VALUE_TYPE}}</span> </td>
+                                        <td><button [disabled]="!edit_ins_data"
+                                                (click)="patient_details.co_ins.splice(in, 1)"
+                                                class="btn-sm btn text-danger"><i class="fa fa-trash"></i></button></td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                        </div>
+
+                    </ng-template>
+                </ngb-tab>
+                <ngb-tab title="Corporate Company" *ngIf="patient_details.patient_data.OP_REGISTRATION_TYPE == 3">
+                    <ng-template ngbTabContent>
+                        <div class="row" style="padding: 10px;">
+                            <div class="col-lg-9 pull-right" style="padding-bottom: 10px;">
+                            </div>
+                            <div class="col-lg-3" style="padding-bottom: 10px;">
+                                <button *ngIf="user_rights.EDIT == '1'" [hidden]="edit_company_data"
+                                    (click)="edit_company_data = !edit_company_data"
+                                    class=" pull-right btn btn-sm btn-primary">Edit <i class="fa fa-edit"></i></button>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button *ngIf="user_rights.EDIT == '1'" [hidden]="!edit_company_data"
+                                    (click)="edit_company_data = !edit_company_data;getPatientDetails()"
+                                    class="btn btn-sm btn-primary">Cancel <i class="fa fa-eraser"></i></button>
+                                <button *ngIf="user_rights.EDIT == '1'" [disabled]="!edit_company_data"
+                                    [hidden]="!edit_company_data" type="button"
+                                    class="pull-right btn btn-primary btn-sm" (click)="updateCompanyDetails()">Update <i
+                                        class="pull-right fa fa-floppy-o"></i></button>
+                            </div>
+                            <div class="col-lg-12" style="padding: 10px;"></div>
+                            <div class="col-lg-6 ">
+                                <div class="row">
+                                    <label class="col-4">Company</label>
+                                    <div class="col-8">
+                                        <ngx-select-dropdown [disabled]="!edit_company_data"
+                                            class="form-control form-control-sm size custom-select custom-select-sm"
+                                            [config]="config_company" [options]="company_options"
+                                            name="corporate_company" [multiple]="false" (change)="getcompany();"
+                                            [(ngModel)]="company_data"></ngx-select-dropdown>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 ">
+                                <div class="row">
+                                    <label class="col-4">Company address</label>
+                                    <div class="col-8">
+                                        <textarea [readOnly]="true" class="form-control form-control-sm" type="text"
+                                            [(ngModel)]="CORPORATE_COMPANY_ADDRESS" name="corporate_address"
+                                            id="corporate_address"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </ng-template>
+                </ngb-tab>
+            </ngb-tabset>
+        </fieldset>
+    </ng-container>
+    <app-op-visit-list [visit_list]="visit_list"></app-op-visit-list>
+</div>
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Patient List</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form>
+            <div class="form-group">
+                <table class="sm-tbl table table-hover table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th style="width:10%;" class="text-center">Date</th>
+                            <th>Patient Name</th>
+                            <th style="width:5%;" class="text-center">Age</th>
+                            <th style="width:10%;" class="text-center">Patient No</th>
+                            <th style="width:15%;">Phone No</th>
+                            <th style="width:5%;" class="text-center">Action</th>
+                        </tr>
+                        <tr *ngIf="(pat_list | json) == '[]'">
+                            <td colspan="12" class="text-center">No data to show</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let list of pat_list">
+                            <td class="text-center">{{ formatDate(list.date)}}</td>
+                            <td>{{list.name}}</td>
+                            <td class="text-center">{{list.age}}</td>
+                            <td class="text-center">{{list.OP_no}}</td>
+                            <td>{{list.phone_no}}</td>
+                            <td class="text-center"><button (click)="selectPatient(list);modal.close('Save click');"
+                                    class="btn btn-sm btn-info"><i class="fa fa-check"></i></button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </form>
+    </div>
+</ng-template>
+
+<ng-template #discount let-modal>
+    <div class="modal-header">
+        <div class="pull-right ">
+            <h5 class="modal-title" id="modal-basic-title">
+                Add CPT/CDT
+            </h5>
+        </div>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <label aria-hidden="true">&times;</label>
+        </button>
+    </div>
+    <div class="modal-body discount">
+        <div class="col-lg-12">
+            <div class="form-group row">
+                <div class="container form-group col-lg-12">
+                    <label for="p_type">CPT / CDT Name</label><span class="text-danger">&nbsp;*</span>
+                    <ngx-select-dropdown class="form-control form-control-sm size" [config]="cdt_config"
+                        [options]="cdt_options" name="sel_tpa_receiver" [multiple]="false"
+                        (change)="getCPTdata();addCPTdata()" [(ngModel)]="cdt_data">
+                    </ngx-select-dropdown>
+                </div>
+                <!-- <div class="container form-group col-lg-1" ><br>
+                <button class="btn btn-sm btn-info pull-right" (click)="addCPTdata()">Add</button>
+            </div> -->
+            </div>
+            <!-- <div class="form-group row">
+                <div class="container form-group col-lg-6" >
+                    <label for="p_type">CPT / CDT Code</label>
+                    <input type="text" class="form-control  form-control-sm" readonly 
+                    name="cptcode" id="cptcode" name="cptcode"  
+                    [(ngModel)]="discountData.cptcode">
+                </div>
+                <div class="container form-group col-lg-6" >
+                    <label for="p_type">Rate</label>
+                    <input type="text" class="form-control  form-control-sm" readonly 
+                    name="rate" id="rate" name="rate"  
+                    [(ngModel)]="discountData.rate">
+                </div>
+            </div> -->
+            <!-- <div class="clearfix"></div>
+            <div class="form-group row">
+                <div class="container form-group col-lg-12" >
+                    <button class="btn btn-sm btn-info pull-right" (click)="addCPTdata()">Add</button>
+                </div>
+            </div> -->
+            <div class="clearfix"></div>
+            <div class="clearfix"></div>
+            <div class="form-group row">
+                <div class="container form-group col-lg-12">
+                    <table class="table sm-tbl table-hover table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-left">CPT/CDT Name</th>
+                                <th class="text-center">Code</th>
+                                <th class="text-center">Rate</th>
+                                <th width="10%">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngIf="dicountedCPTdata.length == 0">
+                                <td colspan="9" class="text-center">No CPT/CDT added</td>
+                            </tr>
+                            <tr *ngFor="let discounted of dicountedCPTdata;let i = index">
+                                <td class="text-center">{{i+1}}</td>
+                                <td class="text-left" style="font-size:12px;">{{discounted.cptname}}</td>
+                                <td class="text-center">{{discounted.cptcode}}</td>
+                                <td class="text-center">{{discounted.rate}}</td>
+                                <td class="text-center">
+                                    <button alt="Delete data" title="Delete data" type="button" class="btn btn-sm"
+                                        (click)="deleterow(discounted)" type="button">
+                                        <i class="text-danger fa fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-sm btn-danger" (click)="modal.dismiss('Cross click')">Close</button>
+        <button class="btn btn-sm btn-success pull-right"
+            (click)="modal.dismiss('Cross click')">&nbsp;&nbsp;Add&nbsp;&nbsp;</button>
+    </div>
+</ng-template>

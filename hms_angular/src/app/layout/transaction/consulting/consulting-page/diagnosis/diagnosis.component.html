@@ -1,0 +1,204 @@
+
+<form #DiagnosisForm="ngForm" (ngSubmit)="saveDaignosis()"></form>
+<ng-template #rt let-r="result" let-t="term">
+  <ngb-highlight [result]="r.CODE   +' - '+r.NAME" [term]="t"></ngb-highlight>
+</ng-template>
+<div>
+  <fieldset class="form-group">
+    <legend>Diagnosis</legend>
+    <div class="container form-group">
+      <table class="table-bordered">
+        <thead>
+          <tr>
+            <th style="width:1%;">#</th>
+            <th class="text-left" style="width:10%;">Diagnosis Name</th>
+            <th class="text-left" style="width:6%;">ICD</th>
+            <th style="width:6%;">Level</th>
+            <th style="width:6%;">Type</th>
+            <th width="1%">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let daignosis of num_rows;let i = index">
+            <td class="text-center:center">
+              {{ i + 1}}
+            </td>
+            <td>
+              <input (change)="getEvent()" style="height: 30px;" id="typeahead-http{{i}}" type="text"
+                class="form-control" [resultTemplate]="rt" [class.is-invalid]="searchFailed"
+                [inputFormatter]="formatter" [(ngModel)]="diagnosis_data.diagnosis_name_data[i]"
+                (selectItem)="set_item($event,i)" [ngbTypeahead]="diagnosis_search"
+                placeholder="Search ICD Description...." />
+              <div class="invalid-feedback" *ngIf="searchFailed">Sorry, suggestions could not be loaded.</div>
+            </td>
+            <td class="text-left">
+              <input class="form-control form-control-sm" type="text" [(ngModel)]="diagnosis_data.code[i]" readonly
+                name="code" id="code" name="diagnosis_CODE{{i}}">
+            </td>
+            <td>
+              <select (change)="getEvent()" [(ngModel)]="diagnosis_data.diagnosis_level_arr[i]"
+                name="diagnosis_level_arr{{i}}"
+                class="form-control form-control-sm custom-select custom-select-sm ng-pristine ng-valid ng-touched">
+                <option value="">Select level</option>
+                <option *ngFor="let level of level_list" value="{{level.MASTER_DATA_ID}}"
+                  class="ng-tns-c13-1 ng-star-inserted">{{level.DATA}}</option>
+              </select>
+            </td>
+            <td>
+              <select (change)="getEvent()" [(ngModel)]="diagnosis_data.diagnosis_type_arr[i]"
+                name="diagnosis_type_arr{{i}}"
+                class="form-control form-control-sm custom-select custom-select-sm ng-pristine ng-valid ng-touched">
+                <option value="">Select type</option>
+                <option *ngFor="let type of type_list" value="{{type.MASTER_DATA_ID}}"
+                  class="ng-tns-c13-1 ng-star-inserted">{{type.DATA}}</option>
+              </select>
+            </td>
+            <td class="text-center">
+              <button style="height: 29px;" *ngIf="i == num_rows.length-1" alt="Add New data" title="Add New data"
+                type="button" class="btn btn-success btn-sm " (click)="addrow(i)" type="button"><i style="color: white;"
+                  class="fa fa-plus "></i></button>
+              <button style="height: 29px;" *ngIf="i != num_rows.length-1" alt="Delete data" title="Delete data"
+                type="button" class="btn  btn-danger   btn-sm" (click)="deleterow(i)" type="button"><i
+                  style="color: white" class="fa fa-trash"></i></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="clearfix"></div>
+  </fieldset>
+
+  <div class="clearfix"></div>
+  <div class="clearfix"></div>
+  <ngb-accordion #acc="ngbAccordion">
+    <ngb-panel>
+      <ng-template ngbPanelTitle>
+        <span><b>Previous Diagnosis</b></span>
+      </ng-template>
+      <ng-template ngbPanelContent>
+        <div class="container form-group">
+          <table class="table tbl table-striped table-bordered">
+            <thead>
+              <tr>
+                <th style="width:1%;">#</th>
+                <th style="width:5%;">Visit Date</th>
+                <th class="text-left" style="width:10%;">Doctor Name</th>
+                <th class="text-left" style="width:20%;">Diagnosis Name</th>
+                <th class="text-left" style="width:7%;">ICD</th>
+                <th style="width:7%;">Level</th>
+                <th style="width:5%;">Type</th>
+              </tr>
+              <tr>
+              <tr *ngIf="(previous_diagnosis | json ) == '[]'">
+                <td colspan="7" class="text-center">No details available</td>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let data of previous_diagnosis;let j=index">
+                <tr *ngFor="let previous of data.PATIENT_DIAGNOSIS_DETAILS;let i=index">
+                  <ng-container *ngIf="i == 0">
+                    <td style="vertical-align: middle" [attr.rowspan]="data.PATIENT_DIAGNOSIS_DETAILS.length"
+                      class="text-center">{{ start + j + 1}}</td>
+                    <td style="vertical-align: middle" [attr.rowspan]="data.PATIENT_DIAGNOSIS_DETAILS.length"
+                      class="text-center"> {{data.VISIT_DATE}} </td>
+                    <td style="vertical-align: middle" [attr.rowspan]="data.PATIENT_DIAGNOSIS_DETAILS.length">
+                      {{data.DOCTORS_NAME}} </td>
+                  </ng-container>
+                  <td>{{ previous.DIAGNOSIS_NAME }}</td>
+                  <td>{{ previous.DIAGNOSIS_CODE }}</td>
+                  <td class="text-center">{{ previous.DIAGNOSIS_LEVEL_NAME }}</td>
+                  <td class="text-center">{{ previous.DIAGNOSIS_TYPE_NAME }}</td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+          <div class="clearfix"></div>
+          <div class="clearfix"></div>
+          <div *ngIf="(previous_diagnosis | json) != '[]'">
+            <ngb-pagination class="d-flex justify-content-center" [(page)]="page" [pageSize]="p"
+              [collectionSize]="collection" [directionLinks]="true" [boundaryLinks]="true"
+              aria-label="Default pagination" [maxSize]="3" (pageChange)="getPreviousDiagnosis(page-1)">
+            </ngb-pagination>
+            <pre>Current page : {{page}}</pre>
+            <pre>Total records : {{collection}}</pre>
+          </div>
+        </div>
+      </ng-template>
+    </ngb-panel>
+
+  </ngb-accordion>
+
+  <div class="clearfix"></div>
+  <div class="clearfix"></div>
+
+  <!-- <fieldset class="form-group">
+    <legend>Previous Diagnosis</legend>
+    <div class="container form-group">
+      <table class="table tbl table-striped table-bordered">
+        <thead>
+          <tr>
+              <th style="width:1%;">#</th>
+              <th style="width:5%;">Visit Date</th>          
+              <th class="text-left" style="width:10%;">Doctor Name</th>      
+              <th class="text-left" style="width:20%;">Diagnosis Name</th>
+              <th class="text-left" style="width:7%;">ICD</th>
+              <th style="width:7%;">Level</th>
+              <th style="width:5%;">Type</th>
+          </tr>
+          <tr>
+            <tr *ngIf="(previous_diagnosis | json ) == '[]'">
+              <td colspan="7" class="text-center">No details available</td>
+          </tr>
+        </thead>
+        <tbody> 
+          <ng-container  *ngFor="let data of previous_diagnosis;let j=index">
+              <tr *ngFor="let previous of data.PATIENT_DIAGNOSIS_DETAILS;let i=index">
+                  <ng-container *ngIf="i == 0"> 
+                      <td style="vertical-align: middle" [attr.rowspan]="data.PATIENT_DIAGNOSIS_DETAILS.length" class="text-center">{{ start + j + 1}}</td>
+                      <td style="vertical-align: middle" [attr.rowspan]="data.PATIENT_DIAGNOSIS_DETAILS.length" class="text-center"> {{data.VISIT_DATE}} </td>
+                      <td style="vertical-align: middle" [attr.rowspan]="data.PATIENT_DIAGNOSIS_DETAILS.length"> {{data.DOCTORS_NAME}} </td>
+                  </ng-container>
+                  <td>{{ previous.DIAGNOSIS_NAME }}</td>
+                  <td>{{ previous.DIAGNOSIS_CODE }}</td>    
+                  <td class="text-center">{{ previous.DIAGNOSIS_LEVEL_NAME }}</td>
+                  <td class="text-center">{{ previous.DIAGNOSIS_TYPE_NAME  }}</td>
+              </tr>
+          </ng-container>
+        </tbody>
+      </table>
+      <div class="clearfix"></div>
+      <div class="clearfix"></div>
+      <div *ngIf="(previous_diagnosis | json) != '[]'">
+        <ngb-pagination 
+          class="d-flex justify-content-center"
+          [(page)]="page"
+          [pageSize]="p"
+          [collectionSize]="collection"
+          [directionLinks]="true"
+          [boundaryLinks]="true"
+          aria-label="Default pagination"
+          [maxSize]="3"
+          (pageChange)="getPreviousDiagnosis(page-1)">
+        </ngb-pagination>
+        <pre>Current page : {{page}}</pre>
+        <pre>Total records : {{collection}}</pre>
+      </div>
+    </div>
+  </fieldset> -->
+  <fieldset class="form-group">
+    <legend>Other Diagnosis</legend>
+    <div class="container">
+      <div class="row col-lg-12">
+        <div class="form-group col-lg-12">
+          <textarea (change)="getEvent()" class="form-control form-control-sm"
+            [(ngModel)]="diagnosis_data.patient_other_diagnosis" name="paitent_other_daignosis" rows="3"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+  </fieldset>
+  <div class="clearfix"></div>
+  <button [disabled]="formatDate(todaysDate) != formatDate(selected_visit.CREATED_TIME)"
+    class="btn btn-primary btn-sm ng-star-inserted" style="margin-left: 20px;" type="button" (click)="saveDaignosis()">
+    Save </button>
+</div>

@@ -1,0 +1,188 @@
+<div class="container-fluid-sm container-lg mt-3" >
+	<!-- Content here -->
+
+	<mat-toolbar  color="primary" class="text-center  mb-2 rounded-top">
+		{{ title }}
+	</mat-toolbar>
+	<mat-card>
+		<mat-card-title><h5>Patient Details</h5></mat-card-title>
+		<mat-card-content>
+			<div class="row">
+				<div class="col-md-12 ">
+
+					<mat-form-field class="col-6">
+						<input matInput [(ngModel)]="opnumber" (change)="getPatientDetails()" placeholder="OP Number">
+						<mat-icon class="cursor-pointer" matSuffix (click)="getPatientDetails()">search</mat-icon>
+					</mat-form-field>
+					<div class="float-md-right d-none d-md-block ">
+						Date : {{ dateVal | date:'dd-MM-yyyy H:mm a' }}
+					</div>
+				</div>
+				<div class="col-md-12 " *ngIf="patient_data != null  && patient_data != ''">
+					<mat-card >
+						<mat-card-content>
+							<div class="row">
+								<div *ngIf="patient_data != null  && patient_data != ''" class="col-lg-12">
+									<mat-card-subtitle class="text-purple mb-1 pt-2">Name</mat-card-subtitle>
+									<mat-card-content>{{ patient_gender }}. {{ patient_name }}</mat-card-content>
+									<mat-divider></mat-divider>
+									<mat-card-subtitle class="text-purple mb-1 pt-2">Dob</mat-card-subtitle>
+									<mat-card-content>{{ patient_dob }}</mat-card-content>
+									<mat-divider></mat-divider>
+									<mat-card-subtitle class="text-purple mb-1 pt-2">Address.</mat-card-subtitle>
+									<mat-card-content>{{ patient_address }}</mat-card-content>
+									<mat-divider></mat-divider>
+								
+									
+									<mat-card-subtitle class="text-purple mb-1 pt-2">Phone No.</mat-card-subtitle>
+									<mat-card-content>{{ patient_no }}</mat-card-content>
+									<mat-divider></mat-divider>
+									<mat-card-subtitle class="text-purple mb-1 pt-2">Nationality.</mat-card-subtitle>
+									<mat-card-content>{{ patient_nationality }}</mat-card-content>
+									<mat-divider></mat-divider>
+									<mat-card-subtitle class="text-purple mb-1 pt-2">National Id.</mat-card-subtitle>
+									<mat-card-content>{{ patient_nationalid }}</mat-card-content>
+									
+								</div>
+							</div>
+
+						</mat-card-content>
+					</mat-card>
+				</div>
+				
+
+				
+				
+			</div>
+			
+		</mat-card-content>
+	</mat-card>
+	<mat-divider></mat-divider>
+	<mat-card>
+		<mat-card-title ><mat-toolbar class="h-3 h5 rounded" color="primary">Influenza-like illness symptoms</mat-toolbar></mat-card-title>
+		<mat-card-content>
+			<div class="row">
+				<div class="col-lg-8 col-md-8">
+					
+						<section class="example-section list-group">
+							<ng-container *ngFor="let influensa of influensas">
+									<mat-checkbox [(ngModel)]="influensa.selected" >{{influensa.name}}</mat-checkbox>
+
+							</ng-container>
+						</section>
+					
+				</div>
+				<div class="col-lg-4 col-md-4">
+					<mat-card class="bg_pur">
+						<mat-card-content>
+							<h5 class="card-title"><mat-icon  class="align-middle">arrow_forward</mat-icon> Droplet Precautions</h5>
+							<p class="card-text">for patient with respiratory symptoms</p>
+							<mat-divider></mat-divider>
+							<h5 class="card-title pt-2"><mat-icon  class="align-middle">arrow_forward</mat-icon> Contact Precautions</h5>
+						</mat-card-content>
+					</mat-card>
+
+				</div>
+			</div>
+			
+		</mat-card-content>
+	</mat-card>
+	<mat-card>
+		<mat-card-title><mat-toolbar class="h-3 h5 rounded" color="primary">TOCC: 14 days before onset of symptoms</mat-toolbar></mat-card-title>
+		<mat-card-content>
+			<div class="row">
+				<div class="col-lg-8 col-md-8">
+					
+						<section class="example-section list-group">
+							<ng-container *ngFor="let tocc of toccSymptoms;let i=index">
+									<mat-checkbox [(ngModel)]="tocc.selected" class="break-all" >{{tocc.name}}</mat-checkbox>
+									<form *ngIf="tocc.sub == true && tocc.selected==true"  class="example-form">
+											<mat-form-field class="col-6">
+												<input matInput [max]="maxDate" [matDatepicker]="from_date" placeholder="From"  [(ngModel)]="tocc.fields.from" name="from_date" readonly>
+												<mat-datepicker-toggle matSuffix [for]="from_date"></mat-datepicker-toggle>
+												<mat-datepicker #from_date readonly="false"></mat-datepicker>
+											</mat-form-field>
+
+											<mat-form-field class="col-6">
+												<input matInput [max]="maxDate" [matDatepicker]="to_date" placeholder="To"  [(ngModel)]="tocc.fields.to" name="to_date" readonly>
+												<mat-datepicker-toggle matSuffix [for]="to_date"></mat-datepicker-toggle>
+												<mat-datepicker #to_date  readonly="false"></mat-datepicker>
+											</mat-form-field>
+
+											<mat-form-field class="col-12">
+												<textarea [(ngModel)]="tocc.fields.area" name="area" matInput placeholder="Area"></textarea>
+											</mat-form-field>
+									</form>
+								
+							</ng-container>
+						</section>
+				 
+				</div>
+				<div class="col-lg-4 col-md-4">
+					<mat-card  class="bg_pur">
+						<mat-card-content>
+							<p class="card-title text-center text-sm-left">If influenza-like-illness <br> symptoms +ve plus <br> TOCC +ve</p>
+							<h6 class="card-text"><mat-icon  class="align-middle">arrow_forward</mat-icon> Prompt isolation</h6>
+							<h6 class="card-text"><mat-icon  class="align-middle">arrow_forward</mat-icon> Airkoorne, Droplet & Contact Precautions</h6>
+						</mat-card-content>
+					</mat-card>
+
+				</div>
+			</div>
+			
+		</mat-card-content>
+	</mat-card>
+	<mat-card>
+		<mat-card-title><mat-toolbar class="h-3 h5 rounded" color="primary">Types of Isolation Precautions required!</mat-toolbar></mat-card-title>
+		<mat-card-content>
+			<div class="row">
+				<div class="col-lg-8 col-md-8">
+						<section class="example-section list-group">
+							<ng-container *ngFor="let typeIso of isolationtype">
+								<mat-checkbox [(ngModel)]="typeIso.selected" >{{typeIso.name}}</mat-checkbox>
+							</ng-container>
+						</section>
+				</div>
+				
+			</div>
+			
+		</mat-card-content>
+	</mat-card>
+	<mat-card>
+		
+		<mat-card-content>
+			<div class="row">
+				
+				<div class="col-lg-6">
+				</div>
+				<div class="col-lg-6 "  #pagediv>
+					<div class="text-center" *ngIf="accept_terms == true">
+						(Sign Below)
+					</div>
+					<div class="text-center">
+						<signature-pad class="" [options]="signaturePadOptions" (onBeginEvent)="drawStart()" (onEndEvent)="drawComplete($event)"></signature-pad>
+						<button  type="button" (click)="drawClear()" class="float-right btn btn-default btn-sm" >Clear Signature</button>
+					</div>
+																	 
+				</div>
+				
+			</div>
+			
+		</mat-card-content>
+	</mat-card>
+	<mat-card>
+		
+		<mat-card-content  *ngIf="patient_visit != null">
+			<div class="row">
+				
+				<div class="col-lg-12">
+																	 
+						<button  type="button" (click)="saveConsent()" class="btn btn-success btn-sm" >Submit</button>
+				</div>
+			</div>
+			
+		</mat-card-content>
+	</mat-card>
+
+	
+</div>

@@ -1,0 +1,107 @@
+<app-page-header [heading]="'Diagnosis'" [icon]="'fa fa-stethoscope'"></app-page-header>                
+<fieldset class="form-group row" *ngIf="user_rights.ADD == '1'">
+  <legend>New</legend>
+  <div class="row col-lg-12">
+    <div class="form-group col-lg-4" >
+        <label for="p_type">Name</label><span class="text-danger">&nbsp;*</span>
+        <input [(ngModel)]="diagnosis_data.diagnosis_name" class="form-control form-control-sm" type="text" name="diagnosis_name" id="diagnosis_name">
+    </div>
+    <div class="form-group col-lg-4" >
+      <label for="p_type">ICD Code</label><span class="text-danger">&nbsp;*</span>
+      <input [(ngModel)]="diagnosis_data.diagnosis_code" class="form-control form-control-sm" type="text" name="diagnosis_code" id="diagnosis_code">
+    </div>
+    <div class="form-group col-lg-4" >
+      <label for="p_type">Order</label><span class="text-danger">&nbsp;*</span>
+      <input [(ngModel)]="diagnosis_data.diagnosis_order" class="form-control form-control-sm" type="text" name="diagnosis_order" id="diagnosis_order">
+    </div>
+    <div class="form-group col-lg-4" >
+      <label for="p_type">Description</label><span class="text-danger">&nbsp;*</span>
+      <textarea [(ngModel)]="diagnosis_data.diagnosis_description" class="form-control form-control-sm" name="diagnosis_description" id="diagnosis_description"></textarea>
+    </div>
+  </div>
+  <div class="clearfix"></div>
+  <div class="clearfix"></div>
+  <div class="form-group col-lg-7 pull-right">
+    <button *ngIf="user_rights.ADD=='1'" class="btn btn-primary btn-sm ng-star-inserted" type="button" (click)="save_diagnosis();">&nbsp;Save&nbsp;</button>&nbsp;&nbsp;&nbsp;
+    <button  class="btn btn-danger btn-sm ng-star-inserted" type="button" (click)="clearDiagnosis();">&nbsp;Clear&nbsp; </button>
+  </div>
+  <div class="clearfix"></div>
+</fieldset>
+<fieldset class="form-group row" >
+  <legend>List</legend>
+  <div class="col-lg-12 ">
+    <table class="col-lg-12 borderless">
+      <tr> 
+        <td width="40%" class="text-left">
+          <div class="input-group mb-3 pull-left">
+              <input id="typeahead-http" style="height: 31px" type="text" class="form-control" 
+              [(ngModel)]="diagnosis_data.search_diagnosis" 
+              (keyup)="getlength($event)" 
+              (keypress)="getlength($event)" 
+              (keydown)="getlength($event)" 
+              (paste)= "getsearchlist($event)"  
+              name="search_text" 
+              placeholder="Diagnosis Name / Diagnosis Code..." >
+              <div class="input-group-append">
+                <button style="height:31px;padding:7px" class="input-group-text" (click)="clear_search()">
+                  <i  *ngIf="diagnosis_data.search_diagnosis != ''"  class="fa fa-close"></i>
+                  <i *ngIf="diagnosis_data.search_diagnosis == ''" class="fa fa-search"></i>
+                </button>
+              </div>
+          </div>  
+          <div class="invalid-feedback">Sorry, suggestions could not be loaded.</div>
+        </td>
+        <td width="50%" class="text-right" style="vertical-align: top;"></td>
+      </tr>
+    </table>
+  </div>
+  <div class="clearfix"></div>
+  <div class="col-lg-12">
+    <table class="table tbl table-hover table-striped table-bordered">
+      <thead>
+        <tr>
+          <th class="text-center" width="1%">#</th>
+          <th>Name</th>
+          <th class="text-center" width="10%">ICD code</th>
+          <th>Description</th>
+          <th class="text-center" width="7%">Order</th>
+          <th class="text-center" width="7%">Action</th>
+        </tr>
+        <tr *ngIf="(diagnosis_list | json) == '[]'">
+          <td colspan="7" class="text-center">No details available</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let doc of diagnosis_list;let i=index;">  
+          <td class="text-center">{{ start + i + 1}}</td>
+          <td>{{ doc.NAME}}</td>
+          <td class="text-center">{{ doc.CODE}}</td>
+          <td>{{ doc.DESCRIPTION }}</td>
+          <td class="text-center">{{ doc.LIST_ORDER }}</td>
+          <td class="text-center" >
+            <button *ngIf="user_rights.EDIT=='1'" (click)="editDiagnosis(doc);" alt="Edit" title="Edit" class="btn btn-sm btn-default"><i class="fa fa-edit"></i></button>
+          </td>  
+        </tr>
+      </tbody>
+    </table>
+    <ngb-pagination 
+        [disabled]="diagnosis_data.search_diagnosis !== ''"
+        class="d-flex justify-content-center"
+        [(page)]="page"
+        [pageSize]="p"
+        [collectionSize]="collection"
+        [directionLinks]="true"
+        [boundaryLinks]="true"
+        aria-label="Default pagination"
+        [maxSize]="3"
+        (pageChange)="getDiagnosisList(page-1)">
+    </ngb-pagination>
+    <pre>Current page : {{page}}</pre>
+    <pre>Total records : {{collection}}</pre>
+  </div>       
+</fieldset>
+  
+
+      
+      
+        

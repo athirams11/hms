@@ -1,0 +1,56 @@
+<fieldset class="form-group">
+  <legend>Vitals</legend>  
+  <form #vitalsForm="ngForm" (ngSubmit)="saveVitals()">
+    <div class="container form-group">
+      <div class="form-group">
+        <table class="table tbl tbl-sm  table-bordered">
+          <thead>
+            <tr>
+              <th style="width: 15%;"><label>Date & Time</label></th>
+              <th *ngFor="let vitals of vital_params"><label>{{ vitals.SHORT_FORM }}({{ vitals.SYMBOL }})</label></th>
+              
+              <th *ngIf="user_rights.EDIT=='1' || user_rights.ADD=='1' "><label>*</label></th>
+            </tr>
+          </thead>        
+          <tbody>
+            <tr> 
+              <td><input class="form-control  form-control-sm"  value="Now" readonly="readonly"  type="text"></td>
+              <ng-container *ngFor="let vitals of vital_params;let i = index">
+                <td *ngIf="vitals.TEST_PARAMETER_ID == settings.HEIGHT || vitals.TEST_PARAMETER_ID == settings.WEIGHT">
+                  <input (change)="getEvent()" maxlength="7" [(ngModel)]="vital_form_values[vitals.TEST_PARAMETER_ID]" name="{{vitals.TEST_PARAMETER_ID}}" id="{{vitals.SHORT_FORM}}" class="form-control  form-control-sm" type="text"  (change)="calculateBMI(vital_form_values[settings.HEIGHT],vital_form_values[settings.WEIGHT])"  >
+                </td>
+                <td *ngIf="vitals.TEST_PARAMETER_ID != settings.HEIGHT && vitals.TEST_PARAMETER_ID != settings.WEIGHT">
+                  <input (change)="getEvent()" maxlength="7" [(ngModel)]="vital_form_values[vitals.TEST_PARAMETER_ID]" name="{{vitals.TEST_PARAMETER_ID}}" id="{{vitals.SHORT_FORM}}" class="form-control  form-control-sm" type="text" > 
+                </td>
+              </ng-container>
+              <td><button [disabled]="formatDate(todaysDate) != formatDate(selected_visit.CREATED_TIME)" alt="Save" title="Save" type="button" class="btn btn-xs " type="submit"><i class="fa fa-save"></i></button></td>
+            </tr>
+            <tr *ngFor="let details of vital_values">
+              <td>{{ formatDateTime(details.DATE_TIME)}}</td>
+              <td *ngFor="let details_data of details.param_values;let i = index">{{ details_data.PARAMETER_VALUE }}</td>
+              
+              <td *ngIf="user_rights.EDIT=='1'"><button [disabled]="user_data.user_id != details.CREATED_BY" alt="Edit" title="Edit" type="button" (click)="editAssesmentValues(details.NURSING_ASSESSMENT_ENTRY_ID,vitalsForm)" class="btn btn-xs " type="button"><i class="fa fa-edit"></i></button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </form>
+</fieldset>   
+
+<!-- <fieldset class="form-group">
+  <legend>Blood Sugar Report</legend>  
+  <div class="container form-group">
+    <div class="form-group">
+      <div class="row">
+        <div class="col-12">
+          <textarea (change)="getEvent()" name="blood_sugar" id="blood_sugar" [(ngModel)]="blood_sugar_report" class="form-control form-control-sm" rows="4"></textarea>
+        </div>
+        <div class="col-1" style="padding-top: 20px;">
+          <button  class="btn btn-sm btn-primary" (click)="saveBloodSugarReport()" [disabled]="formatDate(todaysDate) != formatDate(selected_visit.CREATED_TIME)">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="clearfix"></div>
+</fieldset> -->

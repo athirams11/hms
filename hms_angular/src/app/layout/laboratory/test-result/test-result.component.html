@@ -1,0 +1,226 @@
+
+<app-page-header [heading]="'Test Result'" [icon]="'fa fa-futbol-o'"style="height:100px;"></app-page-header>
+<fieldset class="form-group row" *ngIf="user_rights.ADD == '1'">
+  <legend>Search</legend>
+  <div class="row col-lg-12">
+      <div class="form-group col-lg-4" >
+          <label for="p_type">MR.No</label>
+          <input  class="form-control form-control-sm" type="text"[(ngModel)]="appdata.mrno" >
+      </div>
+      <div class="form-group col-lg-4" >
+          <label for="p_type">Patient Number</label>
+          <input class="form-control form-control-sm" type="text"[(ngModel)]="appdata.patient_no" >
+      </div>
+      <div class="form-group col-lg-4" >
+          <label for="p_type" >Sample Type</label>
+          <div class="input-group mb-3">
+              <select [(ngModel)]="appdata.sample_type" class="form-control form-control-sm custom-select custom-select-sm" name="sample_type" id="sample_type">
+                  <option value="">Select Type</option>
+                  <option *ngFor="let type of type_list" value="{{ type.SAMPLE_TYPE_ID }}" >{{ type.TYPE_NAME }}</option>
+              </select>
+          </div>
+      </div>
+      <div class="form-group col-lg-4" >
+          <label for="p_type" >Test Name</label>
+          <div class="input-group mb-3">
+              <select [(ngModel)]="appdata.test" class="form-control form-control-sm custom-select custom-select-sm" name="test" id="test">
+                  <option value="">Select Test</option>
+                  <option *ngFor="let type of test_list" value="{{ type.TEST_ID }}" >{{ type.TEST_NAME }}</option>
+              </select>
+          </div>
+      </div>
+      <div class="form-group col-lg-2" >
+        <label for="p_type" ></label>
+        <div class="input-group mb-3">
+            <button type="button" (click)="getSearchlist()" class="btn btn-info btn-sm" >Search</button>
+
+        </div>
+    </div>
+  </div>
+  <div class="clearfix"></div>
+  <div class="clearfix"></div>
+</fieldset>
+<fieldset class="form-group row">
+  <legend>List</legend>
+  <div class="col-lg-12 ">
+      <table class="col-lg-12 borderless">
+          <tr> 
+          <td width="40%" class="text-left">
+              <!-- <div class="input-group mb-3 pull-left">
+                  <input id="typeahead-http" style="height:31px" type="text" 
+                  class="form-control" [(ngModel)]="appdata.search" 
+                  (keypress)=" getSearchlist($event)"  
+                  (paste)= " getSearchlist($event)"  
+                  name="search_text" placeholder="Mr.No, Patient Number.... ">
+
+                  <div class="input-group-append">
+                      <button style="height:31px;padding:7px" class="input-group-text" (click)="clear_search()">
+                          <i *ngIf="appdata.search != ''"  class="fa fa-close"(onclick)="clear_search()"></i>
+                          <i *ngIf="appdata.search == ''" class="fa fa-search"></i>
+                      </button>
+                  </div>
+              </div>  
+              <div class="invalid-feedback">Sorry, suggestions could not be loaded.</div> -->
+          </td>
+          <td width="50%" class="text-right" style="vertical-align: top;"></td>
+          </tr>
+      </table>
+  </div>
+  <div class="clearfix"></div>
+  <div class=" col-lg-12" >
+      <table class="table tbl table-hover table-striped table-bordered">
+          <thead>
+              <tr>
+                  <th class="text-center" width="2%">#</th>
+                  <th>MR.No</th>
+                  <th>Patient Number</th>
+                  <th>Patient Name</th>
+                  <th>Collected Date</th>
+                  <th>Doctor Name</th>
+                  <th>Test Name</th>
+                  <th>Sample Type</th>
+                  
+                  <!-- <th>Collection Type</th> -->
+                  <th class="text-center">Status</th>
+                  <th class="text-center" width="7%">Action</th>
+              </tr>
+              <tr *ngIf="(collection_list | json) == '[]'">
+                  <td colspan="8" class="text-center">No details available</td>
+              </tr>
+          </thead>
+          <tbody>
+              <tr  *ngFor="let data of collection_list;let i=index">
+                  <td class="text-center">{{start + i+1 }}</td>
+                  <td>{{ data.MR_NO}}</td>
+                  <td>{{ data.OP_REGISTRATION_NUMBER}}</td>
+                  <td>{{ data.FIRST_NAME}}</td>
+                  <td>{{ format_date(data.SAMPLE_COLLECTED_DATE)}}</td>
+                  <td>{{ data.DOCTORS_NAME}}</td>
+                  <td>{{ data.PROCEDURE_CODE_NAME}}</td>
+                  <td>{{ data.TYPE_NAME}}</td>
+                  <!-- <td>{{ data.TEST_NAME}}</td> -->
+                  <td>
+                    <select class="custom-select custom-select-sm"  name="currentstatus" [(ngModel)]="listStatus[i] = data.CURRENT_STATUS"
+                    (change)="changeStatus(data.SAMPLE_ID,i)">
+                      <option  value="1">Collected</option>
+                      <option value="2">Processing</option>
+                      <option value="3">Completed</option>
+                    </select> 
+                  </td>
+                  <!-- <td class="text-center" *ngIf="data.COLLECTION_TYPE == 1">In House</td>
+                  <td class="text-center" *ngIf="data.COLLECTION_TYPE == 2">Out Source</td> -->
+                  <!-- <td class="text-center" *ngIf="data.CURRENT_STATUS == 1">Collected</td>
+                  <td class="text-center" *ngIf="data.CURRENT_STATUS == 2">Processing</td>
+                  <td class="text-center" *ngIf="data.CURRENT_STATUS == 3">Completed</td> -->
+                  <td class="text-center" width="10%">
+                      <button *ngIf="user_rights.EDIT=='1'"  (click)="open(content);addattachment(data);"alt="Add Report" title="Add Report" class="btn btn-sm btn-success"><i class="fa fa-paperclip"></i></button>   &nbsp;
+                      <button *ngIf="data.RESULT_FILE_NAME != ''"  alt="View Report" title="View Report" class="btn btn-sm btn-warning"><a href = "{{filePath(data.SAMPLE_ID,data.RESULT_FILE_NAME)}}"  target="_blank"><i class="fa fa-eye" style="color: #04081b;" ></i></a> </button>                  
+                      <button *ngIf="data.RESULT_FILE_NAME == ''" [disabled]="data.RESULT_FILE_NAME == ''" alt="View Report" title="View Report" class="btn btn-sm btn-warning"><a   target="_blank"><i class="fa fa-eye" style="color: #04081b;" ></i></a> </button>                  
+                  </td>
+              </tr> 
+          </tbody>
+      </table>
+      <ngb-pagination 
+          [disabled]="appdata.search !=''"
+          class="d-flex justify-content-center"
+          [(page)]="page"
+          [pageSize]="p"
+          [collectionSize]="collection"
+          [directionLinks]="true"
+          [boundaryLinks]="true"
+          [(page)]="page" aria-label="Default pagination"
+          [maxSize]="2"
+          (pageChange)="getCollection(page-1)">
+      </ngb-pagination>
+      <!-- <pre>Current page : {{page}}</pre> -->
+      <!-- <pre>Total records : {{collection}}</pre> -->
+  </div>   
+</fieldset>
+
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+      <div class="pull-right text-right">
+        <h6 class="modal-title" id="modal-basic-title" style="vertical-align: top;">
+            Add Test Report
+        </h6>
+      </div>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <div class="row col-lg-12">
+            <div class="form-group col-lg-3" >
+                <label for="p_type">MR.No</label>
+                <input  [readOnly]="true" class="form-control form-control-sm" type="text"[(ngModel)]="appdatas.mrno" >
+            </div>
+            
+            <div class="form-group col-lg-3" >
+                <label for="p_type">Patient Number</label>
+               
+                <input [readOnly]="true" class="form-control form-control-sm" type="text"[(ngModel)]="appdatas.patient_no" >
+            </div>
+            <div class="form-group col-lg-3" >
+                <label for="p_type">Patient Name</label>
+               
+                <input [readOnly]="true" class="form-control form-control-sm" type="text"[(ngModel)]="appdatas.patient_name" >
+            </div>
+            <div class="form-group col-lg-3" >
+                <label for="p_type">Result Type</label>
+                <br>
+                <label class="radio-inline">
+                    <input  type="radio" (click)="selectStatus(1)" name="status" id="active" value="1" [checked]="appdatas.collection_type == 1">&nbsp;&nbsp;In House &nbsp;&nbsp;
+                </label>
+                <label class="radio-inline">
+                    <input  type="radio" (click)="selectStatus(0)" name="status" id="inactive" value="2" [checked]="appdatas.collection_type == 2">&nbsp;&nbsp;Out Source
+                </label>
+            </div>
+            <div class="form-group col-lg-3" >
+                <label for="p_type" >Status</label>
+                <div class="input-group mb-3">
+                    <select [(ngModel)]="appdatas.status" class="form-control form-control-sm custom-select custom-select-sm" name="status" id="status">
+                        <option value="">Select Status</option>
+                        <option value="1">Collected</option>
+                        <option value="2">Processing</option>
+                        <option value="3">Completed</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group col-lg-3" >
+                <label for="p_type">Report</label><span class="text-danger">&nbsp;*</span>
+                        <input #file  
+                        [(ngModel)]="appdatas.document" accept=".pdf" class="form-control form-control-sm" type="file" name="document" id="document"
+                        (change)="getFileDetails($event)">
+            </div>
+            <div class="form-group col-lg-3" *ngIf="appdatas.filepath!=''">
+                <label style="font-size:12px;"><br>
+                    <a href = "{{filePath(appdatas.sample_id,appdatas.filepath)}}"
+                        title="{{ appdatas.filepath }}" target="_blank">
+                        <i class="fa fa-file"></i>&nbsp;&nbsp;{{ appdatas.filepath}}
+                    </a>&nbsp;&nbsp;&nbsp;
+                    <button style="font-size:12px;" class="btn btn-sm" 
+                    (click)="removeattachment(appdatas.sample_id);" >
+                        <i class="fa fa-trash text-danger"></i>
+                    </button>
+                </label>
+            </div>
+            <div class="form-group col-lg-12" >
+                <label for="p_type" >Remarks</label>
+                <textarea class="form-control"  style="height: 120px;" 
+                [(ngModel)]="appdatas.remarks" 
+                name="remarks">
+                </textarea>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="clearfix"></div>
+        <div class="row container">
+            <div class="col-lg-7 pull-right">
+                <button *ngIf="user_rights.ADD == '1'" (click)="attachcollection();"  class="btn btn-primary btn-sm ng-star-inserted" type="button"  style="width:60px;height:30px;">&nbsp;Save&nbsp;</button>&nbsp;&nbsp;&nbsp;
+                <!-- <button *ngIf="user_rights.ADD == '1'" (click)="clearForm();" class="btn btn-danger btn-sm ng-star-inserted" type="button" style="width:60px;height:30px;">&nbsp;Clear&nbsp; </button> -->
+            </div>
+        </div>
+    </div>
+    
+  </ng-template>

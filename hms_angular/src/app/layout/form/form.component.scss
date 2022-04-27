@@ -1,0 +1,27 @@
+legend {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    padding: 10px;
+    margin-bottom: .5rem;
+    font-size: 1.5rem;
+    line-height: inherit;
+    color: inherit;
+    white-space: normal;
+}
+fieldset {
+    min-width: 0;
+    padding: 10px;
+    margin: 5px;
+    margin-left: 5px;
+    border: 1px solid grey;
+}
+.clearfix {
+
+    width: 100%;
+    min-height: 10px;
+
+} 
+label,th{
+    font-size: 14px;
+}

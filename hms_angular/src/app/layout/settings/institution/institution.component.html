@@ -1,0 +1,106 @@
+<div [@routerTransition]>
+  <app-page-header [heading]="'Institution'" [icon]="'fa-hospital-o'"></app-page-header>
+  <form role="form">
+    <!-- <fieldset class="form-group ">
+      <legend>Date Settings</legend>
+      <div class="row col-lg-12">
+        <div class="col-8">
+          <div class=" row">
+            <label for="p_type" class="col-3">Custom Date</label>
+            <div class="col-1">
+              <input type="checkbox" class="form-control form-control-sm" [checked]="hospital_data.custom_date_status == true"  [(ngModel)]="hospital_data.custom_date_status" name="custom_date_status">
+            </div>
+            <div class="col-6">
+              <input type="date" class="form-control form-control-sm" [disabled]="hospital_data.custom_date_status == false"  [ngModel]="hospital_data.custom_date | date:'yyyy-MM-dd'" (ngModelChange)="hospital_data.custom_date = $event" name="custom_date">
+            </div>
+            <div class="col-2">
+              <input type="button" class="btn btn-info" value="Save" (click)="saveDate()" >
+            </div>
+          </div>
+        </div>
+      </div>
+    </fieldset> -->
+    <fieldset class="form-group row">
+      <legend>Institution Details</legend>
+      <div class="row col-lg-12">
+        <div class="form-group col-lg-4" >
+            <label for="p_type">Name</label><span class="text-danger">&nbsp;*</span>
+            <input type="text" class="form-control form-control-sm"   [(ngModel)]="hospital_data.hospital_name" name="hospital_name">
+        </div>
+        <div class="form-group col-lg-4" >
+            <label for="p_type">Address</label><span class="text-danger">&nbsp;*</span>
+            <textarea type="text" class="form-control form-control-sm" name="hospital_address" [(ngModel)] ="hospital_data.hospital_address"></textarea>
+        </div>
+        <div class="form-group col-lg-4" >
+          <label for="p_type">Country</label><span class="text-danger">&nbsp;*</span>
+          <ngx-select-dropdown class="form-control form-control-sm size" 
+            [config]="configer" [options]="country_options" name="country" 
+            [multiple]="false" (change)="getcountry(country_options)"
+            [(ngModel)]="country_data">
+          </ngx-select-dropdown>
+        </div>
+        <div class="form-group col-lg-4" >
+          <label for="p_type">City</label>
+          <input type="text" class="form-control form-control-sm" name="hospital_city" [(ngModel)] ="hospital_data.hospital_city">
+        </div>
+        <div class="form-group col-lg-4" >
+          <label for="p_type">Phone Number</label><span class="text-danger">&nbsp;*</span>
+          <input type="text" class="form-control form-control-sm" name="hospital_phone" [(ngModel)] ="hospital_data.hospital_phone">
+        </div>
+        <div class="form-group col-lg-4" >
+          <label for="p_type">Email Address</label><span class="text-danger">&nbsp;*</span>
+          <input type="text" class="form-control form-control-sm" name="hospital_email" [(ngModel)] ="hospital_data.hospital_email">
+        </div>
+        <div class="form-group col-lg-4" >
+          <label for="p_type">Logo</label>
+          <input class="form-control form-control-sm" #file  type="file" accept=".png,.jpeg,.jpg"
+          name="hospital_logo" id="document"
+          (change)="getFileDetails($event)">
+          <ng-container *ngIf="image!= ''">
+            <div class="clearfix"></div>
+            <div class="clearfix"></div>
+            <div class="text-center">
+              <img  [src]="image" height="150">
+            </div>
+          </ng-container>
+        </div>
+        <div class="clearfix"></div>
+        <div class="form-group col-lg-6" >
+          <ng-container *ngIf="image!= ''">
+            <label class="text-primary">
+              <i class="fa fa-image"></i>&nbsp;&nbsp;
+              {{ fileName }}
+            </label>&nbsp;
+            <button (click)="removeLogo()" class="btn btn-small">
+              <i class="fa fa-trash text-danger"></i>
+            </button>
+          </ng-container>
+        </div>
+      </div>
+    </fieldset>
+    <!-- <fieldset class="form-group row">
+      <legend>DHPO Details</legend>
+      <div class="row col-lg-12">
+        <div class="form-group col-lg-4" >
+            <label for="p_type">User Id</label>
+            <input type="text"class="form-control form-control-sm"name="dhpo_id" [(ngModel)] ="hospital_data.dhpo_id">
+        </div>
+        <div class="form-group col-lg-4" >
+          <label for="p_type">User Name</label>
+          <input type="text"class="form-control form-control-sm" name="dhpo_name" [(ngModel)] ="hospital_data.dhpo_name">
+        </div>
+        <div class="form-group col-lg-4" >
+          <label for="p_type">Password</label>
+          <input type="password"class="form-control form-control-sm" name="dhpo_password" [(ngModel)] ="hospital_data.dhpo_password">
+        </div>
+      </div>
+      <div class="clearfix"></div>
+      <div class="clearfix"></div>
+    </fieldset> -->
+    <div class="clearfix"></div>
+    <!-- <div class="col-lg-12"> -->
+      <button  *ngIf="user_rights.ADD == '1'"  type="button" class=" btn btn-sm btn-primary pull-left"(click)=" saveInstitution()">Save</button>
+    <!-- </div> -->
+    <div class="clearfix"></div>
+  </form>
+</div>

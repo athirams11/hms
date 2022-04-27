@@ -1,0 +1,82 @@
+<div class="col-lg-12" *ngIf="(schedule_list | json) != '[]'">
+  <table class="table table-sm table-bordered">
+    <thead>
+      <tr>
+        <th>Doctor Name</th>
+        <th>Slot 1</th>
+        <th>Slot 2</th>
+        <th>Slot 3</th>
+      </tr>
+    </thead>  
+    <tbody>
+        <tr  *ngFor="let schedule of schedule_list.DOCTORS">
+          <td>{{ schedule.name }} - {{schedule.specialized}}</td>
+          <td *ngFor="let slots of schedule.slotList">
+              <div *ngIf="slots.START_AT != slots.END_AT">
+                {{ formatTime(slots.START_AT) }} - {{ formatTime(slots.END_AT) }} 
+              [<span class="tot-pat">
+                  {{ slots.AP_COUNT }}/{{ getNoOfPatients(slots,schedule.avg_time) }}
+              </span>  ]
+            </div>
+          </td>
+          <!--
+            <td>
+              {{ formatTime(schedule.slots.slot_2.START_AT) }} - {{ formatTime(schedule.slots.slot_2.END_AT) }}
+              [<span class="tot-pat">
+                {{ getNoOfPatients(schedule.slots.slot_2.START_AT,schedule.slots.slot_2.END_AT, schedule.avg_time,schedule) }}
+              </span>]
+          </td>
+          <td >
+            {{ formatTime(schedule.slots.slot_3.START_AT) }} - {{ formatTime(schedule.slots.slot_3.END_AT) }}
+            [<span class="tot-pat">
+               {{ getNoOfPatients(schedule.slots.slot_3.START_AT,schedule.slots.slot_3.END_AT, schedule.avg_time,schedule) }} 
+            </span>]
+
+          </td>
+          -->
+        </tr>
+    </tbody>
+  </table>
+		
+</div>
+<div class="col-lg-12" *ngIf="(dr_schedule_list_date | json) != '[]'">
+  <table class="table table-sm table-bordered">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Slot 1</th>
+        <th>Slot 2</th>
+        <th>Slot 3</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr  *ngFor="let schedule of dr_schedule_list_date.DATES" >
+          <td *ngIf="schedule != ''">{{ formatDate(schedule.date) }} - {{ schedule.DAY | uppercase }}</td>
+          <td *ngFor="let slots of schedule.slotList">
+              <div *ngIf="slots.START_AT != slots.END_AT">
+                {{ formatTime(slots.START_AT) }} - {{ formatTime(slots.END_AT) }} 
+              [<span class="tot-pat">
+                  {{ slots.AP_COUNT }}/{{ getNoOfPatients(slots,schedule.avg_time) }}
+              </span>  ]
+            </div>
+          </td>
+          <!--
+            <td>
+              {{ formatTime(schedule.slots.slot_2.START_AT) }} - {{ formatTime(schedule.slots.slot_2.END_AT) }}
+              [<span class="tot-pat">
+                {{ getNoOfPatients(schedule.slots.slot_2.START_AT,schedule.slots.slot_2.END_AT, schedule.avg_time,schedule) }}
+              </span>]
+          </td>
+          <td >
+            {{ formatTime(schedule.slots.slot_3.START_AT) }} - {{ formatTime(schedule.slots.slot_3.END_AT) }}
+            [<span class="tot-pat">
+               {{ getNoOfPatients(schedule.slots.slot_3.START_AT,schedule.slots.slot_3.END_AT, schedule.avg_time) }} 
+            </span>]
+
+          </td>
+          -->
+        </tr>
+    </tbody>
+  </table>
+		
+</div>

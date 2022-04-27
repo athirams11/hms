@@ -1,0 +1,79 @@
+/* You can add global styles to this file, and also import other style files */
+@import "bootstrap/bootstrap";
+@import "spinner";
+@import "utils";
+@import "rtl";
+@import "responsive";
+@import "~angular-notifier/styles";
+
+@media print {
+    .breadcrumb {
+        display: none !important;
+    }
+}
+
+.table thead th {
+    background-color: #1d578e !important; //#1d578e
+    color: white !important;
+    border-bottom-color: 1px black;
+    padding: 6px;
+    font-size: 13px;
+    text-transform: capitalize;
+    padding: 12px;
+}
+
+.table tbody td {
+    font-size: 13px;
+    text-align: left;
+}
+
+.modal-lg {
+    max-width: 95%;
+}
+
+.multiselect-dropdown[_ngcontent-c7] .dropdown-btn[_ngcontent-c7] .dropdown-down[_ngcontent-c7] {
+    display: inline-block;
+    top: 10px;
+    width: 0;
+    height: 0;
+    border-top: 5px solid #adadad !important;
+    border-left: 5px solid transparent !important;
+    border-right: 5px solid transparent !important;
+}
+
+.multiselect-dropdown[_ngcontent-c7] .dropdown-btn[_ngcontent-c7] .dropdown-up[_ngcontent-c7] {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-bottom: 5px solid #adadad !important;
+    border-left: 5px solid transparent !important;
+    border-right: 5px solid transparent !important;
+}
+
+.clearfix {
+
+    width: 100%;
+    min-height: 10px;
+
+}
+
+.dropdown-menu.show {
+    max-height: 200px !important;
+    max-width: 1000px !important;
+    overflow-y: auto !important;
+    overflow-x: auto !important;
+    font-size: 14px !important;
+
+}
+
+.dropdown-list[_ngcontent-c9] li h5 {
+    font-size: 14px !important;
+}
+
+.tbl {
+    td {
+        padding: 0px 0px 0px 0px;
+    }
+
+    background-color: #f3f8fd;
+}

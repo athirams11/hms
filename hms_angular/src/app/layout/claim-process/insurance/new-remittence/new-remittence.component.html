@@ -1,0 +1,83 @@
+<fieldset class="form-group ">
+    <legend>Filter</legend>
+      <div class="row col-lg-12">
+          <div class="col-5">
+              <div class=" row">
+              <label class="col-sm-1" style="width:50%">From</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <div class="col-sm-9">                                      
+                <input class="form-control form-control-sm" type="date" [ngModel] ="fromDateval | date:'yyyy-MM-dd'" (ngModelChange)="fromDateval = $event" name="fromdate" id="fromdate">
+                
+              </div>
+              </div>
+          </div>
+          <div class="col-6">
+              <div class=" row">
+                <div class="col-1"></div>
+              <label class="col-sm-0">To</label>
+              <div class="col-1"></div>
+              <div class="col-sm-7">
+                  <input class="form-control form-control-sm" type="date"  [ngModel] ="toDateval | date:'yyyy-MM-dd'" (ngModelChange)=" toDateval = $event" name="todate" id="todate">                     
+              </div>
+              </div>
+        </div>
+        <button type="button" class="btn btn-primary btn-sm"(click)="searchNewTransactions();">Search</button>
+        </div>
+</fieldset>     
+<form class="inner_body">
+<fieldset class="form-group" style="width:100%">
+  <legend> Remitance<label class="high-light"></label></legend>
+   <div class="container" style="width:100%">
+    <div class="row" style="width:100%">
+      <table style="width:100%"class="sm-tbl table table-hover table-striped table-bordered">
+        <thead>
+          <tr>
+              <th width=1%>#</th>
+              <th>File ID</th>
+              <th>File Name</th>
+              <th>Receiver ID</th>
+              <th>Record Count</th>
+              <th>SenderID</th>
+              <th>Date</th>
+          </tr>
+          <tr *ngIf="notDownloadedfile_list.length === 0">
+            <td colspan="7" class="text-center">No details available</td>
+          </tr>
+          </thead>
+          
+          <tbody>
+              <tr *ngFor="let list of notDownloadedfile_list; let i=index">
+                  <td>{{i+1}}</td>
+                  <td>{{list['@FileID']}}</td>
+                  <td>{{list['@FileName']}}</td>
+                  <!-- .substring(20) -->
+                  <td>{{list['@ReceiverID']}}</td>
+                  <td>{{list['@RecordCount']}}</td>
+                  <td>{{list['@SenderID']}}</td>
+                  <td>{{list['@TransactionDate']}}</td>                           
+              </tr>
+          </tbody>
+      </table>
+      <div class=" row container col-lg-12" style="width:100%">
+          <div class="col-10 text-right"></div> 
+      <button type="button" class="btn btn-info btn-sm"(click)="GetNewTransactions()">Check for data</button>
+    </div>
+    </div>
+    </div>
+    <!-- <ngb-pagination 
+    [disabled]=""
+    class="d-flex justify-content-center"
+    [(page)]="page"
+    [pageSize]="ps"
+    [collectionSize]="notDownloadedfile_list"
+    [directionLinks]="true"
+    [boundaryLinks]="true"
+    aria-label="Default pagination"
+    [maxSize]="3"
+    (pageChange)="GetNewTransactions(page-1)"
+    >
+  </ngb-pagination>
+  <pre>Current page : {{page}}</pre>
+  <pre>Total records : {{notDownloadedfile_colletion}}</pre> -->
+  
+</fieldset>
+</form>

@@ -1,0 +1,199 @@
+// $topnav-background-color:  linear-gradient(white, #cccccc 40%, #bbbbbb 60%, #aaaaaa);
+$topnav-background-color:  linear-gradient(30deg, #1674B8 60%, #17A2B8 );
+label,th,td{
+    font-size: 13px;
+    text-align: center;
+}
+input,select,option {
+    font-size: 13px;
+}   
+.btn-group-xs > .btn, .btn-xs {
+    padding: 1px 5px;
+    font-size: 12px;
+    line-height: 1.5;
+    border-radius: 3px;
+}
+
+
+
+/*side bar*/
+.tabs-left, .tabs-right {
+    border-bottom: none;
+    padding-top: 2px;
+}
+.tabs-left {
+    border-right: 1px solid #ddd;
+}
+.tabs-right {
+    border-left: 1px solid #ddd;
+}
+.tabs-left>li, .tabs-right>li {
+    float: none;
+    margin-bottom: 2px;
+    width: 100%;
+}
+.tabs-left>li {
+    margin-right: -1px;
+}
+.tabs-right>li {
+    margin-left: -1px;
+    
+}
+.tabs-left>li.active>a,
+.tabs-left>li.active>a:hover,
+.tabs-left>li.active>a:focus {
+    border-bottom-color: #ddd;
+    border-right-color: transparent;
+}
+
+.tabs-right>li.active>a,
+.tabs-right>li.active>a:hover,
+.tabs-right>li.active>a:focus {
+    border-bottom: 1px solid #ddd;
+    border-left-color: transparent;
+}
+.tabs-left>li>a {
+    border-radius: 4px 0 0 4px;
+    margin-right: 0;
+    display:block;
+}
+.tabs-right>li>a {
+    border-radius: 0 4px 4px 0;
+    margin-right: 0;
+}
+.sideways {
+    margin-top:50px;
+    border: none;
+    position: relative;
+}
+.sideways>li {
+    height: 20px;
+    width: 120px;
+    margin-bottom: 100px;
+}
+.sideways>li>a {
+    border-bottom: 1px solid #ddd;
+    border-right-color: transparent;
+    text-align: center;
+    border-radius: 4px 4px 0px 0px;
+}
+.sideways>li.active>a,
+.sideways>li.active>a:hover,
+.sideways>li.active>a:focus {
+    border-bottom-color: transparent;
+    border-right-color: #ddd;
+    border-left-color: #ddd;
+}
+.sideways.tabs-left {
+    left: -50px;
+}
+.sideways.tabs-right {
+    right: -50px;
+}
+.sideways.tabs-right>li {
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+.sideways.tabs-left>li {
+    -webkit-transform: rotate(-90deg);
+    -moz-transform: rotate(-90deg);
+    -ms-transform: rotate(-90deg);
+    -o-transform: rotate(-90deg);
+    transform: rotate(-90deg);
+}
+.showTab{
+    display: block !important;
+}
+.hideTab{
+    display: none !important;
+}
+.side_div {
+    background-color: aliceblue;
+    padding-top: 0px;
+}
+.side_nav{
+    background: $topnav-background-color;
+    li {
+        background: transparent;
+        padding: 6px;
+        font-weight: 500;
+        font-size: 14px;
+        color:#fff;
+        cursor: pointer;
+        
+    }
+    li.active{
+        background:  linear-gradient(to right, #b1d5df, #a1cbda);
+        color: #0048BA;
+    }
+    li:hover{
+        background:  linear-gradient(to right, #b1d5df, #a1cbda);
+        color: #0048BA;
+    }
+}
+.tab-content{
+    background-color: #fff;
+    border: 1px solid antiquewhite;
+    .panel-heading {
+        // background: linear-gradient(30deg,#373737, #999 40%, #939393 60%, #373737);
+        background: linear-gradient(30deg, #1674B8 60%, #17A2B8 );
+        margin-bottom: 5px;
+        padding: 1px 9px;
+        color:#fff;
+    }
+    .panel-body {
+        padding: 10px;
+    }
+}
+
+.loading-screen-wrapper {
+    z-index: 100000;
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.6);
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  
+  .loading-screen-icon {
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .table td {
+
+    padding:4px 4px 2px 4px;
+    }
+    .table thead th {
+    vertical-align: middle;
+    border-bottom: 2px solid #dee2e6;
+        border-bottom-width: 2px;
+    }
+    .table tbody td {
+    font-size: 12px;
+    text-align: left;
+    }
+    .table  {
+    vertical-align: middle;
+    }
+    .table tbody td {
+        font-size: 12px;
+        text-align: left;
+      }
+      label,th,td{
+        font-size: 12px;
+        // color: black;
+      }
+      input,select,option {
+        font-size: 12px;
+      }
+      .tbl  {
+        td{
+          padding: 5px 8px 5px 8px;
+        }
+        
+      }

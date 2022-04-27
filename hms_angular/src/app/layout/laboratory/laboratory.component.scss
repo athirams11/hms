@@ -1,0 +1,156 @@
+legend {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    padding: 10px;
+    margin-bottom: .5rem;
+    font-size: 17px;
+    line-height: inherit;
+    color: inherit;
+    white-space: normal;
+}
+
+.high-light {
+    font-weight: bold;
+    font-size: 17px;
+    color: #1d578e;
+}
+
+fieldset {
+    min-width: 0;
+    padding: 10px;
+    margin: 5px;
+    margin-left: 5px;
+
+    border: 1px solid grey;
+}
+
+.clearfix {
+
+    width: 100%;
+    min-height: 10px;
+
+}
+
+label,
+th {
+    font-size: 14px;
+}
+
+input,
+select,
+option {
+    font-size: 14px;
+}
+
+.info-td {
+    text-align: center;
+
+}
+
+.form-group {
+    label {
+        display: inline-block;
+        margin-top: .5rem;
+        margin-bottom: 0rem !important;
+    }
+}
+
+.input-group {
+    label {
+        display: inline-block;
+        margin-top: .0rem;
+        margin-bottom: .5rem !important;
+    }
+}
+
+.sm-tbl {
+
+    td,
+    th {
+        padding: 2px;
+        font-size: 12px;
+    }
+}
+
+label,
+th,
+td {
+    font-size: 13px;
+}
+
+input,
+select,
+option {
+    font-size: 13px;
+}
+
+.loading-screen-wrapper {
+    z-index: 100000;
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.6);
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.loading-screen-icon {
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Hide the browser's default checkbox */
+.con input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+    border: 1px solid black;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+    position: absolute;
+    top: 8px;
+    left: 1px;
+    height: 16px;
+    width: 16px;
+    background-color: #fff;
+    border: 1px solid black;
+    border-radius: 2px;
+}
+
+/* On mouse-over, add a grey background color */
+
+/* When the checkbox is checked, add a blue background */
+.con input:checked~.checkmark {
+    background-color: #fff
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the checkmark when checked */
+.con input:checked~.checkmark:after {
+    display: block;
+}
+
+/* Style the checkmark/indicator */
+.con .checkmark:after {
+    left: 4px;
+    top: 0px;
+    width: 6px;
+    height: 12px;
+    border: solid black;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}

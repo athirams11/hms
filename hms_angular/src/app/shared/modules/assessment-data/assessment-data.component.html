@@ -1,0 +1,35 @@
+
+    <fieldset class="form-group">
+        <legend>NOTES</legend>
+        <div class="row container" *ngIf="notesData.chief_complaints !=''">
+          <label  class="col-3"><b>Chief complaints</b></label><label class="pull-right">:</label>
+          <div  class="col-8">{{ notesData.chief_complaints }}</div>
+        </div>
+        <div class="row container" *ngIf="notesData.nursing_notes != ''">
+        <label class="col-3"><b>Nursing notes</b></label><label class="pull-right">:</label>
+          <div class="col-8">{{ notesData.nursing_notes }}</div>
+        </div>
+        <div class="row container" *ngIf="notesData.past_history !=''">
+          <label  class="col-3"><b>Lab Result</b></label><label class="pull-right">:</label>
+          <div class="col-8">{{ notesData.past_history }}</div>
+        </div>
+        <div class="row container" *ngIf="notesData.family_history !=''">
+        <label class="col-3"><b>Treatment Given</b></label><label class="pull-right">:</label>
+            <div class="col-8">{{ notesData.family_history }}</div>
+        </div>
+    </fieldset>
+      <fieldset class="form-group">
+        <legend>GENERAL INFORMATION</legend>
+          <div class="row container" *ngIf="notesData.mode_arrival_other_value !=''">
+            <label class="col-3"><b>Mode of arrival</b></label><label class="pull-right">:</label>
+              <div class="col-8">{{notesData.mode_arrival_other_value}}</div>
+            </div>
+              <div class="row container" *ngIf="notesData.accompanied_other_value !=''">
+              <label class="col-3"><b>Accompanied by</b></label><label class="pull-right">:</label>
+                  <div class="col-8">{{notesData.accompanied_other_value}}</div>
+                  </div>  
+        </fieldset>
+
+                  
+                
+  

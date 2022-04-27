@@ -1,0 +1,23 @@
+<div [@routerTransition]>
+  <app-page-header [heading]="'Nursing Assessment'" [icon]="'fa fa-plus-square'"></app-page-header>
+  <fieldset class="row form-group">
+    <legend>Search</legend>
+    <div class="col-12 row container">
+    <div class="col-md-5">
+      <div class="row">
+        <label for="date" class="col-2">Date</label>
+        <div class="col-10">
+          <input class="form-control form-control-sm" type="date" [ngModel] ="dateVal | date:'yyyy-MM-dd'" (ngModelChange)="dateVal = $event" name="date" id="date" [max]="getToday()">
+        </div>
+      </div>
+    </div>
+      <div class="col-md-2">
+        <div class="row">
+          <button type="button" (click)="getVisitListByDate();getAssesmentListByDate();" class="btn btn-info btn-sm" >Search By Date</button>
+        </div>
+      </div> 
+    </div>
+  </fieldset>
+  <app-op-visit-list [page]="'Pre-consult'" [visit_list]="visit_list"></app-op-visit-list>
+  <app-nursing-assesment-list (onEvent) ="getAssesmentListByDate();" [page]="'Pre-consult'" [visit_list]="assesment_list"></app-nursing-assesment-list>
+</div>

@@ -1,0 +1,24 @@
+.example-spacer {
+  flex: 1 1 auto;
+}
+.cursor-pointer{
+	cursor: pointer;
+}
+.example-section{
+	margin-left:10px;
+}
+.bg_pur{
+	background: #ccd4ff;
+}
+.text-purple{
+	color: #3f51b5;
+}
+.cursor-pointer{
+	cursor: pointer;
+}
+.h-3{
+	height: 40px;
+}
+.mergin-top-10{
+    margin-top: 15px;
+}

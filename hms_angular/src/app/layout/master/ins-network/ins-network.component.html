@@ -1,0 +1,128 @@
+<app-page-header [heading]="'Insurance Network'" [icon]="'fa fa-google-wallet'"style="height:100px;"></app-page-header>
+<fieldset class="form-group row" >
+    <legend>New</legend>
+    <div class="row col-lg-12">
+        <div class="form-group col-lg-4" >
+            <label for="p_type">TPA Name</label><span class="text-danger">&nbsp;*</span>
+            <ngx-select-dropdown class="form-control form-control-sm size" [config]="config" [options]="tpa_options" name="sel_tpa_receiver" 
+                [multiple]="false" (change)="getTpa(tpa_options);getNetworks($event)"   [(ngModel)]="tpa_data">
+            </ngx-select-dropdown>
+        </div>
+        <div class="form-group col-lg-4" >
+            <label for="p_type">Network Code</label><span class="text-danger">&nbsp;*</span>
+            <input class="form-control form-control-sm" type="text" name="vaccine_price"[(ngModel)]="appdata.network_code">          
+        </div>
+        <div class="form-group col-lg-4" >
+            <label for="p_type">Network Name</label><span class="text-danger">&nbsp;*</span>
+            <input class="form-control form-control-sm" type="text" name="vaccine_price"[(ngModel)]="appdata.network_name">
+        </div>
+        <div class="form-group col-lg-4" >
+            <label for="p_type">Classification</label>
+            <input class="form-control form-control-sm" type="text" name="classification" [(ngModel)]="appdata.network_classification">
+        </div>
+        <div class="form-group col-lg-4" >
+            <label for="p_type">Status</label>
+            <br>
+            <label class="radio-inline">
+                <input  type="radio" (click)="selectStatus(1)" name="status" id="available" value="1" [checked]="appdata.network_status == 1">&nbsp;&nbsp;Available &nbsp;&nbsp;
+            </label>
+            <label class="radio-inline">
+                <input  type="radio" (click)="selectStatus(0)" name="status" id="inavailable" value="0" [checked]="appdata.network_status == 0">&nbsp;&nbsp;Un Available
+            </label>
+        </div>
+        <ng-container *ngIf="appdata.tpa_id != 0 ">
+            <div class="form-group col-lg-4">
+                <br>
+                <input type="checkbox"  [(ngModel)]="showselect" name="">
+                <label>&nbsp;&nbsp;Copy From Another Network</label>
+                <div *ngIf="showselect">
+                    <select class="form-control form-control-sm custom-select custom-select-sm" [(ngModel)]="appdata.copy_from_network" name="network" id="network">
+                        <option value="">Select Network</option>
+                        <option *ngFor="let network of networks" value="{{network.INS_NETWORK_ID}}" >{{ network.INS_NETWORK_NAME }}</option>
+                    </select>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <div class="row container">
+        <div class="col-lg-7 pull-right">
+            <button *ngIf="user_rights.ADD == '1'" (click)="save_network()"  class="btn btn-primary btn-sm ng-star-inserted" type="button"  style="width:60px;height:30px;">&nbsp;Save&nbsp;</button>&nbsp;&nbsp;&nbsp;
+            <button *ngIf="user_rights.ADD == '1'"  (click)="clearForm();" class="btn btn-danger btn-sm ng-star-inserted" type="button" style="width:60px;height:30px;">&nbsp;Clear&nbsp; </button>
+        </div>
+    </div>
+</fieldset>
+<fieldset class="form-group row">
+    <legend>List</legend>
+    <div class="col-lg-12 ">
+        <table class="col-lg-12 borderless">
+            <tr> 
+            <td width="40%" class="text-left">
+                <div class="input-group mb-3 pull-left">
+                    <input id="typeahead-http" style="height:31px;" type="text" class="form-control" 
+                    [(ngModel)]="search" (keypress)="getlength($event)"  
+                    (keydown)="getlength($event)" 
+                    (keyup)="getlength($event)" 
+                    (paste)="getSearchlist($event)"  
+                    name="search_text" placeholder="TPA Name / Network Code / Network Name...">
+
+
+                    <div class="input-group-append">
+                        <button style="height:31px;padding:7px" class="input-group-text" (click)="clear_search()">
+                            <i *ngIf="search == ''"  class="fa fa-search"></i>
+                            <i *ngIf="search != ''" class="fa fa-close"></i>
+                        </button>
+                    </div>
+                </div>  
+                <div class="invalid-feedback">Sorry, suggestions could not be loaded.</div>
+            </td>
+            <td width="50%" class="text-right" style="vertical-align: top;"></td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-lg-12 " >
+        <table class="table tbl table-hover table-striped table-bordered">
+            <thead>
+            <tr>
+                <th class="text-center">#</th>
+                <th>TPA name</th>
+                <th>Network Code</th>
+                <th>Network Name</th>
+                <th class="text-center">Status</th>
+                <th class="text-center">Action</th>
+            </tr>
+            <tr *ngIf="(network_list | json) == '[]'">
+                <td colspan="8" class="text-center">No details available</td>
+            </tr>
+            </thead>
+            <tbody>
+                <tr  *ngFor="let data of network_list;let i=index">
+                <td class="text-center">{{ start+i+1 }}</td>
+                <td>{{ data.TPA_NAME}}</td>
+                <td>{{ data.INS_NETWORK_CODE }}</td>
+                <td>{{ data.INS_NETWORK_NAME }}</td>
+                <td class="text-center" *ngIf="data.INS_NETWORK_STATUS == 1">Available</td>
+                <td class="text-center" *ngIf="data.INS_NETWORK_STATUS == 0">Un available</td>
+                <td class="text-center"> 
+                    <button *ngIf="user_rights.EDIT=='1'" (click)="editNetwork(data);" alt="Edit" title="Edit" class="btn btn-sm btn-default"><i class="fa fa-edit"></i></button>                                  
+                </td>
+                </tr> 
+            </tbody>
+        </table>
+        <ngb-pagination 
+            [disabled]="search !== ''"
+            class="d-flex justify-content-center"
+            [(page)]="page"
+            [pageSize]="p"
+            [collectionSize]="collection"
+            [directionLinks]="true"
+            [boundaryLinks]="true"
+            [(page)]="page" aria-label="Default pagination"
+            [maxSize]="3"
+            (pageChange)="getNetwork(page-1)">
+        </ngb-pagination>
+        <pre>Current page : {{page}}</pre>
+        <pre>Total records : {{collection}}</pre>
+    </div>
+</fieldset>

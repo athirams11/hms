@@ -1,0 +1,91 @@
+<div class="row">
+  <div class="col-md-2">
+    <ul class="mainmenu">
+      <li [ngClass]="{'active': UserTab.MODULE_ID == tab.MODULE_ID}" *ngFor="let tab of menu_list">
+        <ng-container *ngIf="tab.MENUS.length == 1 && tab.MODULE_ID !=28">
+          <a [ngClass]="{'active-sub': tab.MENUS[0] == selectedUserTab}"
+            (click)="tabchange(tab.MENUS[0],notify)">{{tab.MODULE_NAME}}</a>
+        </ng-container>
+        <ng-container *ngIf="tab.MENUS.length > 1 && tab.MODULE_ID !=28">
+          <a (click)="change(tab)">{{tab.MODULE_NAME}}</a>
+          <ul *ngIf="UserTab==tab" class="submenu">
+            <li *ngFor="let subtab of tab.MENUS"><a [ngClass]="{'active-sub': subtab == selectedUserTab}"
+                (click)="tabchange(subtab,notify)"><i>{{subtab.MODULE_NAME}}</i></a></li>
+          </ul>
+        </ng-container>
+      </li>
+    </ul>
+    <div class="clearfix"></div>
+    <span *ngIf="selected_visit.DISCOUNT_SITE_ID > 0" style="font-size: 14px;width:180px;" title="Discount Details"
+      alt="Discount Details" class="btn  text-left" (click)="ShowDiscount()">
+      <span class="fa-stack fa-lg text-warning">
+        <i class="fa fa-certificate fa-stack-2x"></i>
+        <i class="fa fa-tag fa-stack-1x fa-inverse"></i>
+      </span>
+      Discount Details
+    </span>
+    <div class="clearfix"></div>
+    <button *ngIf="selected_visit.DOCTOR_STAT != 1 && selected_visit.STAT == 1"
+      style="padding:5px 15px 5px 15px;font-size: 14px;width:180px;" title="Finish Assessment" alt="Finish Assessment"
+      class="btn btn-success" (click)="OnFinish()">
+      Finish Assessment
+    </button>
+  </div>
+  <div class="col-md-10">
+    <ng-container *ngFor="let tab of menu_list">
+      <div class="tab-pane active" *ngFor="let subtab of tab.MENUS">
+        <div class="tab-content" *ngIf="selectedUserTab==subtab">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              {{selectedUserTab.MODULE_NAME}}
+            </div>
+          </div>
+          <div class="panel-body">
+            <app-chiefcomplaints (saveNotify)="OnApplyNotify($event)" *ngIf="selectedUserTab.MODULE_ID == 22"
+              [assessment_id]="assessment_id" [patient_id]="patient_id" [vital_values]="vital_values"
+              [selected_visit]="selected_visit"></app-chiefcomplaints>
+            <app-diagnosis (saveNotify)="OnApplyNotify($event)" *ngIf="selectedUserTab.MODULE_ID == 22"
+              [assessment_id]="assessment_id" [patient_id]="patient_id" [selected_visit]="selected_visit"
+              [visit_list]="visit_list"></app-diagnosis>
+            <ng-container *ngIf="department != 1">
+              <app-laboratory (saveNotify)="OnApplyNotify($event)" *ngIf="selectedUserTab.MODULE_ID == 22"
+                [assessment_id]="assessment_id" [patient_id]="patient_id" [selected_visit]="selected_visit">
+              </app-laboratory>
+            </ng-container>
+            <app-prescription (saveNotify)="OnApplyNotify($event)" *ngIf="selectedUserTab.MODULE_ID == 22"
+              [assessment_id]="assessment_id" [patient_id]="patient_id" [selected_visit]="selected_visit">
+            </app-prescription>
+            <app-upload-file (saveNotify)="OnApplyNotify($event)" *ngIf="selectedUserTab.MODULE_ID == 22"
+              [assessment_id]="assessment_id" [patient_id]="patient_id" [selected_visit]="selected_visit">
+            </app-upload-file>
+            <ng-container *ngIf="department != 1">
+              <app-immunization (saveNotify)="OnApplyNotify($event)" *ngIf="selectedUserTab.MODULE_ID == 22"
+                [assessment_id]="assessment_id" [patient_id]="patient_id" [selected_visit]="selected_visit">
+              </app-immunization>
+            </ng-container>
+            <app-sick-leave (saveNotify)="OnApplyNotify($event)" *ngIf="selectedUserTab.MODULE_ID == 22"
+              [assessment_id]="assessment_id" [patient_id]="patient_id" [selected_visit]="selected_visit">
+            </app-sick-leave>
+            <app-medical-report *ngIf="selectedUserTab.MODULE_ID == 35" [assessment_id]="assessment_id"
+              [patient_id]="patient_id" [selected_visit]="selected_visit"></app-medical-report>
+            <app-lab-report *ngIf="selectedUserTab.MODULE_ID == 67" [assessment_id]="assessment_id"
+              [patient_id]="patient_id" [selected_visit]="selected_visit"></app-lab-report>
+              <app-radiology-report *ngIf="selectedUserTab.MODULE_ID == 70" [assessment_id]="assessment_id"
+              [patient_id]="patient_id" [selected_visit]="selected_visit"></app-radiology-report>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>
+<ng-template #notify let-modal>
+  <div class="modal-body">
+    <label style="font-size: 14px;" class="text-left">Do you want to change the tab without save the details ?</label>
+  </div>
+  <div class="form-group text-center col-lg-12">
+    <button type="button" class="btn  btn-sm btn-info"
+      (click)="changetab();modal.dismiss('Cross click')">Yes</button>&nbsp;&nbsp;
+    <button type="button" class="btn  btn-sm btn-warning text-light" (click)="modal.dismiss('Cross click')">No</button>
+  </div>
+  <div class="clearfix"></div>
+</ng-template>

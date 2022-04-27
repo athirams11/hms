@@ -1,0 +1,51 @@
+
+
+
+
+<div class="container row form-group">
+  <div Class="col-4"><label class="form-check-label con"><span style="color:rgb(0, 123, 255);">&nbsp;&nbsp;&nbsp;
+        Optional Vaccines</span>
+      <input type="checkbox" [checked]="immunization_data.vaccine_optional == 1" (click)="giveoption()">&nbsp;<span
+        class="checkmark"></span> </label>
+  </div>
+  <div class="btn-group col-4">
+    <button (click)="this.showMainContent = false" ng-model="showadult" [class.active]="this.showMainContent == false"
+      class="col-6 btn btn-sm btn-info">Adult</button>
+    <button (click)="this.showMainContent = true" ng-model="show" [class.active]="this.showMainContent == true"
+      class="col-6 btn btn-sm btn-info">Peadiatrics</button>
+  </div>
+</div>
+<div style="padding: 20px"></div>
+<div *ngFor="let vaccines of vaccines_list;let i=index" class="container">
+  <div class="row main" *ngIf="this.showMainContent == true">
+    <div class="col-10">{{i+1}}
+      <label><b>&nbsp;&nbsp;{{vaccines.VACCINE_NAME}}</b></label>&nbsp;&nbsp;&nbsp;&nbsp;Age
+      :<label><b>{{vaccines.VACCINE_AGE}}</b></label>&nbsp;&nbsp;&nbsp;
+      <label *ngIf="vaccines.VACCINE_OPTIONAL == 1"><span style="color:red">(&nbsp;Optional&nbsp;)</span></label>
+    </div>
+    <div class="col-2"><label class="form-check-label">
+        <input (change)="getEvent()" class="form-check-input" name="immunization_id"
+          [checked]="isexistVaccin(vaccines.IMMUNIZATION_ID) == true" (click)="giveVaccine(vaccines.IMMUNIZATION_ID)"
+          type="checkbox" value="vaccines.IMMUNIZATION_ID">Give Vaccine</label>
+    </div>
+  </div>
+</div>
+<div *ngFor="let vaccines of vaccines_lists;let i=index" class="container">
+  <div class="row main" *ngIf="this.showMainContent == false">
+    <div class="col-10">{{i+1}}
+      <label><b>&nbsp;&nbsp;{{vaccines.VACCINE_NAME}}</b></label>&nbsp;&nbsp;&nbsp;&nbsp;Age
+      :<label><b>{{vaccines.VACCINE_AGE}}</b></label>&nbsp;&nbsp;&nbsp;
+      <label *ngIf="vaccines.VACCINE_OPTIONAL == 1"><span style="color:red">(&nbsp;Optional&nbsp;)</span></label>
+    </div>
+    <div class="col-2"><label class="form-check-label">
+        <input (change)="getEvent()" class="form-check-input" name="immunization_id"
+          [checked]="isexistVaccin(vaccines.IMMUNIZATION_ID) == true" (click)="giveVaccine(vaccines.IMMUNIZATION_ID)"
+          type="checkbox" value="vaccines.IMMUNIZATION_ID">Give Vaccine</label>
+    </div>
+  </div>
+</div>
+<div style="padding-top: 100px" class="container row">
+  <button [disabled]="formatDate(todaysDate) != formatDate(selected_visit.CREATED_TIME)"
+    class="btn btn-primary btn-sm ng-star-inserted" type="button" (click)="savePatientImmunization()"> Save
+  </button>&nbsp;
+</div>

@@ -1,0 +1,102 @@
+
+<div style="padding-bottom:100px;">
+      <button (click)="print()" class=" btn-sm btn-primary  ng-star-inserted"  type="button"> Print medical report</button>
+</div>
+  <div id="print-section" style="display: none;">
+  <div class="col-12" *ngFor = "let datas of labels">
+    <div style="padding-top:10px" *ngIf="complaint_list[datas.key_name.toUpperCase()]!=null">
+      <h2><b>{{datas.label}}</b></h2>
+    </div>
+    <div style="padding-top:10px; text-align: justify;" *ngIf="complaint_list[datas.key_name.toUpperCase()]!=null">
+      <label> {{ complaint_list[datas.key_name.toUpperCase()] }}</label>
+    </div>
+  </div>
+  <div class="col-12"><h2><b>Daignosis</b></h2>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:2%;">Sl#</th>
+          <th style="width:15%;">Diagnosis Name</th>
+          <th style="width:7%;">ICD</th>
+          <th style="width:7%;">Level</th>
+          <th style="width:5%;">Type</th>
+        </tr>
+        <tr *ngIf="(diagnosis_list | json) == '[]'">
+          <td colspan="5" class="text-center">No details available</td>
+        </tr>
+    </thead>
+    <tbody *ngFor="let diagnosis of diagnosis_list;let i=index">
+      <tr >
+        <td>{{ i + 1 }}</td>
+        <td>{{ diagnosis.DIAGNOSIS_NAME }}</td>
+        <td>{{ diagnosis.DIAGNOSIS_CODE }}</td>    
+        <td>{{ diagnosis.DIAGNOSIS_LEVEL_NAME }}</td>
+        <td>{{ diagnosis.DIAGNOSIS_TYPE_NAME  }}</td>
+      </tr> 
+    </tbody>
+  </table>
+  </div>
+    <div class="col-12"><h2><b>Vitals Information</b></h2>
+      <div class="container row form-group">
+        <table>
+          <thead>
+            <tr>
+                <th style="width:10%;"><label>Date & Time</label></th>
+                <th style="width:8%;" *ngFor="let vitals of vital_params"><label>{{ vitals.SHORT_FORM }}({{ vitals.SYMBOL }})</label></th>
+            </tr>
+          </thead>        
+          <tbody>
+            <tr *ngFor="let details of vital_values">
+                <td>{{ formatDate(details.DATE_TIME)}}</td>
+                <td *ngFor="let details_data of details.param_values;let i = index">{{ details_data.PARAMETER_VALUE }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>    
+    </div>
+    <div class="col-12"><h2><b>Allergy</b></h2>
+      <div *ngIf="allergy.NO_KNOWN_ALLERGIES== 0">
+        <label> No known allergies </label> 
+      </div>
+      <div *ngIf="drug_allergy.GENERIC_NAME !=null">
+        <label> Drug allergy </label> 
+        <table>
+          <thead>
+            <tr>
+              <th style="width:20%;">Generic Name</th>
+              <th style="width:20%;">Brand Name</th>
+            </tr>
+            <tr *ngIf="(drug_allergy | json) == '[]'">
+              <td colspan="5" class="text-center">No details available</td>
+            </tr>
+        </thead>
+        <tbody *ngFor="let drug of drug_allergy;let i=index">
+          <tr >
+            <td>{{ i + 1 }}</td>
+            <td>{{ drug.GENERIC_NAME }}</td>
+            <td>{{ drug.BRAND_NAME }}</td>    
+          </tr> 
+        </tbody>
+      </table>
+      </div>
+      <div *ngIf="other_allergy.ALLERGIES_OTHER_ID !=null">
+        <label> other allergy </label> 
+      <table>
+        <thead>
+          <tr>
+            <th style="width:20%;">Other Allergy</th>
+            <th style="width:20%;">Allergy Item</th>
+          </tr>
+      </thead>
+      <tbody *ngFor="let other of other_allergy;let i=index">
+        <tr >
+          <td>{{ i + 1 }}</td>
+          <td>{{ other.ALLERGIES_OTHER_ID }}</td>
+          <td>{{ other.ALLERGIES_ITEM }}</td>    
+        </tr> 
+      </tbody>
+    </table>  
+      </div>
+</div>
+</div>
+

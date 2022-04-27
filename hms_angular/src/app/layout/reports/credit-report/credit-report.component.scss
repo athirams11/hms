@@ -1,0 +1,197 @@
+legend {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  padding: 10px;
+  margin-bottom: .5rem;
+  font-size: 19px;
+  line-height: inherit;
+  color: inherit;
+  white-space: normal;
+}
+
+.high-light {
+  font-weight: bold;
+  font-size: 19px;
+  color: #1d578e;
+}
+
+fieldset {
+  min-width: 0;
+  padding: 10px;
+  margin: 5px;
+  margin-left: 5px;
+
+  border: 1px solid grey;
+}
+
+.clearfix {
+
+  width: 100%;
+  min-height: 10px;
+
+}
+
+label,
+th {
+  font-size: 12px;
+}
+
+input,
+select,
+option {
+  font-size: 12px;
+}
+
+.info-td {
+  text-align: center;
+
+}
+
+.form-group {
+  label {
+    display: inline-block;
+    margin-top: .5rem;
+    margin-bottom: 0rem !important;
+  }
+}
+
+.input-group {
+  label {
+    display: inline-block;
+    margin-top: .0rem;
+    margin-bottom: .5rem !important;
+  }
+}
+
+.sm-tbl {
+
+  td,
+  th {
+    padding: 2px;
+    font-size: 12px;
+  }
+}
+
+.footer,
+.footer-space {
+  height: 30px;
+}
+
+.header {
+  //position: fixed;
+  top: 0;
+}
+
+.footer {
+  // position: fixed;
+  bottom: 0;
+}
+
+label,
+th,
+td {
+  font-size: 12px;
+}
+
+input,
+select,
+option {
+  font-size: 12px;
+}
+
+.tbl {
+  td {
+    padding: 0px 0px;
+  }
+
+}
+
+.table tbody td {
+  font-size: 12px;
+  text-align: left;
+}
+
+.custom {
+  max-width: 50%;
+  margin-left: 25%;
+  margin-top: 3%;
+}
+
+.tbl {
+  td {
+    padding: 5px 8px 5px 8px;
+  }
+
+}
+
+.table thead th {
+  vertical-align: middle;
+}
+
+.btn-stk {
+  color: #fff;
+  background-color: #17a2b8;
+  border-color: #17a2b8;
+  font-weight: 400;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  border-radius: 0.2rem;
+  border: 1px solid transparent;
+}
+
+.gst {
+
+  th,
+  td {
+    vertical-align: middle;
+    padding: 1px 2px 1px 2px;
+  }
+}
+
+.size {
+  height: 32px;
+  padding: 0px;
+  margin: 0px;
+  font-size: 12px;
+}
+
+.tab-content {
+  background-color: #fff;
+  border: 1px solid antiquewhite;
+
+  .panel-heading {
+    background: linear-gradient(30deg, #0A1023 60%, #17A2B8);
+    margin-bottom: 5px;
+    padding: 1px 9px;
+  }
+
+  .panel-body {
+    padding: 10px;
+  }
+}
+
+
+html,
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+
+
+
+.tab-content {
+  background-color: #fff;
+  border: 1px solid #ccc;
+
+  .panel-heading {
+    background-color: #1d578e;
+    margin-bottom: 5px;
+    padding: 1px 9px;
+    color: #fff;
+  }
+
+  .panel-body {
+    padding: 10px;
+  }
+}

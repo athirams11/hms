@@ -1,0 +1,104 @@
+<app-page-header [heading]="'Corporate Company'" [icon]="'fa fa-industry'"></app-page-header>
+<fieldset class="form-group row">
+    <legend>New</legend>
+    <div class="row col-lg-12">
+        <div class="form-group col-lg-4" >
+            <label for="p_type">Company Name</label><span class="text-danger">&nbsp;*</span>
+            <input class="form-control form-control-sm" type="text"[(ngModel)]="company_data.company_name" >
+        </div>
+        <div class="form-group col-lg-4" >
+            <label for="p_type">Company Code</label><span class="text-danger">&nbsp;*</span>
+            <input class="form-control form-control-sm" type="text" name="vaccine_price"[(ngModel)]="company_data.company_code" >
+        </div>
+        <div class="form-group col-lg-4" >
+            <label for="p_type">Status</label><br>
+            <label class="radio-inline">
+                <input  type="radio" (click)="selectStatus(1)" name="status" id="active" value="1" [checked]="company_data.company_status == 1">&nbsp;&nbsp;Active &nbsp;&nbsp;
+            </label>
+            <label class="radio-inline">
+                <input  type="radio" (click)="selectStatus(0)" name="status" id="inactive" value="0" [checked]="company_data.company_status == 0">&nbsp;&nbsp;Inactive
+            </label>
+        </div>
+        <div class="form-group col-lg-4" >
+            <label for="p_type">Address</label>
+            <textarea class="form-control form-control-sm" type="text" [(ngModel)]="company_data.company_address" ></textarea>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <div class="form-group col-lg-7 pull-right">
+        <button *ngIf="user_rights.ADD == '1'" (click)="saveCorporateCompany();"  class="btn btn-primary btn-sm" type="button"  style="width:60px;height:30px;">&nbsp;Save&nbsp;</button>&nbsp;&nbsp;&nbsp;
+        <button *ngIf="user_rights.ADD == '1'" (click)="clearForm();" class="btn btn-danger btn-sm" type="button" style="width:60px;height:30px;">&nbsp;Clear&nbsp; </button>
+    </div>
+</fieldset>
+<fieldset class="form-group row">
+    <legend>List</legend>
+    <div class="col-lg-12 ">
+        <table class="col-lg-12 borderless">
+          <tr> 
+            <td width="40%" class="text-left">
+                <div class="input-group mb-3 pull-left">
+                    <input id="typeahead-http" style="height:31px" type="text" class="form-control" 
+                    [(ngModel)]="company_data.search_text" 
+                    (keypress)="getSearchlist($event)" 
+                    (keydown)="getSearchlist($event)" 
+                    (keyup)="getSearchlist($event)" 
+                    (paste)="getSearchlist($event)"  
+                    name="search_text" placeholder="Company Name / Address ...">
+                    <div class="input-group-append">
+                        <button style="height:31px;padding:7px" class="input-group-text" (click)="clear_search()">
+                            <i *ngIf="company_data.search_text != ''"  class="fa fa-close"(onclick)="clear_search()"></i>
+                            <i *ngIf="company_data.search_text == ''" class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </div>  
+              <div class="invalid-feedback">Sorry, suggestions could not be loaded.</div>
+            </td>
+            <td width="50%" class="text-right" style="vertical-align: top;"></td>
+          </tr>
+        </table>
+    </div>
+    <div class="col-lg-12">
+        <table class="table tbl table-hover table-striped table-bordered">
+            <thead>
+                <tr >
+                    <th class="text-center" width="2%">#</th>
+                    <th>Company Name</th>
+                    <th>Address</th>
+                    <th class="text-center" width='7%'>Status</th>
+                    <th class="text-center" width='7%'>Action</th>
+                </tr>
+                <tr *ngIf="(company_list | json) == '[]'">
+                    <td colspan="5" class="text-center">No details available</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr  *ngFor="let data of company_list;let i=index">
+                    <td class="text-center">{{start + i+1 }}</td>
+                    <td>{{ data.CORPORATE_COMPANY_NAME}}</td>
+                    <td>{{ data.CORPORATE_COMPANY_ADDRESS }}</td>
+                    <td class="text-center" *ngIf="data.CORPORATE_STATUS == 1">Active</td>
+                    <td class="text-center" *ngIf="data.CORPORATE_STATUS == 0">Inactive</td>
+                    <td class="text-center">
+                        <button *ngIf="user_rights.EDIT=='1'"  (click)="getCorporateCompany(data);" alt="Edit" title="Edit" class="btn btn-sm btn-default"><i class="fa fa-edit"></i></button>                      
+                    </td>
+                </tr> 
+            </tbody>
+        </table>
+        <ngb-pagination 
+            [disabled]="company_data.search_text !=''"
+            class="d-flex justify-content-center"
+            [(page)]="page"
+            [pageSize]="p"
+            [collectionSize]="collection"
+            [directionLinks]="true"
+            [boundaryLinks]="true"
+            [(page)]="page" aria-label="Default pagination"
+            [maxSize]="2"
+            (pageChange)="listCorporateCompany(page-1)">
+        </ngb-pagination>
+        <pre>Current page : {{page}}</pre>
+        <pre>Total records : {{collection}}</pre>
+    </div>
+</fieldset>

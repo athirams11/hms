@@ -1,0 +1,77 @@
+// $topnav-background-color: linear-gradient(30deg,#373737, #999 40%, #939393 60%, #373737);//linear-gradient(90deg, #373737, #212529);;
+// $topnav-background-color: linear-gradient(30deg,#054b5e, #16aeb9 40%, #5ad3db 60%, #0e7d99);//linear-gradient(90deg, #373737, #212529);;
+$topnav-background-color: #F0F8FF; //linear-gradient(90deg, #373737, #212529);;
+
+:host {
+    .navbar {
+        background: $topnav-background-color;
+        border-bottom: 1px solid #8ac7e7;
+        padding: 12px 5px 12px;
+
+        .navbar-brand {
+            color: #1d578e;
+        }
+
+        .nav-item>a {
+            color: #1d578e;
+
+            &:hover {
+                color: #1d578e;
+            }
+        }
+    }
+
+
+    .messages {
+        width: 600px;
+
+        .media {
+            border-bottom: 1px solid #ddd;
+            padding: 5px 10px;
+
+            &:last-child {
+                border-bottom: none;
+            }
+        }
+
+        .media-body {
+            h5 {
+                font-size: 13px;
+                font-weight: 600;
+            }
+
+            .small {
+                margin: 0;
+            }
+
+            .last {
+                font-size: 12px;
+                margin: 0;
+            }
+        }
+    }
+}
+
+.tab-content {
+    background-color: #1d578e;
+    border: 1px solid antiquewhite;
+
+    .panel-heading {
+        background: $topnav-background-color;
+        margin-bottom: 5px;
+        padding: 1px 9px;
+        color: #1d578e;
+    }
+
+    .panel-body {
+        padding: 20px;
+    }
+}
+
+.label {
+    font-size: 13px;
+}
+
+.form-control {
+    width: 250px;
+}

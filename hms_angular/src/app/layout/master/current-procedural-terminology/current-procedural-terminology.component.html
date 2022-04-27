@@ -1,0 +1,143 @@
+<ng-template #rt let-r="result" let-t="term">
+  <ngb-highlight [result]="r.PROCEDURE_CODE+' - '+r.PROCEDURE_CODE_NAME" [term]="t"></ngb-highlight>
+</ng-template>
+<app-page-header [heading]="'Cash price list'" [icon]="'fa fa-check-square-o'"style="height:100px;"></app-page-header>
+
+<fieldset class="form-group row" *ngIf="user_rights.ADD == '1'">
+  <legend>New</legend>
+  <div class="row col-lg-12">
+    <div class="form-group col-lg-4" >
+      <label for="p_type">CPT Type</label><span class="text-danger">&nbsp;*</span>
+      <select class="form-control form-control-sm custom-select custom-select-sm"  [(ngModel)]="cpt_data.cpt_type" name="cpt_type">
+        <option value="">Select CPT Type</option>
+        <option *ngFor="let data of cpt_list" value="{{data.OPTIONS_ID}}">{{data.OPTIONS_NAME}}</option>
+      </select>
+    </div>
+    <div class="form-group col-lg-4" >
+      <label for="p_type">CPT Code</label><span class="text-danger">&nbsp;*</span>
+      <input [(ngModel)]="cpt_data.cpt_code"class="form-control form-control-sm" type="text" name="cpt_code">
+    </div>
+    <div class="form-group col-lg-4" >
+      <label for="p_type">Alias Name</label><span class="text-danger">&nbsp;*</span>
+      <input [(ngModel)]="cpt_data.allias_name" class="form-control form-control-sm" type="text"name="alias_name">
+    </div>
+    <div class="form-group col-lg-4" >
+      <label for="p_type">Procedure</label><span class="text-danger">&nbsp;*</span>
+      <input [(ngModel)]="cpt_data.procedure_name" class="form-control form-control-sm" type="text" name="procedure_name" id="procedure_name">
+    </div>
+    <div class="form-group col-lg-4" *ngIf="cpt_data.cpt_type == 37">
+      <label for="p_type">Dental Procedure</label><span class="text-danger">&nbsp;*</span>
+      <select class="form-control form-control-sm custom-select custom-select-sm"  [(ngModel)]="cpt_data.dental_procedure" name="dental_procedure">
+        <option value=0>Select Dental Procedure</option>
+        <option *ngFor="let data of dental_procedure" value="{{data.MASTER_DENTAL_PROCEDURE_ID}}">{{data.PROCEDURE_NAME}}</option>
+      </select>
+    </div> 
+    <div class="form-group col-lg-4" >
+      <label for="p_type">CPT Group</label><span class="text-danger">&nbsp;*</span>
+      <select class="form-control form-control-sm custom-select custom-select-sm"  [(ngModel)]="cpt_data.cpt_group" name="cpt_group" >
+        <option value="">Select CPT Group</option>
+        <option *ngFor="let data of cpt_groups" value="{{data.CPT_GROUP_ID}}">{{data.CPT_GROUP_NAME}}</option>
+      </select>
+    </div>
+    <div class="form-group col-lg-4" >
+      <label for="p_type">CPT Rate</label><span class="text-danger">&nbsp;*</span>
+      <input type="text" class="form-control" (keydown)="validateNumber($event)" [(ngModel)]="cpt_data.cpt_rate" name="cpt_rate"/>
+    </div>
+    <div class="form-group col-lg-8" >
+      <label for="p_type">Description</label><span class="text-danger">&nbsp;*</span>
+      <textarea name="procedure_description" id="procedure_description" class="form-control form-control-sm" [(ngModel)]="cpt_data.procedure_description"></textarea>
+    </div> 
+    <!-- <div class="form-group col-lg-4">
+        <br>
+        <input type="checkbox"  [(ngModel)]="showselect" name="">
+        <label>&nbsp;&nbsp;Add CPT to discount</label>
+        <div *ngIf="showselect">
+            <select class="form-control form-control-sm custom-select custom-select-sm" [(ngModel)]="cpt_data.discount_site" name="discount_site" id="discount_site">
+                <option value=0>Select Site</option>
+                <option *ngFor="let discount of discount_sites" value="{{discount.DISCOUNT_SITES_ID}}" >{{ discount.DISCOUNT_SITES_NAME }}</option>
+            </select>
+        </div>
+    </div> -->
+  </div>
+  <div class="clearfix"></div>
+  <div class="clearfix"></div>
+  <div class="form-group col-lg-7 pull-right">
+    <button *ngIf="user_rights.ADD=='1'" type="button" (click)="save_cpt()" class="btn btn-primary btn-sm" >&nbsp;Save&nbsp;</button>&nbsp;&nbsp;&nbsp;
+    <button  type="button"  (click)="clearCPT()" class="btn btn-danger btn-sm" >&nbsp;Clear&nbsp; </button>    
+  </div>
+  <div class="clearfix"></div>
+</fieldset>  
+<fieldset class="form-group row">
+  <legend>List</legend>
+  <div class="col-lg-12 ">
+    <table class="col-lg-12 borderless">
+      <tr> 
+        <td width="40%" class="text-left">
+          <div class="input-group mb-3 pull-left">
+            <input style="height:31px" id="typeahead-http" type="text" class="form-control" 
+              [(ngModel)]="cpt_data.search_cpt" 
+              (keypress)="getlength($event)"   
+              (keydown)="getlength($event)" 
+              (keyup)="getlength($event)" 
+              (paste)= "getCPTsearchlist($event)"  
+              name="search_text" placeholder="CPT Code / CPT Alias name / CPT Description...">
+              <div class="input-group-append">
+                <button style="height:31px;padding:7px" class="input-group-text" (click)="clear_search()">
+                  <i *ngIf="cpt_data.search_cpt != ''"  class="fa fa-close"></i>
+                  <i *ngIf="cpt_data.search_cpt == ''" class="fa fa-search"></i>
+                </button>
+              </div>
+          </div>  
+          <div class="invalid-feedback">Sorry, suggestions could not be loaded.</div>
+        </td>
+        <td width="50%" class="text-right" style="vertical-align: top;"></td>
+      </tr>
+    </table>
+  </div>
+  <div class="clearfix"></div>
+  <div class="col-lg-12">
+    <table class="table tbl table-hover table-striped table-bordered">
+      <thead>
+        <tr> 
+          <th class="text-center" width="1%">#</th>
+          <!-- <th>CPT group</th>                    -->
+          <th class="text-center" width="10%">CPT code</th>
+          <th lass="text-left">Alias name</th>
+          <th lass="text-left">Procedure name</th>
+          <th lass="text-left">Description</th>
+          <th class="text-center" width="5%">Action</th>
+        </tr>
+        <tr *ngIf="(cptlist_data | json) == '[]'" >
+            <td colspan="7" class="text-center">No details available</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr  *ngFor="let data of cptlist_data;let i = index">
+          <td class="text-center">{{ start + i + 1}}</td>
+          <td class="text-center">{{ data.PROCEDURE_CODE}}</td>
+          <td>{{ data.PROCEDURE_CODE_ALIAS_NAME }}</td>
+          <td>{{ data.PROCEDURE_CODE_NAME }}</td>
+          <td>{{ data.PROCEDURE_CODE_DESCRIPTION }}</td>
+          <td class="text-center">
+              <button *ngIf="user_rights.EDIT=='1'" (click)="editCpt(data,i);" alt="Edit" title="Edit" class="btn btn-sm btn-default"><i class="fa fa-edit"></i></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <ngb-pagination 
+      [disabled]="cpt_data.search_cpt !== ''"
+      class="d-flex justify-content-center"
+      [(page)]="page"
+      [pageSize]="p"
+      [collectionSize]="collection"
+      [directionLinks]="true"
+      [boundaryLinks]="true"
+      [(page)]="page" aria-label="Default pagination"
+      [maxSize]="3"
+      (pageChange)="getCPTlist(page-1)">
+    </ngb-pagination>
+    <pre>Current page : {{page}}</pre>
+    <pre>Total records : {{collection}}</pre>
+  </div>       
+</fieldset>
+                

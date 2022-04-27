@@ -1,0 +1,185 @@
+<div [@routerTransition]>
+  <app-page-header [heading]="'Billing'" [icon]="'fa fa-calculator'"></app-page-header>
+  <fieldset class="row form-group">
+    <legend>Search</legend>
+    <div class="col-12 row container">
+      <div class="col-md-5">
+        <div class="row">
+          <label for="date" class="col-2">Date</label>
+          <div class="col-10">
+            <input class="form-control form-control-sm" type="date" [ngModel] ="dateVal | date:'yyyy-MM-dd'" (ngModelChange)="dateVal = $event" name="date" id="date" [max]="getToday()">
+          </div>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="row">
+          <button type="button" (click)="getAssesmentListByDate();" class="btn btn-info btn-sm" >Search By Date</button>
+        </div>
+      </div> 
+    </div>
+  </fieldset>
+  </div>
+  <fieldset class="form-group row" >
+    <legend>Consulting List <label class="high-light"></label></legend>
+    <div class=" col-lg-12" >
+      <div class="input-group-append pull-right">
+        &nbsp; &nbsp; <i class="fa fa-search"></i>
+     </div>
+     <input type="text"  class="form-control form-control-sm"  class="pull-right" [(ngModel)]="term">  
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+      <table class="table tbl table-hover table-striped table-bordered">
+        <thead>
+          <tr>
+              <th class="text-left">Patient Name</th>
+              <th >Patient No.</th>
+              <th >Nationality</th>
+              <th >Info</th>
+              <th class="text-left">Phone No.</th>
+              <th class="text-left">Bill Status</th>
+              <th width="10%">Action</th>
+          </tr>
+          <tr *ngIf="(assesment_list | json) == '[]'"><td colspan="12" class="text-center">No consulting list </td></tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let visit of assesment_list | filter:term" style="cursor: pointer;" [class.text-success]="visit.GENERATED == 1" [class.text-danger]="visit.BILL_STATUS == null" [class.text-info]="visit.BILL_STATUS == 1 && visit.GENERATED != 1" (mouseover)="showTpa(visit)" (mouseout)="hideTpa(visit)" title="{{text}}">
+              <td>{{ visit.FIRST_NAME }} {{ visit.MIDDLE_NAME }} {{ visit.LAST_NAME }}</td>
+              <td class="text-center">{{ visit.PATIENT_NO }} </td>
+              <td class="text-center">{{ visit.COUNTRY_ISO3 }}</td>
+              <td class="text-center">
+                <button *ngIf="visit.OP_REGISTRATION_TYPE == 1 &&  visit.PATIENT_TYPE == null" class="btn btn-xs btn-link"><i class="fa fa-umbrella"></i></button>
+                <button *ngIf="visit.PATIENT_TYPE != null &&  visit.PATIENT_TYPE == 1" class="btn btn-xs btn-link"><i class="fa fa-umbrella"></i></button>
+              </td>
+              <td>{{ visit.MOBILE_NO }} </td>  
+              <td >{{ visit.ACTION }}</td>
+              <td class="text-center">
+                <button *ngIf="user_rights.ADD == '1'" title="View Invoice" (click)="setAssessment(visit);setPatient(visit.PATIENT_ID);open(content);" alt="Attach data"  class="btn btn-sm btn-xs btn-info"><i class="fa fa-file-text-o"></i></button>&nbsp;&nbsp; 
+                <button *ngIf="user_rights.ADD == '1' && user.department == 0" title="View Duplicate Invoice" (click)="setAssessment(visit);setPatient(visit.PATIENT_ID);open(duplicate);" alt="Attach data"  class="btn btn-sm btn-xs btn-primary"><i class="fa fa-clone"></i></button>
+              </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </fieldset>
+
+
+<ng-template #content let-modal>
+  <div class="modal-header">       
+    <div class="pull-right">
+        <!-- <h6 class="modal-title" id="modal-basic-title"> -->
+          Name : {{ selected_visit.FIRST_NAME }} {{ selected_visit.MIDDLE_NAME }} {{ selected_visit.LAST_NAME }}
+        <!-- </h6> -->
+    </div>     
+    <div class="pull-right text-right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      Assessment Date & Time :&nbsp;&nbsp;&nbsp; {{formatDateTime(selected_visit.CREATED_TIME)}}
+    </div>
+    <div *ngIf="selected_visit.DISCOUNT_SITE_ID > 0"
+      class="pull-right text-right"
+      style="font-size: 13px;"
+      title="Discount Details"
+      (click)="getDiscountTreatmentDetails(discount)">
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <label class="fa-stack fa-lg text-warning bounce" style="font-size: 14px;">
+        <i class="fa fa-certificate fa-stack-2x"></i>
+        <i class="fa fa-tag fa-stack-1x fa-inverse"></i>
+      </label>
+    </div>
+    <!-- <ng-container *ngIf="selected_visit.DISCOUNT_SITE_ID > 0">
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <i class="fa fa-bell bounce  text-danger pull-right" title="Notification" (click)="getDiscountTreatmentDetails(discount)"></i>
+    </ng-container> -->
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">     
+    <div class="tab-pane active" >
+      <div class="tab-content" >
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            Patient Bill Details
+          </div> 
+        </div>
+        <div  class="panel-body"> 
+          <app-bill-patient  [assessment_id]="assessment_id" [selected_visit]="selected_visit" [patient_id]="patient_id" [assessment_list]="assesment_list"></app-bill-patient>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template> 
+  
+<ng-template #duplicate let-modal>
+  <div class="modal-header">       
+    <div class="pull-right">
+        <h6 class="modal-title" id="modal-basic-title">
+          Name : {{ selected_visit.FIRST_NAME }} {{ selected_visit.MIDDLE_NAME }} {{ selected_visit.LAST_NAME }}
+        </h6>
+    </div>     
+    <div class="pull-right text-right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      Assessment Date & Time :&nbsp;&nbsp;&nbsp; {{formatDateTime(selected_visit.CREATED_TIME)}}
+    </div>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">     
+    <div class="tab-pane active" >
+      <div class="tab-content" >
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            Patient Bill Details
+          </div> 
+        </div>
+        <div  class="panel-body"> 
+          <!-- <app-bill-patient  [assessment_id]="assessment_id" [selected_visit]="selected_visit" [patient_id]="patient_id" [assessment_list]="assesment_list"></app-bill-patient> -->
+          <app-invoice-duplicate [assessment_id]="assessment_id" [selected_visit]="selected_visit" [patient_id]="patient_id" [assessment_list]="assesment_list"></app-invoice-duplicate>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>   
+  
+
+<ng-template #discount let-modal>
+  <div class="modal-header">
+    <div class="pull-right ">
+      <h5 class="modal-title" id="modal-basic-title">
+        Available Treatment List
+      </h5>
+    </div>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <label aria-hidden="true">&times;</label>
+    </button>
+  </div>
+  <div class="modal-body discount">
+    <div class="col-lg-12">
+        <div class="clearfix"></div>
+        <div class="form-group row">
+            <div class="container form-group col-lg-12" >
+                <table class="table sm-tbl table-hover table-striped table-bordered">
+                    <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th class="text-center">Code</th>
+                        <th class="text-left">CPT / CDT Name</th>
+                        <th class="text-center">Rate</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngIf="discountDetails.length == 0">
+                        <td colspan="9" class="text-center">No CPT/CDT added</td>
+                    </tr>
+                    <tr *ngFor="let discounted of discountDetails;let i = index">
+                        <td class="text-center">{{i+1}}</td>
+                        <td class="text-center">{{discounted.CPT_CODE}}</td> 
+                        <td class="text-left" style="font-size:12px;">{{discounted.CPT_NAME}}</td>
+                        <td class="text-center">{{discounted.CPT_RATE}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <button class="btn btn-sm btn-danger pull-right" (click)="modal.dismiss('Cross click')">Close</button>
+    </div>
+  </div>
+</ng-template>

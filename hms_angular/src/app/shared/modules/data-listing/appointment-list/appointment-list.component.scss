@@ -1,0 +1,171 @@
+legend {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    padding: 10px;
+    margin-bottom: .5rem;
+    font-size: 17px;
+    line-height: inherit;
+    color: inherit;
+    white-space: normal;
+}
+
+.high-light {
+    font-weight: bold;
+    font-size: 17px;
+    color: #1d578e;
+}
+
+fieldset {
+    min-width: 0;
+    padding: 10px;
+    margin: 5px;
+    margin-left: 5px;
+
+    border: 1px solid grey;
+}
+
+.clearfix {
+
+    width: 100%;
+    min-height: 10px;
+
+}
+
+label,
+th,
+td {
+    font-size: 13px;
+}
+
+input,
+select,
+option {
+    font-size: 13px;
+}
+
+.btn-xs {
+    padding: 3px;
+    font-size: 12px;
+    line-height: 13px;
+    margin-left: 5px;
+}
+
+.table td {
+
+    padding: 4px 4px 2px 4px;
+}
+
+.table thead th {
+    vertical-align: middle;
+    border-bottom: 2px solid #dee2e6;
+    border-bottom-width: 2px;
+}
+
+.table tbody td {
+    font-size: 12px;
+    text-align: left;
+}
+
+.table {
+    vertical-align: middle;
+}
+
+.table tbody td {
+    font-size: 12px;
+    text-align: left;
+}
+
+label,
+th,
+td {
+    font-size: 12px;
+    // color: black;
+}
+
+input,
+select,
+option {
+    font-size: 12px;
+}
+
+.tbl {
+    td {
+        padding: 5px 8px 5px 8px
+    }
+
+}
+
+// .text-orange{
+//     color: rgb(255, 123, 0) !important
+// }
+// .text-pink{
+//     color: rgb(187, 59, 149) !important
+// }
+.bg-orange {
+    background-color: #faa307 !important; //rgb(255, 123, 0)
+    // color: #fff !important
+}
+
+.bg-pink {
+    background-color: #f1aac2 !important;
+    // color: #fff !important
+}
+
+.bg-danger {
+    background-color: #dc0909d5 !important;
+    // color: #fff !important
+}
+
+.bg-info {
+    background-color: rgb(37, 182, 240) !important;
+    // color:#fff !important
+}
+
+.bg-success {
+    background-color: #8ac926 !important; //#28a745d6 
+    // color: #fff !important
+}
+
+.bg-primary {
+    background-color: #29B3B3 !important;
+    // color:#fff !important
+}
+
+.text-orange {
+    color: #faa307 !important; //rgb(255, 123, 0)
+    // color: #fff !important
+}
+
+.text-pink {
+    color: #f1aac2 !important;
+    // color: #fff !important
+}
+
+.text-danger {
+    color: #dc0909d5 !important;
+    // color: #fff !important
+}
+
+.text-info {
+    color: rgb(37, 182, 240) !important;
+    // color:#fff !important
+}
+
+.text-success {
+    color: #8ac926 !important; //#28a745d6 
+    // color: #fff !important
+}
+
+.text-primary {
+    color: #29B3B3 !important;
+    // color:#fff !important
+}
+
+.btn-group-xs>.btn,
+.btn-xs {
+    padding: .25rem .25rem;
+    font-size: .75rem;
+    line-height: .5;
+    border-radius: .2rem;
+}

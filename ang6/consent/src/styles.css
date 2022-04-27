@@ -1,0 +1,33 @@
+/* You can add global styles to this file, and also import other style files */
+@import '~bootstrap/dist/css/bootstrap.min.css';
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  background-color: #0a1023 !important;
+}
+
+.mat-checkbox-layout {
+  white-space: break-spaces !important;
+}
+
+.text-ar {
+  direction: rtl;
+}
+
+.mat-radio-label-content {
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+}
+
+.form-control {
+
+  border: 1px solid #fff;
+
+}

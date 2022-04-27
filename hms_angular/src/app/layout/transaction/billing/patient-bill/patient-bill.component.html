@@ -1,0 +1,967 @@
+<ng-template #rt let-r="result" let-t="term">
+  <ngb-highlight [result]="r.PROCEDURE_CODE+' - '+r.PROCEDURE_CODE_NAME" [term]="t"></ngb-highlight>
+</ng-template>
+<ngb-tabset #bill_tabs="ngbTabset" *ngIf="cash_bill_id.GENERATED == 1 || claim_bill_id.GENERATED == 1">
+  <ngb-tab id="bill_tab" title="Billing Summary">
+    <ng-template ngbTabContent>
+      <div class="clearfix"></div>
+      <fieldset class="form-group row">
+        <legend>Summary</legend>
+        <div class="col-lg-12 row">
+          <div class="col-lg-8" *ngIf="patient_details.patient_data">
+            <div class="row">
+              <label for="p_type" class="col-4 font-weight-bold">Name</label>
+              <div class="col-8">
+                <label>:&nbsp;
+                  {{ gender_sur[patient_details.patient_data.GENDER] }}
+                  {{ patient_details.patient_data.FIRST_NAME }}
+                  {{ patient_details.patient_data.MIDDLE_NAME }}
+                  {{ patient_details.patient_data.LAST_NAME }}
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="row" *ngIf="patient_details.patient_data">
+              <label for="p_type" class="col-4 font-weight-bold ">Gender </label>
+              <div class="col-8 pull-right">
+                <label>
+                  :&nbsp; {{ gender[patient_details.patient_data.GENDER] }}
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-8">
+            <div class="row" *ngIf="patient_details.patient_data">
+              <label for="p_type" class="col-4 font-weight-bold">Mobile&nbsp;No</label>
+              <div class="col-8">
+                <label>
+                  :&nbsp; {{ patient_details.patient_data.MOBILE_NO }}
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="clearfix"></div>
+        <div class="col-lg-12">
+          <table class="table tbl table-hover table-striped table-bordered">
+            <thead>
+              <tr>
+                <!-- <th style="width:1%;padding:3px">Avail For Claim</th> -->
+                <th style="width:1%">#</th>
+                <th style="width:20%" class="text-left">Description</th>
+                <th style="width:7%">Code</th>
+                <th style="width:3%">Price</th>
+                <th style="width:5%">Qty</th>
+                <th style="width:3%">Gross</th>
+                <!-- <th style="width:4%">Co-payment</th>
+                <th style="width:4%">Patient Pay</th>
+                <th style="width:4%">Authorization No:</th> -->
+                <th style="width:4%">Total</th>
+                <!-- <th style="width:4%">Insurance Total</th> -->
+                <!-- <th class="text-center" style="width:7%">Action</th> -->
+                <!--    <th style="width:7%">Total</th>-->
+              </tr>
+              <tr *ngIf="(table_invoice_list | json) == '[]'">
+                <td colspan="11" class="text-center">No details available</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let invoice of table_invoice_list;let i=index">
+                <!-- <td class="text-center"><input type="checkbox" [disabled]=" generate_status == 1" [checked]="invoice.INSURANCE_STATUS != 0" (change)="changeCheckbox(invoice.INSURANCE_STATUS,i)" name="checked.{{i}}"></td> -->
+                <td [class.bg-success]="invoice.BILL_TYPE == 1" [class.bg-orange]="invoice.BILL_TYPE == 0"
+                  class="text-center">{{ i + 1 }}</td>
+                <td class="text-left">{{ invoice.PROCEDURE_CODE_NAME }}</td>
+                <td class="text-center">{{ invoice.PROCEDURE_CODE}} </td>
+                <td class="text-right">{{ invoice.RATE}}</td>
+                <td class="text-center">{{ invoice.QUANTITY }}</td>
+                <td class="text-right">{{ invoice.RATE * invoice.QUANTITY | number : '1.2-2'}}</td>
+                <!-- <td class="text-right"> {{ invoice.CO_PAYMENT + invoice.CO_PAYMENT_TYPE}}</td> -->
+                <!-- <td class="text-right"> {{invoice.PATIENT_PAYABLE | number : '1.2-2'}}</td> -->
+                <!-- <td><input class="form-control form-control-sm" type="text" [(ngModel)]="prior_authorization[i]" name="prior_authorization{{i}}"></td> -->
+                <td class="text-right"> {{invoice.TOTAL_PATIENT_PAYABLE | number : '1.2-2'}}</td>
+                <!-- <td class="text-right"> {{invoice.TOTAL | number : '1.2-2'}}</td> -->
+                <!-- <td class="text-center" >
+                    <button  [disabled]="patient_details.patient_data && patient_details.patient_data.OP_REGISTRATION_TYPE != 1 || lab_status == 'Failed' ||  claim_generate_status == 1" class="btn btn-sm btn-xs btn-success" (click)="addToClaim(i,invoice)"  title="Add to claim"><i class="fa fa-plus text-light"></i> </button>&nbsp;&nbsp;
+                    <button [disabled]=" lab_status == 'Failed' ||  cash_generate_status == 1" class="btn btn-sm btn-xs btn-warning" (click)="addToCash(invoice)" title="Add to cash"><i class="fa fa-arrows text-light"></i> </button>
+                  </td>  -->
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-lg-12 pull-right">
+          <table cellspacing="0" cellpadding="0" class="table table-sm table-striped ">
+            <tbody *ngIf="(table_invoice_list | json) != '[]'">
+              <tr>
+                <td style="text-align: right">Gross Total:</td>
+                <td style="text-align: right;width:10%">{{ gross_total | number : '1.2-2'}}</td>
+              </tr>
+
+            </tbody>
+          </table>
+
+          <div
+            *ngIf="investigation && investigation.INSTRUCTION_TO_CASHIER != null && investigation.INSTRUCTION_TO_CASHIER != ''">
+            <label class="font-weight-bold">Instruction to cashier&nbsp; :&nbsp; </label>
+            <label>{{investigation.INSTRUCTION_TO_CASHIER}}</label>
+          </div>
+        </div>
+        <div class="clearfix"></div>
+
+      </fieldset>
+    </ng-template>
+  </ngb-tab>
+
+  <ngb-tab id="bill_cash_tab" title="Cash Invoice" *ngIf="cash_billing_id > 0">
+    <ng-template ngbTabContent>
+      <div class="clearfix"></div>
+      <fieldset class="form-group row">
+        <legend>Cash Invoice</legend>
+        <div class="col-lg-12 row">
+          <div class="col-lg-7" *ngIf="patient_details.patient_data">
+            <div class="row">
+              <label for="p_type" class="col-4 font-weight-bold">Name</label>
+              <div class="col-8">
+                <label>:&nbsp;
+                  {{ gender_sur[patient_details.patient_data.GENDER] }}
+                  {{ patient_details.patient_data.FIRST_NAME }}
+                  {{ patient_details.patient_data.MIDDLE_NAME }}
+                  {{ patient_details.patient_data.LAST_NAME }}
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-5">
+            <div class="row" *ngIf="patient_details.patient_data">
+              <label for="p_type" class="col-4 font-weight-bold ">Gender </label>
+              <div class="col-8 pull-right">
+                <label>
+                  :&nbsp; {{ gender[patient_details.patient_data.GENDER] }}
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-7">
+            <div class="row" *ngIf="patient_details.patient_data">
+              <label for="p_type" class="col-4 font-weight-bold">Mobile&nbsp;No</label>
+              <div class="col-8">
+                <label>
+                  :&nbsp; {{ patient_details.patient_data.MOBILE_NO }}
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-5">
+            <div class="row" *ngIf="cash_invoice_number">
+              <label for="p_type" class="col-4 font-weight-bold">Invoice Number</label>
+              <div class="col-8">
+                <label>:&nbsp; {{ cash_invoice_number }}</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="clearfix"></div>
+        <div class="clearfix"></div>
+        <div class="clearfix"></div>
+        <div class="col-lg-12">
+          <table class="table tbl table-hover table-striped table-bordered">
+            <thead>
+              <tr>
+                <!-- <th style="width:1%;padding:3px">Avail For Claim</th> -->
+                <th style="width:1%">#</th>
+                <th class="text-left">Description</th>
+                <th style="width:7%">Code</th>
+                <th style="width:3%">Price</th>
+                <th style="width:5%">Qty</th>
+                <th style="width:3%">Gross</th>
+
+              </tr>
+              <tr *ngIf="(cash_list | json) == '[]'">
+                <td colspan="11" class="text-center">No details available</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let cash of cash_list;let i=index">
+                <td class="text-center">{{ i + 1 }}</td>
+                <td class="text-left">{{ cash.PROCEDURE_CODE_NAME }}</td>
+                <td class="text-center">{{ cash.PROCEDURE_CODE}} </td>
+                <td class="text-right">{{ cash.RATE}}</td>
+                <td class="text-center">{{ cash.QUANTITY }}</td>
+
+                <td class="text-right"> {{cash.TOTAL_PATIENT_PAYABLE | number : '1.2-2'}}</td>
+
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-lg-12 pull-right">
+          <table cellspacing="0" cellpadding="0" class="table table-sm table-striped ">
+            <tbody *ngIf="(cash_list | json) != '[]'">
+              <tr>
+                <td style="text-align: right">Gross Total:</td>
+                <td style="text-align: right;width:10%">{{ cash_gross_total | number : '1.2-2'}}</td>
+              </tr>
+
+              <tr>
+                <td style="text-align: right">Amount Paid:</td>
+                <td style="text-align: right;width:10%">{{ patient_pay_payment | number : '1.2-2'}}</td>
+              </tr>
+
+            </tbody>
+          </table>
+          <div class="clearfix"></div>
+          <button *ngIf="cash_bill_id.GENERATED == 1 && cash_list.length > 0" class="btn btn-sm btn-info"
+            (click)="open(printcashBill)"> <i class="fa fa-eye"></i>&nbsp;View </button>
+          <button *ngIf="cash_bill_id.GENERATED == 1 && cash_list.length > 0" [useExistingCss]="true"
+            class="btn pull-right btn-info btn-sm" type="button" printSectionId="printcashBill1" ngxPrint> <i
+              class="fa fa-print"></i>&nbsp;Print </button>&nbsp;&nbsp;
+        </div>
+      </fieldset>
+    </ng-template>
+  </ngb-tab>
+
+</ngb-tabset>
+
+<div *ngIf="generate_status == 0" [hidden]="cash_bill_id.GENERATED == 1 && payment_type !=1">
+  <fieldset class="form-group row">
+    <legend>For add CPT items</legend>
+    <div class="col-lg-12">
+      <table class="table_cpt table-bordered">
+        <thead>
+          <tr>
+            <th style="width:25%;padding:5px">CPT name</th>
+            <th style="width:8%;padding:5px">CPT code</th>
+            <th style="width:35%;padding:5px" class="text-left">Description</th>
+            <th style="width:5%">Qty</th>
+            <th style="width:7%">Rate</th>
+            <!-- <th style="width:7%;">Change of future</th>
+            <th style="width:7%">Remarks</th>
+            <th style="width:15%;">Priority</th> -->
+            <th>*</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <input style="height: 29px;" id="typeahead-http" type="text" class="form-control" [resultTemplate]="rt"
+                [class.is-invalid]="searchFailed" [inputFormatter]="formatter" [(ngModel)]="cpt_add_data.cpt_data[0]"
+                (selectItem)="set_item($event)" [ngbTypeahead]="cptsearch"
+                placeholder="CPT code / CPT alias name / CPT description..." />
+              <div class="invalid-feedback" *ngIf="searchFailed">Sorry, suggestions could not be loaded.</div>
+            </td>
+            <td>
+              <input type="text" class="form-control  form-control-sm" readonly name="cptcode" id="cptcode"
+                name="cptcode" [(ngModel)]="cpt_add_data.cptcode">
+            </td>
+            <td>
+              <input type="text" class="form-control  form-control-sm" readonly name="lab_discription"
+                name="description" [(ngModel)]="cpt_add_data.description">
+            </td>
+            <td>
+              <input type="text" class="form-control  form-control-sm" name="quantity"
+                [(ngModel)]="cpt_add_data.quantity">
+            </td>
+            <td>
+              <input type="text" class="form-control  form-control-sm" name="rate" [(ngModel)]="cpt_add_data.rate"
+                name="rate" readOnly>
+            </td>
+            <!-- <td>
+              <input type="text" class="form-control  form-control-sm" name="change_of_future"
+                [(ngModel)]="cpt_add_data.change_of_future">
+            </td>
+            <td>
+              <input type="text" class="form-control  form-control-sm" name="remarks"
+                [(ngModel)]="cpt_add_data.remarks">
+            </td> -->
+            <!-- <td>
+              <select style="height: 29px;"
+                class="form-control form-control-sm custom-select custom-select-sm ng-pristine ng-valid ng-touched"
+                name="priority" [(ngModel)]="cpt_add_data.priority">
+                <option value='0'>Select</option>
+                <option *ngFor="let type of priority_list" value="{{type.MASTER_DATA_ID}}"
+                  class="ng-tns-c13-1 ng-star-inserted">{{type.DATA}}</option>
+              </select>
+            </td> -->
+            <td>
+              <button alt="Save" title="Save" type="button" class="btn btn-sm " (click)="saveInvestigationByCashier()"
+                type="button"><i class="text-primary fa fa-save"></i></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </fieldset>
+  <fieldset class="form-group row">
+    <legend>Billing Summary</legend>
+    <div class="col-lg-12 row">
+      <div class="col-lg-8" *ngIf="patient_details.patient_data">
+        <div class="row">
+          <label for="p_type" class="col-4 font-weight-bold">Name</label>
+          <div class="col-8">
+            <label>:&nbsp;
+              {{ gender_sur[patient_details.patient_data.GENDER] }}
+              {{ patient_details.patient_data.FIRST_NAME }}
+              {{ patient_details.patient_data.MIDDLE_NAME }}
+              {{ patient_details.patient_data.LAST_NAME }}
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="row" *ngIf="patient_details.patient_data">
+          <label for="p_type" class="col-4 font-weight-bold ">Gender </label>
+          <div class="col-8 pull-right">
+            <label>
+              :&nbsp; {{ gender[patient_details.patient_data.GENDER] }}
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-8">
+        <div class="row" *ngIf="patient_details.patient_data">
+          <label for="p_type" class="col-4 font-weight-bold">Mobile&nbsp;No</label>
+          <div class="col-8">
+            <label>
+              :&nbsp; {{ patient_details.patient_data.MOBILE_NO }}
+            </label>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="col-lg-4">
+        <div class="row" *ngIf="patient_details.patient_data">
+          <label for="p_type" class="col-4 font-weight-bold">Payment&nbsp;Type </label>
+          <div class="col-8">
+            <label>:&nbsp; {{ patient_details.patient_data.PAY_TYPE }}</label>
+          </div>
+        </div>
+      </div> -->
+      <!-- <div class="col-lg-8">
+        <div class="row" *ngIf="patient_details.ins_data">
+          <label for="p_type" class="col-4 font-weight-bold">Insurance&nbsp;Company/Payer</label>
+          <div class="col-8">
+            <label>:&nbsp; {{ patient_details.ins_data.INSURANCE_PAYERS_NAME }}</label>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="row" *ngIf="patient_details.ins_data">
+          <label for="p_type" class="col-4 font-weight-bold">Network</label>
+          <div class="col-8">
+            <label>:&nbsp; {{ patient_details.ins_data.INS_NETWORK_NAME }}</label>
+          </div>
+        </div>
+      </div> -->
+      <!-- <div class="col-lg-8">
+        <div class="row" *ngIf="patient_details.patient_data">
+          <label for="p_type" class="col-4 font-weight-bold">Payment Method</label>
+          <div class="col-8">
+            <label *ngIf="payment_mode == 0">:&nbsp;Cash</label>
+            <label *ngIf="payment_mode == 1">:&nbsp;Card</label>
+          </div>
+        </div>
+      </div> -->
+    </div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <div class="col-lg-12">
+      <table class="table tbl table-hover table-striped table-bordered">
+        <thead>
+          <tr>
+            <!-- <th style="width:1%;padding:3px">Avail For Claim</th> -->
+            <th style="width:1%">#</th>
+            <th style="width:20%" class="text-left">Description</th>
+            <th style="width:7%">Code</th>
+            <th style="width:3%">Price</th>
+            <th style="width:5%">Qty</th>
+            <th style="width:3%">Gross</th>
+            <!-- <th style="width:4%">Co-payment</th> -->
+            <!-- <th style="width:4%">Patient Pay</th> -->
+            <!-- <th style="width:4%">Authorization No:</th> -->
+            <th style="width:4%">Total</th>
+            <!-- <th style="width:4%">Insurance Total</th> -->
+            <th class="text-center" style="width:10%">Action</th>
+            <!--    <th style="width:7%">Total</th>-->
+          </tr>
+          <tr *ngIf="(table_invoice_list | json) == '[]'">
+            <td colspan="11" class="text-center">No details available</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let invoice of table_invoice_list;let i=index">
+            <!-- <td class="text-center"><input type="checkbox" [disabled]=" generate_status == 1" [checked]="invoice.INSURANCE_STATUS != 0" (change)="changeCheckbox(invoice.INSURANCE_STATUS,i)" name="checked.{{i}}"></td> -->
+            <td class="text-center" [class.bg-success]="invoice.BILL_TYPE == 1"
+              [class.bg-orange]="invoice.BILL_TYPE == 0">{{ i + 1 }}</td>
+            <td class="text-left">{{ invoice.PROCEDURE_CODE_NAME }}</td>
+            <td class="text-center">{{ invoice.PROCEDURE_CODE}} </td>
+            <td class="text-right">{{ invoice.RATE}}</td>
+            <!-- <td>
+              <input type="text"  class="form-control form-control-sm" name="rate" 
+              [(ngModel)]="invoice.RATE" name="rate">
+            </td> -->
+            <td class="text-center">{{ invoice.QUANTITY }}</td>
+            <td class="text-right">{{ invoice.RATE * invoice.QUANTITY | number : '1.2-2'}}</td>
+            <!-- <td class="text-right"> {{ invoice.CO_PAYMENT + invoice.CO_PAYMENT_TYPE}}</td> -->
+            <!-- <td class="text-right"> {{invoice.PATIENT_PAYABLE | number : '1.2-2'}}</td> -->
+            <!-- <td><input class="form-control form-control-sm" type="text" [(ngModel)]="prior_authorization[i]" name="prior_authorization{{i}}"></td> -->
+            <td class="text-right"> {{invoice.TOTAL_PATIENT_PAYABLE | number : '1.2-2'}}</td>
+            <!-- <td class="text-right"> {{invoice.TOTAL | number : '1.2-2'}}</td> -->
+            <td class="text-center">
+              <button style="font-size: 10px;"
+                [disabled]="invoice.BILL_TYPE == 2 && user_data.user_id != invoice.USER_ID || invoice.BILL_TYPE == 1 || invoice.BILL_TYPE == 0 && user_data.user_id != invoice.USER_ID || invoice.BILL_TYPE == 1 || invoice.BILL_TYPE == 0 && user_data.user_id == invoice.USER_ID"
+                class="btn  btn-xs btn-info" (click)="editCPT(invoice)" title="Edit"><i
+                  class="fa fa-edit text-light"></i> </button>&nbsp;
+              <!-- <button style="font-size: 10px;"
+                [disabled]="patient_details.patient_data && patient_details.patient_data.OP_REGISTRATION_TYPE != 1 || lab_status == 'Failed' ||  claim_generate_status == 1"
+                class="btn  btn-xs btn-success" (click)="addToClaim(i,invoice)" title="Add to claim"><i
+                  class="fa fa-plus text-light"></i> </button>&nbsp; -->
+              <button style="font-size: 10px;" [disabled]="lab_status == 'Failed' ||  cash_generate_status == 1"
+                class="btn  btn-xs btn-orange" (click)="addToCash(i,invoice)" title="Add to cash"><i
+                  class="fa fa-arrows text-light"></i> </button>&nbsp;
+              <button style="font-size: 10px;"
+                [disabled]="invoice.BILL_TYPE == 2 && user_data.user_id != invoice.USER_ID || invoice.BILL_TYPE == 1 || invoice.BILL_TYPE == 0 && user_data.user_id != invoice.USER_ID || invoice.BILL_TYPE == 1 || invoice.BILL_TYPE == 0 && user_data.user_id == invoice.USER_ID"
+                alt="Remove" title="Remove" type="button" class="btn btn-xs btn-danger"
+                (click)="removeCPT(invoice);confirms(remove_cpt)" type="button"><i class="fa fa-trash"></i></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="clearfix"></div>
+    <div class="col-lg-12 pull-right">
+      <table cellspacing="0" cellpadding="0" class="table table-sm table-striped ">
+        <tbody *ngIf="(table_invoice_list | json) != '[]'">
+          <tr>
+            <td style="text-align: right">Gross Total:</td>
+            <td style="text-align: right;width:10%">{{ gross_total | number : '1.2-2'}}</td>
+          </tr>
+          <!-- <tr>
+            <td style="text-align: right">Net Total:</td>
+            <td style="text-align: right;width:10%">{{ net_total | number : '1.2-2'}}</td>
+          </tr> -->
+          <!-- <tr>
+            <td style="text-align: right"> Previous Pending Amount:</td>
+            <td style="text-align: right;width:10%">{{ pending_amount | number : '1.2-2'}}</td>
+          </tr> -->
+          <!-- <tr>
+            <td style="text-align: right">Patient Payable:</td>
+            <td style="text-align: right;width:10%">{{ patient_payable_total | number : '1.2-2'}}</td>
+          </tr> -->
+          <!-- <tr>
+            <td style="text-align: right">Amount to be Claimed:</td>
+            <td style="text-align: right;width:10%">{{ bill_total | number : '1.2-2'}}</td>
+          </tr> -->
+        </tbody>
+      </table>
+
+      <div
+        *ngIf="investigation && investigation.INSTRUCTION_TO_CASHIER != null && investigation.INSTRUCTION_TO_CASHIER != ''">
+        <label class="font-weight-bold form-group">Instruction to cashier&nbsp;:&nbsp; </label>
+        <div class="col-1"></div>
+        <div class="col-11"><label [innerHTML]="investigation.INSTRUCTION_TO_CASHIER | nl2br : true"></label></div>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+  </fieldset>
+
+  <fieldset class="form-group row">
+    <legend>Cash Invoice</legend>
+    <div class="col-lg-12">
+      <table class="table tbl table-hover table-striped table-bordered">
+        <thead>
+          <tr>
+            <!-- <th style="width:1%;padding:3px">Avail For Claim</th> -->
+            <th style="width:1%">#</th>
+            <th class="text-left">Description</th>
+            <th style="width:7%">Code</th>
+            <th style="width:10%">Price</th>
+            <th style="width:5%">Qty</th>
+            <th style="width:10%">Gross</th>
+            <!-- <th style="width:4%">Co-payment</th>
+            <th style="width:4%">Patient Pay</th>
+            <th style="width:4%">Patient Total</th>
+            <th style="width:4%">Insurance Total</th> -->
+            <th style="width:4%">Action</th>
+          </tr>
+          <tr *ngIf="(cash_list | json) == '[]'">
+            <td colspan="11" class="text-center">No details available</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let cash of cash_list;let i=index">
+            <td class="text-center">{{ i + 1 }}</td>
+            <td class="text-left">{{ cash.PROCEDURE_CODE_NAME }}</td>
+            <td class="text-center">{{ cash.PROCEDURE_CODE}} </td>
+            <td *ngIf="patient_details.patient_data && patient_details.patient_data.OP_REGISTRATION_TYPE == 1"
+              class="text-right">{{ cash.RATE}}</td>
+            <td *ngIf="patient_details.patient_data && patient_details.patient_data.OP_REGISTRATION_TYPE != 1">
+              <input type="text" class="form-control form-control-sm" name="rate" [(ngModel)]="cash.RATE" name="rate"
+                (focusout)="changeRate(cash,i)" (keydown)="validateNumber($event);changeRate(cash,i)"
+                (keyup)="changeRate(cash,i)" maxlength="7">
+            </td>
+            <td class="text-center">{{ cash.QUANTITY }}</td>
+            <!-- <td class="text-center">{{ cash.RATE * cash.QUANTITY | number : '1.2-2'}}</td>  
+            <td class="text-center"> {{ cash.CO_PAYMENT +  cash.CO_PAYMENT_TYPE}}</td>
+            <td class="text-center"> {{cash.PATIENT_PAYABLE | number : '1.2-2'}}</td> -->
+            <td class="text-right"> {{cash.TOTAL_PATIENT_PAYABLE | number : '1.2-2'}}</td>
+            <!-- <td class="text-center"> {{cash.TOTAL | number : '1.2-2'}}</td>    -->
+            <td class="text-center">
+              <button class="btn btn-sm btn-xs btn-danger"
+                [disabled]="lab_status == 'Failed' || cash_generate_status == 1" title="Remove"
+                (click)="remove(i,cash);confirms(remove_cash)"><i class="fa fa-minus text-light"></i></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="clearfix"></div>
+    <div class="col-lg-12 pull-right">
+      <table cellspacing="0" cellpadding="0" class="table table-sm table-striped ">
+        <tbody *ngIf="(cash_list | json) != '[]'">
+          <tr>
+            <td style="text-align: right">Gross Total:</td>
+            <td style="text-align: right;width:10%">{{ cash_gross_total | number : '1.2-2'}}</td>
+          </tr>
+          <!-- <tr>
+            <td style="text-align: right">Previous Pending Amount:</td>
+            <td style="text-align: right;width:10%">{{ pending_amount | number : '1.2-2'}}</td>
+          </tr> -->
+          <!-- <tr>
+            <td style="text-align: right">Patient Payable:</td>
+            <td style="text-align: right;width:10%">{{ cash_patient_payable_total | number : '1.2-2'}}</td>
+          </tr> -->
+          <tr>
+            <td style="text-align: right">Amount to Pay:</td>
+            <td style="text-align: right;width:10%"><input type="text" class="form-control form-control-sm"
+                name="patient_pay_payment" maxlength="7" [(ngModel)]="patient_pay_payment"
+                (keydown)="validateNumber($event)"></td>
+          </tr>
+
+        </tbody>
+      </table>
+      <div class="clearfix"></div>
+      <button *ngIf="cash_billing_id > 0 && cash_list.length > 0" class="btn btn-sm btn-info"
+        (click)="open(printcashBill)"> <i class="fa fa-eye"></i>&nbsp;View </button>
+      <button class="pull-right" *ngIf="cash_billing_id > 0 && cash_list.length > 0" [useExistingCss]="true"
+        class="btn pull-right btn-info btn-sm" type="button" printSectionId="printcashBill1" ngxPrint> <i
+          class="fa fa-print"></i>&nbsp;Print </button>
+    </div>
+  </fieldset>
+  <div class="clearfix"></div>
+  <div class="form-group">
+    <div class="col-lg-12">
+      <button *ngIf="cash_bill_id.GENERATED != 1 && claim_bill_id.GENERATED != 1"
+        [disabled]=" lab_status == 'Failed' || claim_generate_status == 1 && cash_generate_status == 1"
+        class="btn btn-primary btn-sm ng-star-inserted" type="button" (click)="savePatientBill()">
+        &nbsp;Save</button>&nbsp;&nbsp;
+      <button
+        *ngIf="claim_billing_id > 0 && claim_generate_status == 0 || cash_billing_id > 0 && cash_generate_status == 0"
+        [disabled]="lab_status == 'Failed' || claim_generate_status == 1 && cash_generate_status == 1"
+        [disabled]="claim_bill_id == 0 && cash_billing_id == 0" class="btn btn-sm btn-success   ng-star-inserted"
+        type="button" (click)="confirms(confirm_cash)">Finalize</button>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+</div>
+
+
+<ng-template #remove_cpt let-modal>
+  <div class="modal-body">
+    <label style="font-size: 14px;" class="text-left">Do you want to remove the item ? </label>
+  </div>
+  <div class="form-group text-center col-lg-12">
+    <button type="button" class="btn btn-sm btn-danger"
+      (click)="modal.dismiss('Cross click')">&nbsp;No&nbsp;</button>&nbsp;
+    <button type="button" class="btn btn-sm btn-success"
+      (click)="deleteInvestigationByCashier();modal.dismiss('Cross click');">Yes</button>
+  </div>
+  <div class="clearfix"></div>
+  <div class="clearfix"></div>
+</ng-template>
+
+<ng-template #remove_cash let-modal>
+  <div class="modal-body">
+    <label style="font-size: 14px;" class="text-left">Do you want to remove item from cash invoice ? </label>
+  </div>
+  <div class="form-group text-center col-lg-12">
+    <button type="button" class="btn btn-sm btn-danger"
+      (click)="modal.dismiss('Cross click')">&nbsp;No&nbsp;</button>&nbsp;
+    <button type="button" class="btn btn-sm btn-primary"
+      (click)="removeToCash();modal.dismiss('Cross click');">Yes</button>
+  </div>
+  <div class="clearfix"></div>
+  <div class="clearfix"></div>
+</ng-template>
+
+
+
+
+
+
+<div class="col-lg-12" id="printcashBill1" style="display: none;">
+  <table class="col-lg-12 borderless">
+    <tr>
+      <td width="30%" class="text-left">
+        <ng-container *ngIf="institution && institution.INSTITUTION_LOGO">
+          <img [src]="logo_path+institution.INSTITUTION_LOGO" height="100px" width="auto">
+        </ng-container>
+      </td>
+      <td width="70%" class="text-right">
+        <div *ngIf="institution">
+          <h5 class="name"><b>{{institution.INSTITUTION_NAME}}</b></h5>
+          <div style="line-height: 1em;"><label style="font-size: 15px;">{{institution.INSTITUTION_ADDRESS}}</label>
+          </div>
+          <div style="line-height: 1em;"><label
+              style="font-size: 15px;">{{institution.INSTITUTION_CITY}},&nbsp;{{institution.INSTITUTION_COUNTRY_NAME}}</label>
+          </div>
+          <div style="line-height: 1em;"><label style="font-size: 15px;">Ph
+              :&nbsp;{{institution.INSTITUTION_PHONE_NO}}</label></div>
+          <div style="line-height: 1em;"><label style="font-size: 15px;">Email
+              :&nbsp;{{institution.INSTITUTION_EMAIL}}</label></div>
+        </div>
+      </td>
+    </tr>
+  </table>
+  <div class="clearfix"></div>
+  <div class="clearfix"></div>
+  <div class="clearfix"></div>
+  <h3 class="text-center">INVOICE</h3>
+  <br>
+  <div>&nbsp;</div>
+  <main>
+    <div class="" *ngIf="patient_details.patient_data">
+      <table class="col-lg-12 borderless" style="border: none;font-size: 14px;">
+        <tr>
+          <td width="10%" class="text-left"> Patient #</td>
+          <td width="70%" class="text-left">{{patient_details.patient_data.OP_REGISTRATION_NUMBER}} </td>
+          <td width="10%" class="text-left ">Invoice #</td>
+          <td width="20%" class="text-right">{{cash_invoice_number}}</td>
+        </tr>
+        <tr>
+          <td width="10%" class="text-left">Name</td>
+          <td width="70%" class="text-left">{{ gender_sur[patient_details.patient_data.GENDER] }}
+            {{ patient_details.patient_data.FIRST_NAME }}
+            {{ patient_details.patient_data.MIDDLE_NAME }}
+            {{ patient_details.patient_data.LAST_NAME }}
+          </td>
+          <td width="10%" class="text-left">DOB</td>
+          <td width="20%" class="text-right">{{ formatDate(patient_details.patient_data.DOB) }}</td>
+        </tr>
+        <tr>
+          <td width="10%" class="text-left">Gender</td>
+          <td width="70%" class="text-left">{{ gender[patient_details.patient_data.GENDER] }}</td>
+          <td width="10%" class="text-left">Visit Date</td>
+          <td width="20%" class="text-right">{{ formatDate(patient_details.patient_data.CREATED_DATE) }}</td>
+        </tr>
+
+      </table>
+    </div>
+    <div>&nbsp;</div>
+    <table class="printtable table-hover table-striped table-bordered">
+      <thead>
+        <tr>
+          <!-- <th style="width:1%;padding:3px">Avail For Claim</th> -->
+          <th style="width:1%">#</th>
+          <th class="text-left">Description</th>
+          <th style="width:7%">Code</th>
+          <th style="width:3%">Price</th>
+          <th style="width:5%">Qty</th>
+          <th style="width:3%">Gross</th>
+          <!-- <th style="width:4%">Co-payment</th>
+          <th style="width:4%">Patient Pay</th>
+          <th style="width:4%">Patient Total</th>
+          <th style="width:4%">Insurance Total</th> -->
+          <!-- <th style="width:4%">Action</th> -->
+        </tr>
+        <tr *ngIf="(cash_list | json) == '[]'">
+          <td colspan="11" class="text-center">No details available</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cash of cash_list;let i=index">
+          <td class="text-center">{{ i + 1 }}</td>
+          <td class="text-left">{{ cash.PROCEDURE_CODE_NAME }}</td>
+          <td class="text-center">{{ cash.PROCEDURE_CODE}} </td>
+          <td class="text-right">{{ cash.RATE}}</td>
+          <td class="text-center">{{ cash.QUANTITY }}</td>
+          <!-- <td class="text-center">{{ cash.RATE * cash.QUANTITY | number : '1.2-2'}}</td>  
+          <td class="text-center"> {{ cash.CO_PAYMENT +  cash.CO_PAYMENT_TYPE}}</td>
+          <td class="text-center"> {{cash.PATIENT_PAYABLE | number : '1.2-2'}}</td> -->
+          <td class="text-right"> {{cash.TOTAL_PATIENT_PAYABLE | number : '1.2-2'}}</td>
+          <!-- <td class="text-center"> {{cash.TOTAL | number : '1.2-2'}}</td>    -->
+          <!-- <td class="text-center">
+            <button class="btn btn-sm btn-xs btn-danger" [disabled]="lab_status == 'Failed' || cash_generate_status == 1" title="Remove" (click)="removeToCash(i,cash)"><i class="fa fa-minus text-light"></i></button>
+          </td>    -->
+        </tr>
+      </tbody>
+    </table>
+    <div class="clearfix"></div>
+
+    <div>&nbsp;</div>
+    <div class="pull-right">
+      <table cellspacing="0" cellpadding="0" class="table-sml table-striped " style="font-size: 15px;">
+        <tbody *ngIf="(cash_list | json) != '[]'">
+          <tr>
+            <td style="text-align: right">Gross Total:</td>
+            <td style="text-align: right;width:10%">{{ cash_gross_total | number : '1.2-2'}}</td>
+          </tr>
+          <!-- <tr>
+            <td style="text-align: right">Previous Pending Amount:</td>
+            <td style="text-align: right;width:10%">{{ pending_amount | number : '1.2-2'}}</td>
+          </tr> -->
+          <!-- <tr>
+            <td style="text-align: right">Patient Payable:</td>
+            <td style="text-align: right;width:10%">{{ cash_patient_payable_total | number : '1.2-2'}}</td>
+          </tr> -->
+          <tr>
+            <td style="text-align: right">Amount Paid:</td>
+            <td style="text-align: right;width:10%">{{ patient_pay_payment | number : '1.2-2'}}</td>
+          </tr>
+          <!-- <tr>
+            <td style="text-align: right">Balance Due:</td>
+            <td style="text-align: right;width:10%">{{ cash_patient_payable_total - patient_pay_payment | number :
+              '1.2-2'}}</td>
+          </tr> -->
+          <!-- <tr>
+              <td   style="text-align: right">Net Total:</td>
+              <td style="text-align: right;width:10%">{{ cash_net_total  | number : '1.2-2'}}</td>
+          </tr> -->
+          <!-- <tr>
+              <td  style="text-align: right">Patient Payable:</td>     
+              <td  style="text-align: right;width:10%">{{ cash_patient_payable_total  | number : '1.2-2'}}</td>
+          </tr> -->
+          <!-- <tr>
+              <td   style="text-align: right">Amount to be claimed:</td>
+              <td style="text-align: right;width:10%">{{ cash_bill_total  | number : '1.2-2'}}</td>
+          </tr> -->
+        </tbody>
+      </table>
+      <div style="margin-bottom:50px"></div>
+      <div class="clearfix"></div>
+      <label class="pull-right" style="font-size: 15px;">Signature</label>
+    </div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <hr>
+    <div class="footer"><label>Thank you!</label></div>
+  </main>
+  <div class="clearfix"></div>
+</div>
+
+
+
+
+<ng-template #confirm_cash let-modal>
+  <div class="modal-body">
+    <label style="font-size: 14px;" class="text-left">Once finalized the invoice, not able to modify the details later.
+      Please confirm...</label>
+  </div>
+  <div class="form-group text-center col-lg-12">
+    <button type="button" class="btn  btn-sm2 btn-danger"
+      (click)="modal.dismiss('Cross click')">Cancel</button>&nbsp;&nbsp;
+    <button type="button" class="btn  btn-sm1 btn-success"
+      (click)="generate();modal.dismiss('Cross click');">Continue</button>
+  </div>
+  <div class="clearfix"></div>
+  <div class="clearfix"></div>
+</ng-template>
+
+<ng-template #printcashBill let-modal>
+  <div class="modal-header">
+    <div class="pull-right text-right">
+      <h5 class="modal-title" id="modal-basic-title">
+        Invoice Details
+      </h5>
+    </div>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="col-lg-12 ">
+    <div class="clearfix"></div>
+    <table class="col-lg-12 borderless">
+      <tr>
+        <td width="50%" class="text-left"></td>
+        <td width="50%" class="text-right">
+          <button title="Print" printSectionId="printcashBill" [useExistingCss]="true"
+            class="btn   btn-info btn-sm ng-star-inserted" ngxPrint>
+            <i class="fa fa-print"></i>&nbsp;Print&nbsp;
+          </button>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div class="modal-body">
+    <div class="tab-pane active">
+      <div class="tab-content">
+        <div class="panel-body">
+          <div class="col-lg-12" id="printcashBill">
+            <table class="col-lg-12 borderless">
+              <tr>
+                <td width="30%" class="text-left">
+                  <ng-container *ngIf="institution && institution.INSTITUTION_LOGO">
+                    <img [src]="logo_path+institution.INSTITUTION_LOGO" height="100px" width="auto">
+                  </ng-container>
+                </td>
+                <td width="70%" class="text-right">
+                  <div *ngIf="institution">
+                    <h5 class="name"><b>{{institution.INSTITUTION_NAME}}</b></h5>
+                    <div style="line-height: 1em;"><label
+                        style="font-size: 15px;">{{institution.INSTITUTION_ADDRESS}}</label></div>
+                    <div style="line-height: 1em;"><label
+                        style="font-size: 15px;">{{institution.INSTITUTION_CITY}},&nbsp;{{institution.INSTITUTION_COUNTRY_NAME}}</label>
+                    </div>
+                    <div style="line-height: 1em;"><label style="font-size: 15px;">Ph
+                        :&nbsp;{{institution.INSTITUTION_PHONE_NO}}</label></div>
+                    <div style="line-height: 1em;"><label style="font-size: 15px;">Email
+                        :&nbsp;{{institution.INSTITUTION_EMAIL}}</label></div>
+                  </div>
+                </td>
+              </tr>
+            </table>
+            <div class="clearfix"></div>
+            <div class="clearfix"></div>
+            <div class="clearfix"></div>
+            <h3 class="text-center">INVOICE</h3>
+            <br>
+
+            <div>&nbsp;</div>
+            <main>
+              <div class="" *ngIf="patient_details.patient_data">
+                <table class="col-lg-12 borderless" style="border: none;font-size: 14px;">
+                  <tr>
+                    <td width="10%" class="text-left"> Patient #</td>
+                    <td width="70%" class="text-left">{{patient_details.patient_data.OP_REGISTRATION_NUMBER}} </td>
+                    <td width="10%" class="text-left ">Invoice #</td>
+                    <td width="20%" class="text-right">{{cash_invoice_number}}</td>
+                  </tr>
+                  <tr>
+                    <td width="10%" class="text-left">Name</td>
+                    <td width="70%" class="text-left">{{ gender_sur[patient_details.patient_data.GENDER] }}
+                      {{ patient_details.patient_data.FIRST_NAME }}
+                      {{ patient_details.patient_data.MIDDLE_NAME }}
+                      {{ patient_details.patient_data.LAST_NAME }}
+                    </td>
+                    <td width="10%" class="text-left">DOB</td>
+                    <td width="20%" class="text-right">{{ formatDate(patient_details.patient_data.DOB) }}</td>
+                  </tr>
+                  <tr>
+                    <td width="10%" class="text-left">Gender</td>
+                    <td width="70%" class="text-left">{{ gender[patient_details.patient_data.GENDER] }}</td>
+                    <td width="10%" class="text-left">Visit Date</td>
+                    <td width="20%" class="text-right">{{ formatDate(patient_details.patient_data.CREATED_DATE) }}</td>
+                  </tr>
+
+
+                </table>
+              </div>
+              <div>&nbsp;</div>
+              <table class="printtable table-hover table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <!-- <th style="width:1%;padding:3px">Avail For Claim</th> -->
+                    <th style="width:1%">#</th>
+                    <th class="text-left">Description</th>
+                    <th style="width:7%">Code</th>
+                    <th style="width:3%">Price</th>
+                    <th style="width:5%">Qty</th>
+                    <th style="width:3%">Gross</th>
+                    <!-- <th style="width:4%">Co-payment</th>
+                    <th style="width:4%">Patient Pay</th>
+                    <th style="width:4%">Patient Total</th>
+                    <th style="width:4%">Insurance Total</th> -->
+                    <!-- <th style="width:4%">Action</th> -->
+                  </tr>
+                  <tr *ngIf="(cash_list | json) == '[]'">
+                    <td colspan="11" class="text-center">No details available</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let cash of cash_list;let i=index">
+                    <td class="text-center">{{ i + 1 }}</td>
+                    <td class="text-left">{{ cash.PROCEDURE_CODE_NAME }}</td>
+                    <td class="text-center">{{ cash.PROCEDURE_CODE}} </td>
+                    <td class="text-right">{{ cash.RATE}}</td>
+                    <td class="text-center">{{ cash.QUANTITY }}</td>
+                    <!-- <td class="text-center">{{ cash.RATE * cash.QUANTITY | number : '1.2-2'}}</td>  
+                    <td class="text-center"> {{ cash.CO_PAYMENT +  cash.CO_PAYMENT_TYPE}}</td>
+                    <td class="text-center"> {{cash.PATIENT_PAYABLE | number : '1.2-2'}}</td> -->
+                    <td class="text-right"> {{cash.TOTAL_PATIENT_PAYABLE | number : '1.2-2'}}</td>
+                    <!-- <td class="text-center"> {{cash.TOTAL | number : '1.2-2'}}</td>    -->
+                    <!-- <td class="text-center">
+                      <button class="btn btn-sm btn-xs btn-danger" [disabled]="lab_status == 'Failed' || cash_generate_status == 1" title="Remove" (click)="removeToCash(i,cash)"><i class="fa fa-minus text-light"></i></button>
+                    </td>    -->
+                  </tr>
+                </tbody>
+              </table>
+              <div class="clearfix"></div>
+
+              <div>&nbsp;</div>
+              <div class="pull-right">
+                <table cellspacing="0" cellpadding="0" class="table-sml">
+                  <tbody *ngIf="(cash_list | json) != '[]'">
+                    <tr>
+                      <td style="text-align: right">Gross Total:</td>
+                      <td style="text-align: right;width:10%">{{ cash_gross_total | number : '1.2-2'}}</td>
+                    </tr>
+                    <!-- <tr>
+                      <td style="text-align: right">Previous Pending Amount:</td>
+                      <td style="text-align: right;width:10%">{{ pending_amount | number : '1.2-2'}}</td>
+                    </tr> -->
+                    <!-- <tr>
+                      <td style="text-align: right">Patient Payable:</td>
+                      <td style="text-align: right;width:10%">{{ cash_patient_payable_total | number : '1.2-2'}}</td>
+                    </tr> -->
+                    <tr>
+                      <td style="text-align: right">Amount Paid:</td>
+                      <td style="text-align: right;width:10%">{{ patient_pay_payment | number : '1.2-2'}}</td>
+                    </tr>
+                    <!-- <tr>
+                      <td style="text-align: right">Balance Due:</td>
+                      <td style="text-align: right;width:10%">{{ cash_patient_payable_total - patient_pay_payment |
+                        number : '1.2-2'}}</td>
+                    </tr> -->
+                    <!-- <tr>
+                        <td   style="text-align: right">Net Total:</td>
+                        <td style="text-align: right;width:10%">{{ cash_net_total  | number : '1.2-2'}}</td>
+                    </tr> -->
+                    <!-- <tr>
+                        <td  style="text-align: right">Patient Payable:</td>     
+                        <td  style="text-align: right;width:10%">{{ cash_patient_payable_total  | number : '1.2-2'}}</td>
+                    </tr> -->
+                    <!-- <tr>
+                        <td   style="text-align: right">Amount to be claimed:</td>
+                        <td style="text-align: right;width:10%">{{ cash_bill_total  | number : '1.2-2'}}</td>
+                    </tr> -->
+                  </tbody>
+                </table>
+                <div style="margin-bottom:50px"></div>
+                <div class="clearfix"></div>
+                <label class="pull-right" style="font-size: 15px;">Signature</label>
+              </div>
+              <div class="clearfix"></div>
+              <div class="clearfix"></div>
+              <div class="clearfix"></div>
+              <div class="clearfix"></div>
+              <div class="clearfix"></div>
+              <hr>
+              <div class="footer"><label>Thank you!</label></div>
+            </main>
+            <div class="clearfix"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

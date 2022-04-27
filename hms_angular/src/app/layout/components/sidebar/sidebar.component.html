@@ -1,0 +1,66 @@
+<div>&nbsp;&nbsp;&nbsp;</div>
+<nav class="sidebar" [ngClass]="{sidebarPushRight: isActive, collapsed: collapsed}">
+    <div class="list-group" *ngIf="(menulist) != ''">
+        <div class="nested-menu" *ngFor="let moduleGroup of menulist">
+            <ng-container *ngIf="moduleGroup.sub_menu.length == 0">
+                <a [routerLinkActive]="['expand']">
+                    <a class="list-group-item" href="javascript:void(0)" [routerLink]="[moduleGroup.MODULE_GROUP_PATH]"
+                        [routerLinkActive]="['router-link-active']">
+                        <i class="{{ moduleGroup.MODULE_GROUP_ICON }}"></i>&nbsp;
+                        <span>{{ moduleGroup.MODULE_GROUP_NAME | translate }}</span>
+                    </a>
+                </a>
+            </ng-container>
+            <ng-container *ngIf="moduleGroup.sub_menu.length > 0">
+                <a class="list-group-item" (click)="addExpandClass(moduleGroup.MODULE_GROUP_NAME)">
+                    <i class="{{ moduleGroup.MODULE_GROUP_ICON }}"></i>&nbsp;
+                    <span>{{ moduleGroup.MODULE_GROUP_NAME | translate }}</span>
+                </a>
+                <li class="nested" [routerLinkActive]="['expand']"
+                    [class.expand]="showMenu === moduleGroup.MODULE_GROUP_NAME">
+                    <ul class="submenu">
+                        <li *ngFor="let module of moduleGroup.sub_menu;let i=index">
+
+                            <a href="javascript(void:0);"
+                                [routerLink]="[moduleGroup.MODULE_GROUP_PATH + module.MODULE_PATH]"
+                                [routerLinkActive]="['router-link-active']">
+
+                                <i class="{{ module.MODULE_ICON }}"></i>&nbsp;
+                                <span>{{ module.MODULE_NAME | translate }}</span>&nbsp;
+                                <span *ngIf="count[module.MODULE_ID] "
+                                    class="badge badge-primary badge-pill element style"
+                                    style="margin-right: 5px;">{{count[module.MODULE_ID]}}</span>
+                            </a>
+
+                        </li>
+                    </ul>
+                </li>
+            </ng-container>
+
+
+
+        </div>
+
+        <div class="header-fields">
+            <div class="nested-menu">
+                <a class="list-group-item" (click)="addExpandClass('profile')">
+                    <span><i class="fa fa-user"></i>&nbsp;&nbsp;{{ userCredentials.first_name
+                        }}&nbsp;{{userCredentials.last_name}}</span>
+                </a>
+                <li class="nested" [class.expand]="showMenu === 'profile'">
+                    <ul class="submenu">
+                        <li>
+                            <a [routerLink]="['/login']" (click)="onLoggedout()">
+                                <span><i class="fa fa-fw fa-power-off"></i> {{ 'Log Out' | translate }}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </div>
+        </div>
+    </div>
+    <div class="toggle-button" [ngClass]="{collapsed: collapsed}" (click)="toggleCollapsed()">
+        <i *ngIf="collapsed" class="fa fa-fw fa-angle-double-right"></i>
+        <i *ngIf="!collapsed" class="fa fa-fw fa-angle-double-left"></i>
+    </div>
+</nav>

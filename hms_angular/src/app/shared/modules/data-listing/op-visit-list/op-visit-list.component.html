@@ -1,0 +1,84 @@
+<fieldset class="form-group row" >
+  <legend>Visit List <label class="high-light"></label></legend>
+  <div class=" col-lg-12" >
+      <div class="input-group-append pull-right">
+         &nbsp; &nbsp; <i  class="fa fa-search"></i>
+      </div>
+      <input type="text"  class="form-control form-control-sm"  class="pull-right" [(ngModel)]="term">  
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+      <table class="table tbl table-hover table-striped table-bordered">
+        <thead>
+            <tr>
+                <th >Patient Name</th>
+                <th class="text-center" style="width:10%;">Patient No.</th>
+                <th class="text-center" style="width:5%;">Age</th>
+                <th class="text-center" style="width:6%;">Gender</th>
+                <!-- <th class="text-center">Nationality</th> -->
+                <!-- <th style="width:7%;">Type</th> -->
+                <th class="text-center" style="width:8%;">Visit.Time</th>
+                <th >Doctor</th>
+                <!-- <th class="text-center">Type</th> -->
+                <th style="width:10%;">Dept</th>
+                <th style="width:10%;">Phone No.</th>
+                <th style="width:10%;">Download</th>
+                <th class="text-center" width="15%">Action</th>
+            </tr>
+            <tr *ngIf="(visit_list | json ) == '[]'"><td colspan="12" class="text-center">No visits to show</td></tr>
+        </thead>
+        <tbody *ngIf="(visit_list ) != '[]'">
+            <tr  *ngFor="let visit of visit_list | filter:term" 
+            style="cursor: pointer;" (mouseover)="showTpa(visit)" (mouseout)="hideTpa(visit)" title="{{text}}"
+            [class.text-danger]="visit.VISIT_STATUS == '2'">
+                <td>{{ visit.FIRST_NAME }} {{ visit.MIDDLE_NAME }} {{ visit.LAST_NAME }}</td>
+                <td class="text-center">{{ visit.PATIENT_NO }} </td>
+                <td class="text-center">
+                    <ng-container *ngIf="visit.AGE > 0">{{ visit.AGE }}y</ng-container> 
+                    <ng-container *ngIf="visit.AGE == 0 && visit.MONTHS > 0">{{ visit.MONTHS }}m</ng-container> 
+                    <ng-container *ngIf="visit.AGE == 0 && visit.MONTHS == 0 && visit.DAYS > 0">{{ visit.DAYS }}d</ng-container> 
+                </td>
+                <td class="text-center">
+                    <span *ngIf="visit.GENDER == 1">Male</span>
+                    <span *ngIf="visit.GENDER == 0">Female</span>
+                </td>
+                
+                <!-- <td class="text-center">{{ visit.COUNTRY_ISO3 }}</td> -->
+                <!-- <td class="text-center"><span *ngIf="visit.GENDER == 1">New</span><span *ngIf="visit.GENDER == 2">New</span></td> -->
+                <td class="text-center">{{ formatTime(visit.VISIT_TIME) }}</td>
+                <td class="text-left">{{ visit.DOCTOR_NAME }} </td>
+                <!-- <td class="text-center"><button *ngIf="visit.OP_REGISTRATION_TYPE == 1" class="btn btn-xs btn-link"><i class="fa fa-umbrella"></i></button></td> -->
+                <td>{{ visit.DEPARTMENT_NAME }}</td>
+                <td>{{ visit.MOBILE_NO }} </td>
+                <td>  
+                    <button *ngIf="visit.general == 1" title="General Consent"  (click)="pdfexport(visit,3,visit.PATIENT_NO)" alt="General Consent"   class="btn btn-xs btn-margin  btn-success "><i class="fa fa-file-pdf-o"></i></button>
+                    <button *ngIf="visit.dental == 1" title="Dental Consent"  (click)="pdfexport(visit,1,0)" alt="Dental Consent"   class="btn btn-xs btn-margin  btn-warning "><i class="fa fa-file-pdf-o"></i></button>
+                    <button *ngIf="visit.covid == 1" title="Patient Screening Form - Covid 19"  (click)="pdfexport(visit,2,visit.PATIENT_NO)" alt="Patient Screening Form - Covid 19"   class="btn btn-xs btn-margin  btn-info "><i class="fa fa-file-pdf-o"></i></button>
+               </td>  
+                <td *ngIf="user_rights.EDIT=='1'">  
+                    {{ visit.ACTION }}
+                    <button title="Start Assessment" (click)="startAssesment(visit)" alt="Start Pre-consult" *ngIf="page == 'Pre-consult' && visit.START_TIME == null && visit.VISIT_STATUS == 0" class="btn btn-xs btn-warning "><i class="fa fa-plus"></i></button>
+                    <button title="Cancel Visit"  (click)="open(content);popcancelVisit(visit.PATIENT_VISIT_LIST_ID)" alt="Cancel visit"   *ngIf="visit.VISIT_STATUS == 0" class="btn btn-xs btn-margin  btn-danger "><i class="fa fa-close"></i></button>
+                </td>                
+                
+            </tr>
+        </tbody>
+      </table>
+  </div>
+</fieldset>
+<ng-template #content let-modal>
+    <div class="modal-header">       
+        <div class="pull-right ">
+            <h4 class="modal-title" id="modal-basic-title">
+            Reason for visit cancel
+            </h4>
+        </div>     
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">      
+        <textarea class="form-control" rows="5" [(ngModel)]="cancel_reason"  name="cancel_reason"></textarea>
+        <div class="clearfix"></div>
+        <button  *ngIf="user_rights.ADD=='1'" class="btn-danger btn pull-right btn-sm ng-star-inserted" (click)="cancelVisit();modal.dismiss('Cross click')">Cancel Visit</button>
+    </div>
+</ng-template>

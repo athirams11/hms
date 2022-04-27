@@ -1,0 +1,32 @@
+<div class="row container">
+
+  <div class="col-6">
+    <div style="width:500px">
+      <canvas baseChart [data]="pieChartData" [labels]="pieChartLabels" [chartType]="pieChartType"
+        [options]="pieChartOptions" [colors]="chartColors">
+        <!-- 
+            [legend]="pieChartLegend"
+            [plugins]="pieChartPlugins" -->
+      </canvas>
+    </div>
+  </div>
+  <!-- <div class="col-6"> 
+    <div class="col-3" *ngFor="let name of per.name">{{name}}</div>
+    <div class="col-3" *ngFor="let percentage of per.percentage">{{percentage}}</div>
+  </div> -->
+  <ng-container *ngFor="let moduleGroup of menulist">
+    <ng-container *ngIf="moduleGroup.MODULE_GROUP_ID != setting.DASHBOARD_MODULE_GROUP_ID">
+      <div class="col-2" *ngFor="let module of moduleGroup.sub_menu">
+        <a href="javascript:void(0)" [routerLink]="[moduleGroup.MODULE_GROUP_PATH + module.MODULE_PATH]"
+          class="router-link-active ex1">
+          <span>
+            <label style="color: #1d578e">{{module.MODULE_NAME}}</label>
+            <div style="text-align: center">
+              <i class="{{ module.MODULE_ICON }}" style="font-size: 55px;padding-top:10px"></i>
+            </div>
+          </span>
+        </a>
+      </div>
+    </ng-container>
+  </ng-container>
+</div>

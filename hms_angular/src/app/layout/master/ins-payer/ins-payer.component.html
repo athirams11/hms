@@ -1,0 +1,106 @@
+<app-page-header [heading]="'Insurance Payer'" [icon]="'fa fa-university'"style="height:100px;"></app-page-header>
+<fieldset class="form-group row" *ngIf="user_rights.ADD == '1'">
+    <legend>New</legend>
+    <div class="row col-lg-12">
+        <div class="form-group col-lg-4" >
+            <label for="p_type">Payer Name</label><span class="text-danger">&nbsp;*</span>
+            <input class="form-control form-control-sm" type="text" [(ngModel)]="appdata.ins_payer" >
+        </div>
+        <div class="form-group col-lg-4" >
+            <label for="p_type">Classification</label><span class="text-danger">&nbsp;*</span>
+            <input class="form-control form-control-sm" type="text"[(ngModel)]="appdata.ins_classification" >
+        </div>
+        <div class="form-group col-lg-4" >
+            <label for="p_type">Claim Link Code</label><span class="text-danger">&nbsp;*</span>
+            <input class="form-control form-control-sm" type="text" name="vaccine_price"[(ngModel)]="appdata.ins_link_id">
+        </div>
+        <div class="form-group col-lg-4" >
+            <label for="p_type">Status</label><br>
+            <label class="radio-inline">
+                <input  type="radio" (click)="selectStatus(1)" name="status" id="active" value="1" [checked]="appdata.ins_status == 1">&nbsp;&nbsp;Available &nbsp;&nbsp;
+            </label>
+            <label class="radio-inline">
+                <input  type="radio" (click)="selectStatus(0)" name="status" id="inactive" value="0" [checked]="appdata.ins_status == 0">&nbsp;&nbsp;Un Available
+            </label>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <div class="form-group col-lg-7 pull-right">
+        <button  *ngIf="user_rights.ADD == '1'"(click)="save_inspayer();"  class="btn btn-primary btn-sm ng-star-inserted" type="button"  style="width:60px;height:30px;">&nbsp;Save&nbsp;</button>&nbsp;&nbsp;&nbsp;
+        <button *ngIf="user_rights.ADD == '1'" (click)="clearForm()" class="btn btn-danger btn-sm ng-star-inserted" type="button" style="width:60px;height:30px;">&nbsp;Clear&nbsp; </button>
+    </div>
+    <div class="clearfix"></div>
+</fieldset>
+<fieldset class="form-group row">
+    <legend>List</legend>
+    <div class="col-lg-12 ">
+        <table class="col-lg-12 borderless">
+          <tr> 
+            <td width="40%" class="text-left">
+                <div class="input-group mb-3 pull-left">
+                    <input id="typeahead-http" style="height:31px;" type="text" class="form-control" 
+                    [(ngModel)]="appdata.search" 
+                    (keypress)=" getSearchlist($event)"  
+                    (paste)= " getSearchlist($event)"  
+                    name="search_text" placeholder="Payer Name / Claim Link Code...">
+
+                    <div class="input-group-append">
+                        <button style="height:31px;padding:7px" class="input-group-text" (click)="clear_search()">
+                            <i *ngIf="appdata.search != ''"  class="fa fa-close"(onclick)="clear_search()"></i>
+                            <i *ngIf="appdata.search == ''" class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </div>  
+              <div class="invalid-feedback">Sorry, suggestions could not be loaded.</div>
+            </td>
+            <td width="50%" class="text-right" style="vertical-align: top;"></td>
+          </tr>
+        </table>
+    </div>
+    <div class="col-lg-12 " >
+        <table class="table tbl table-hover table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th width="1%" class="text-center">#</th>
+                    <th>Payer Name</th>
+                    <th>Classification</th>
+                    <th width="10%" class="text-center">Claim Link Code</th>
+                    <th width="10%" class="text-center">Status</th>
+                    <th width="7%" class="text-center">Action</th>
+                </tr>
+                
+                <tr *ngIf="(Inspayer_list | json) == '[]'">
+                    <td colspan="8" class="text-center">No details available</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr  *ngFor="let data of Inspayer_list;let i=index">
+                    <td class="text-center">{{ start+i+1 }}</td>
+                    <td>{{ data.INSURANCE_PAYERS_NAME }}</td>
+                    <td>{{ data.INSURANCE_PAYERS_CLASSIFICATION }}</td>
+                    <td class="text-center">{{ data.INSURANCE_PAYERS_ECLAIM_LINK_ID }}</td>
+                    <td class="text-center" *ngIf="data.INSURANCE_PAYERS_STATUS ==1">Available</td>
+                    <td class="text-center" *ngIf="data.INSURANCE_PAYERS_STATUS ==0">Un available</td>
+                    <td class="text-center">
+                        <button *ngIf="user_rights.EDIT=='1'" (click)="editInspayer(data);"alt="Edit" title="Edit" class="btn btn-sm btn-default"><i class="fa fa-edit"></i></button>                           
+                    </td>
+                </tr> 
+            </tbody>
+        </table>
+        <ngb-pagination 
+            [disabled]="appdata.search !== ''"
+            class="d-flex justify-content-center"
+            [(page)]="page"
+            [pageSize]="p"
+            [collectionSize]="collection"
+            [directionLinks]="true"
+            [boundaryLinks]="true"
+            [(page)]="page" aria-label="Default pagination"
+            [maxSize]="3"
+            (pageChange)="getInspayer(page-1)">
+        </ngb-pagination>
+        <pre>Current page : {{page}}</pre>
+        <pre>Total records : {{collection}}</pre>
+    </div>  
+</fieldset>

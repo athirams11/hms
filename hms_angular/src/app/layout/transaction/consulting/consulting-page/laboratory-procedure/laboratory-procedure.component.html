@@ -1,0 +1,140 @@
+<ng-template #rt let-r="result" let-t="term">
+  <ngb-highlight [result]="r.PROCEDURE_CODE+' - '+r.PROCEDURE_CODE_NAME" [term]="t"></ngb-highlight>
+</ng-template>
+<!-- <div class="form-group">
+      
+      <label for="typeahead-http">Search for cpt data</label>
+      <input id="typeahead-http" type="text" class="form-control"  [resultTemplate]="rt" [class.is-invalid]="searchFailed" [inputFormatter]="formatter" [(ngModel)]="model" [ngbTypeahead]="cptsearch" placeholder="cpt code / cpt alliasname / cpt description..."/>
+      <span *ngIf="searching">searching...</span>
+      <div class="invalid-feedback" *ngIf="searchFailed">Sorry, suggestions could not be loaded.</div>
+    </div> -->
+<div class="col-12" *ngFor="let lab of laboratory;let i=index">
+  <div class="row col-12" style="background-color:#1d578e;color: honeydew;text-align: center">
+    <div class="border col-1"><label><label>Sl no</label></label></div>
+    <div class="border col-5"><label>CPT code</label></div>
+    <div class="border col-5"><label>CPT name</label></div>
+    <div class="border span col-1">
+      <button *ngIf="i == laboratory.length-1" alt="Add New data" title="Add New data" type="button"
+        class="btn btn-success btn-sm " (click)="addCptrow(i)" type="button"><i style="color: white"
+          class="fa fa-plus"></i></button>
+      <button *ngIf="i != laboratory.length-1" alt="Delete data" title="Delete data" type="button"
+        class="btn btn-danger  btn-sm " (click)="deleteCptrow(i);" type="button"><i style="color: white;"
+          class="fa fa-trash"></i></button>
+    </div>
+  </div>
+  <div class="row border col-12">
+    <div class="border col-1"><label>{{i+1}}</label></div>
+    <div class="border col-5">
+      <input style="background-color:#807878;color: honeydew;text-align: center" type="text" class="form-control"
+        [resultTemplate]="rt" [class.is-invalid]="searchFailed" [(ngModel)]="laboratory.laboratory_cptcode"
+        placeholder="cpt code / cpt alliasname / cpt description..." />
+      <!-- (selectItem)="set_item($event,i)" [ngbTypeahead]="cptsearch" 
+                  [inputFormatter]="formatter"  -->
+    </div>
+    <div class="border col-5">
+      <input style="background-color:#807878;color: honeydew;text-align: center" type="text"
+        class="form-control  form-control-sm" id="cptcode" name="laboratory_cptname"
+        [(ngModel)]="laboratory.laboratory_cptname">
+    </div>
+
+
+    <!-- <table class="tbl table tbl-sm  table-bordered">
+          <thead>
+            <tr>
+              <th style="width:50%"><label>CPT code</label></th>
+              <th style="width:50%"><label>CPT name</label></th>
+              <th style="width:1%">*</th>
+            </tr>
+          </thead>
+          
+          <tbody>
+              <tr *ngFor="let lab of laboratory_data_arr;let i = index;">
+              <td>
+                  <input id="typeahead-http{{i}}" type="text" class="form-control"  [resultTemplate]="rt" [class.is-invalid]="searchFailed" [(ngModel)]="laboratory_data.laboratory_cptcode[i]"  placeholder="cpt code / cpt alliasname / cpt description..."/>
+                  (selectItem)="set_item($event,i)" [ngbTypeahead]="cptsearch" 
+                  [inputFormatter]="formatter" 
+              </td>
+              <td> 
+                <input type="text" class="form-control  form-control-sm"  id="cptcode" name="laboratory_cptcode{{i}}" [(ngModel)]="laboratory_data.laboratory_cptcode[i]">
+              </td>
+              <td>
+              <button *ngIf="i == laboratory_data_arr.length-1" alt="Add New data" title="Add New data" type="button"  class="btn btn-success btn-sm " (click)="addDrugrow(i)" type="button" ><i  style="color: white" class="fa fa-plus"></i></button>
+              <button  *ngIf="i != laboratory_data_arr.length-1" alt="Delete data" title="Delete data" type="button" class="btn btn-danger  btn-sm " (click)="deleteDrugrow(i);" type="button"><i  style="color: white;" class="fa fa-trash"></i></button>
+            </td>
+          </tr>
+          <tr style="width:100%"> -->
+    <!-- <div  [disabled]="laboratory_data_arr.table ==''">{{lab.table[i]}}</div> -->
+    <table class="tbl table tbl-sm  table-bordered" style="width:100%">
+      <thead>
+        <tr>
+          <th><label>Result name</label></th>
+          <th><label>Value</label></th>
+          <th><label>Unit</label></th>
+          <th><label>*</label></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let result of result_data_arr;let j = index;">
+          <td><input type="text" class="form-control  form-control-sm" name="result_name{{j}}"
+              [(ngModel)]="table.result_name[j]"></td>
+          <td><input type="text" class="form-control  form-control-sm" name="result_value{{j}}"
+              [(ngModel)]="table.result_value[j]"></td>
+          <td><input type="text" class="form-control  form-control-sm" name="result_unit{{j}}"
+              [(ngModel)]="table.result_unit[j]"></td>
+          <td>
+            <button *ngIf="j == result_data_arr.length-1" alt="Add New data" title="Add New data" type="button"
+              class="btn btn-success btn-sm " (click)="addResultrow(j,i)" type="button"><i style="color: white"
+                class="fa fa-plus"></i></button>
+            <button *ngIf="j!= result_data_arr.length-1" alt="Delete data" title="Delete data" type="button"
+              class="btn btn-danger  btn-sm " (click)="deleteResultrow(j,i);" type="button"><i style="color: white;"
+                class="fa fa-trash"></i></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<!-- </tr>
+    </tbody>
+      </table>
+            </div> -->
+<!-- <div style="width: 100%;padding:9px">
+  <div style="width: 100%;" class="border">
+    <div class="row container text"  style="padding:9px">
+      <div class="row container text">
+      
+          <div class="col-2 label">
+            <label>Billed amount</label>
+          </div>
+          <div class="col-3 label">
+              <label><input class="form-control form-control-sm" type="text"  [(ngModel)]="laboratory_data.laboratory_billedamount"></label>&nbsp;&nbsp;&nbsp;
+          </div>
+          <div class="col-2 label">
+             <label> Unbilled amount</label>
+          </div>
+          <div class="col-3 label">
+              <label><input type="text"class="form-control form-control-sm" [(ngModel)]="laboratory_data.laboratory_un_billedamount"></label>
+          </div>
+      </div> 
+      <div class="row container text">
+          <div class="col-2 label">
+              <label> Instruction to cashier</label>
+            </div>
+            <div class="col-7 label">
+                <label> <textarea class="form-control form-control-sm"  [(ngModel)]="laboratory_data.laboratory_instruction" style="width: 580px;height:50px;"></textarea></label>
+            </div>
+      </div>
+    </div>
+    <div class="col-4 label"></div>
+  </div>
+  </div>
+  <div> &nbsp; </div>
+</div>
+</div>&nbsp;
+  <div class="row">
+        <div class="col-2 label">
+          <button [disabled]="formatDate(todaysDate) != formatDate(selected_visit.CREATED_TIME) || bill_status == 1" class="btn btn-primary btn-sm ng-star-inserted" type="button" (click)="save_lab_investigations();">&nbsp;Save&nbsp; </button>&nbsp;
+          <div>&nbsp;</div>
+        </div> 
+      </div>
+  </div> -->

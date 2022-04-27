@@ -1,0 +1,227 @@
+
+  <ng-template #rt let-r="result" let-t="term">
+    <ngb-highlight [result]="r.PROCEDURE_CODE+' - '+r.PROCEDURE_CODE_NAME" [term]="t"></ngb-highlight>
+</ng-template>
+<fieldset class="form-group">
+  <legend>Investigative Procedure</legend>
+  <div class="container form-group">
+    <table class="table-bordered">
+      <thead>
+        <tr>
+          <th style="width:25%;">CPT Name</th>
+          <th style="width:8%;">CPT Code</th>
+          <th style="width:35%;">Description</th>
+          <th style="width:5%">Qty</th>
+          <th style="width:7%">Rate</th>
+          <!-- <th style="width:10%;">Change Of Future</th>
+          <th style="width:10%">Remarks</th>
+          <th style="width:15%;">Priority</th> -->
+          <th width="10%">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let lab of laboratory_data_arr;let i = index;">
+          <td>
+            <input (change)="getEvent()" style="height: 29px;" id="typeahead-http{{i}}" type="text" class="form-control"  [resultTemplate]="rt" [class.is-invalid]="searchFailed" [inputFormatter]="formatter" [(ngModel)]="laboratory_data.laboratory_allias_data[i]" (selectItem)="set_item($event,i)" (change)="calculateBilledamount()" [ngbTypeahead]="cptsearch" 
+            placeholder="CPT code / CPT alias name / CPT description..."/>
+            <div style="height: 29px;" class="invalid-feedback" *ngIf="searchFailed">Sorry, suggestions could not be loaded.</div>
+          </td>
+          <td> 
+            <input type="text" class="form-control  form-control-sm" readonly name="cptcode" id="cptcode" name="laboratory_cptcode{{i}}" [(ngModel)]="laboratory_data.laboratory_cptcode[i]">
+          </td>
+          <td>
+            <textarea style="height: 30px;font-size: 12px;" type="text" class="form-control  form-control-sm" readonly name="lab_discription" name="laboratory_description{{i}}" [(ngModel)]="laboratory_data.laboratory_description[i]"></textarea>
+          </td>
+          <td>
+            <input (change)="getEvent()" type="text" class="form-control  form-control-sm" name="laboratory_quantity{{i}}" [(ngModel)]="laboratory_data.laboratory_quantity[i]" (focusout)="calculateBilledamount()">
+          </td>
+          <td>
+            <input type="text"  class="form-control  form-control-sm" name="laboratory_rate{{i}}" [(ngModel)]="laboratory_data.laboratory_rate[i]" readonly name="laboratory_rate" (focusout)="calculateBilledamount()">
+          </td>
+          <!-- <td>
+            <input type="text" (change)="getEvent()" class="form-control  form-control-sm" name="laboratory_change_of_future{{i}}" [(ngModel)]="laboratory_data.laboratory_change_of_future[i]">
+          </td>
+          <td>
+            <input type="text" (change)="getEvent()" class="form-control  form-control-sm" name="laboratory_remarks{{i}}" [(ngModel)]="laboratory_data.laboratory_remarks[i]">
+          </td>
+          <td>
+            <select  style="height: 29px;" (change)="getEvent()"  class="form-control form-control-sm custom-select custom-select-sm ng-pristine ng-valid ng-touched" name="laboratory_priority{{i}}"[(ngModel)]="laboratory_data.laboratory_priority[i]">
+              <option value=''>Select</option>
+              <option *ngFor="let type of priority_list" value="{{type.MASTER_DATA_ID}}" class="ng-tns-c13-1 ng-star-inserted">{{type.DATA}}</option>                    
+            </select>  
+          </td> -->
+          <td>
+            <button *ngIf="i == laboratory_data_arr.length-1" alt="Add New data" title="Add New data" type="button"  class="btn btn-success btn-sm " (click)="addDrugrow(i)" type="button" ><i  style="color: white" class="fa fa-plus"></i></button>
+            <button  *ngIf="i != laboratory_data_arr.length-1" alt="Delete data" title="Delete data" type="button" class="btn btn-danger  btn-sm " (click)="deleteDrugrow(i);" type="button"><i  style="color: white;" class="fa fa-trash"></i></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <div class="row col-lg-12">
+      <!-- <div class="form-group col-lg-6" >
+        <label for="p_type">Billed Amount</label>
+        <input class="form-control  form-control-sm" (change)="getEvent()" type="text"  [(ngModel)]="laboratory_data.laboratory_billedamount">
+      </div>
+      <div class="form-group col-lg-6" >
+        <label for="p_type"> Unbilled Amount</label>
+        <input type="text"class="form-control form-control-sm" (change)="getEvent()" [(ngModel)]="laboratory_data.laboratory_un_billedamount">
+      </div> -->
+      <div class="clearfix"></div>
+      <div class="form-group col-lg-6" >
+        <label for="p_type">Instruction to cashier</label>
+        <textarea class="form-control form-control-sm" (change)="getEvent()"  [(ngModel)]="laboratory_data.laboratory_instruction"></textarea>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+    <button [disabled]="formatDate(todaysDate) != formatDate(selected_visit.CREATED_TIME) || bill_status == 1" class="btn btn-primary btn-sm ng-star-inserted" type="button" (click)="save_lab_investigations();">&nbsp;Save&nbsp; </button>&nbsp;
+  </div>
+</fieldset>
+
+<!-- <div class="row ">
+  <div class="container">
+    <ng-template #rt let-r="result" let-t="term">
+        <ngb-highlight [result]="r.PROCEDURE_CODE+' - '+r.PROCEDURE_CODE_NAME" [term]="t"></ngb-highlight>
+    </ng-template>
+    <table class="table-bordered ">
+      <thead>
+        <tr>
+          <th style="width:25%;padding:5px"><label>CPT name</label></th>
+          <th style="width:8%;padding:5px"><label>CPT code</label></th>
+          <th style="width:30%;padding:5px"><label>Description</label></th>
+          <th style="width:5%"><label>Qty</label></th>
+          <th style="width:6%"><label>Rate</label></th>
+          <th style="width:6%;"><label>Change of future</label></th>
+          <th style="width:5%"><label>Remarks</label></th>
+          <th style="width:7%;"><label>Priority</label></th>
+          <th width="7%">*</th>
+        </tr>
+      </thead>  
+      <tbody>
+        <tr>
+          <td>
+              <input style="height: 29px;" id="typeahead-http" type="text" class="form-control"  [resultTemplate]="rt" [class.is-invalid]="searchFailed" [inputFormatter]="formatter" [(ngModel)]="cpt_add_data.cpt_data[0]"  (selectItem)="set_item($event)" [ngbTypeahead]="cptsearch" placeholder="cpt code / cpt alliasname / cpt description..."/>
+              <div  class="invalid-feedback" *ngIf="searchFailed">Sorry, suggestions could not be loaded.</div>
+          </td>
+          <td> 
+            <input type="text" class="form-control  form-control-sm" readonly name="cptcode" id="cptcode" name="cptcode" [(ngModel)]="cpt_add_data.cptcode">
+          </td>
+          <td>
+          <input type="text" class="form-control  form-control-sm" readonly name="lab_discription" name="description" [(ngModel)]="cpt_add_data.description">
+          </td>
+          <td>
+          <input type="text" class="form-control text-center  form-control-sm" name="quantity" [(ngModel)]="cpt_add_data.quantity">
+          </td>
+          <td>
+          <input type="text"  class="form-control form-control-sm" name="rate" [(ngModel)]="cpt_add_data.rate" readonly name="rate">
+          </td>
+          <td>
+          <input type="text"  class="form-control  form-control-sm" name="change_of_future" [(ngModel)]="cpt_add_data.change_of_future">
+          </td>
+          <td>
+              <input type="text"  class="form-control  form-control-sm" name="remarks" [(ngModel)]="cpt_add_data.remarks">
+          </td>
+          <td>
+            <select  style="height: 29px;"  class="form-control form-control-sm custom-select custom-select-sm ng-pristine ng-valid ng-touched" name="priority" [(ngModel)]="cpt_add_data.priority">
+              <option value='0'>Select</option>
+              <option *ngFor="let type of priority_list" value="{{type.MASTER_DATA_ID}}" class="ng-tns-c13-1 ng-star-inserted">{{type.DATA}}</option>   
+            </select>  
+          </td>
+          <td>
+            <button [disabled]="formatDate(todaysDate) != formatDate(selected_visit.CREATED_TIME) || bill_status == 1" alt="Save" title="Save" type="button"  class="btn btn-xs btn-success" (click)="saveInvestigation()" type="button"><i  class="fa fa-save text-light"></i></button>&nbsp;
+            <button [disabled]="formatDate(todaysDate) != formatDate(selected_visit.CREATED_TIME) || bill_status == 1" alt="Remove" title="Clear" type="button"  class="btn btn-xs btn-info" (click)="clearInvestigation()" type="button"><i  class="fa fa-refresh text-light"></i></button>
+          </td>
+        </tr>
+        <tr *ngFor="let cpt of investigation_data">
+          <td>
+            <input type="text" class="form-control form-control-sm" readonly [(ngModel)]="cpt.PROCEDURE_CODE_NAME" />
+          </td>
+          <td> 
+            <input type="text" class="form-control form-control-sm" readonly [(ngModel)]="cpt.PROCEDURE_CODE">
+          </td>
+          <td>
+            <input type="text" class="form-control form-control-sm" readonly [(ngModel)]="cpt.DESCRIPTION">
+          </td>
+          <td>
+            <input type="text" class="form-control form-control-sm" readonly [(ngModel)]="cpt.QUANTITY">
+          </td>
+          <td>
+            <input type="text" class="form-control form-control-sm" readonly [(ngModel)]="cpt.RATE">
+          </td>
+          <td>
+            <input type="text" class="form-control form-control-sm" readonly [(ngModel)]="cpt.CHANGE_TO_FUTURE">
+          </td>
+          <td>
+            <input type="text" class="form-control form-control-sm" readonly [(ngModel)]="cpt.REMARKS">
+          </td>
+          <td>
+            <ng-container *ngIf="cpt.LAB_PRIORITY_ID == 35">
+              High
+            </ng-container>
+            <ng-container *ngIf="cpt.LAB_PRIORITY_ID == 34">
+              Low
+            </ng-container>
+          </td>
+          <td>
+            <button [disabled]="formatDate(todaysDate) != formatDate(selected_visit.CREATED_TIME) || bill_status == 1" alt="Edit" title="Edit" type="button" (click)="editCPT(cpt)" class="btn btn-xs btn-primary" type="button"><i class="fa fa-edit "></i></button>&nbsp; 
+            <button [disabled]="formatDate(todaysDate) != formatDate(selected_visit.CREATED_TIME) || bill_status == 1" alt="Remove" title="Remove" type="button"  class="btn btn-xs btn-danger" (click)="remove(cpt);confirms(remove_data)" type="button"><i class="fa fa-trash"></i></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <div class="row container">
+      <div class="col-lg-6">
+        <div class="row">
+          <div class="col-4">
+            <label>Billed amount</label>
+          </div>
+          <div class="col-8">
+            <label><input class="form-control form-control-sm" readonly type="text"  [(ngModel)]="cpt_add_data.billedamount"></label>&nbsp;&nbsp;&nbsp;
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="row">
+          <div class="col-4">
+            <label> Unbilled amount</label>
+          </div>
+          <div class="col-8">
+            <label><input type="text"class="form-control form-control-sm" [(ngModel)]="cpt_add_data.un_billedamount"></label>
+          </div>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+      <div class="col-lg-12">
+        <div class="row">
+          <div class="col-2 ">
+            <label> Instruction to cashier</label>
+          </div>
+          <div class="col-10 ">
+            <label> <textarea class="form-control form-control-sm"  [(ngModel)]="cpt_add_data.instruction" style="width: 400px;height:70px;"></textarea></label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="row">
+      <div class="col-2 label">
+        <button [disabled]="formatDate(todaysDate) != formatDate(selected_visit.CREATED_TIME) || bill_status == 1" class="btn btn-primary btn-sm ng-star-inserted" type="button" (click)="saveInvestigation();">&nbsp;Save&nbsp; </button>&nbsp;
+        <div>&nbsp;</div>
+      </div> 
+    </div>
+  </div>
+</div> -->
+<!-- <ng-template #remove_data let-modal > 
+    <div class="modal-body">
+      <label style="font-size: 14px;" class="text-left">Do you want to remove the item ? </label>
+    </div>
+    <div class="form-group text-center col-lg-12">
+      <button type="button" class="btn btn-sm btn-danger" (click)="modal.dismiss('Cross click')">&nbsp;No&nbsp;</button>&nbsp;
+      <button type="button" class="btn btn-sm btn-success" (click)="deleteInvestigation();modal.dismiss('Cross click');">Yes</button>
+    </div>
+</ng-template>  -->

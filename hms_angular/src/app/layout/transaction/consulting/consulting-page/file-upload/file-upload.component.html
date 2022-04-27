@@ -1,0 +1,74 @@
+<ngb-tabset>
+    <ngb-tab title="New">
+      <ng-template ngbTabContent>
+        <fieldset class="form-group row">
+            <legend>New Document</legend>
+            <div class="row col-lg-12">
+                <div class="form-group col-lg-4" >
+                    <label for="p_type">Files</label><span class="text-danger">&nbsp;*</span>
+                        <input #file  (change)="getEvent()"  
+                        [(ngModel)]="documents_data.document" class="form-control form-control-sm" type="file" name="document" id="document"
+                        (change)="getFileDetails($event)">
+                </div>
+                <div class="form-group col-lg-4" >
+                    <label for="p_type">Date</label><span class="text-danger">&nbsp;*</span>
+                    <input type="date" [ngModel] ="dateVal | date:'yyyy-MM-dd'" (ngModelChange)="dateVal = $event" class="form-control form-control-sm"  name="document_date" id="document_date" readonly>
+                </div>
+                <div class="form-group col-lg-4" >
+                    <label for="p_type">Type</label><span class="text-danger">&nbsp;*</span>
+                    <select  (change)="getEvent()" [(ngModel)]="documents_data.document_type" name="document_type" class="form-control form-control-sm custom-select custom-select-sm ng-pristine ng-valid ng-touched">
+                        <option value="">Select type</option>
+                        <option *ngFor="let type of type_list" value="{{type.MASTER_DATA_ID}}" class="ng-tns-c13-1 ng-star-inserted">{{type.DATA}}</option>   
+                    </select>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-group col-lg-12" >
+                    <label for="p_type">Description</label><span class="text-danger">&nbsp;*</span>
+                    <textarea  (change)="getEvent()" [(ngModel)]="documents_data.document_description" class="form-control"  name="document_description"></textarea>                        
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="clearfix"></div>
+            <div class="form-group col-lg-7 pull-right">
+                <button [disabled]="formatDate(todaysDate) != formatDate(selected_visit.CREATED_TIME)" class="btn btn-primary btn-sm ng-star-inserted" type="button" (click)="documentsCheck();"> &nbsp;&nbsp;Save&nbsp;&nbsp; </button>&nbsp;
+            </div>
+        </fieldset>
+    </ng-template>
+    </ngb-tab>
+    <ngb-tab title="List">
+        <ng-template ngbTabContent>
+            <fieldset class="form-group">
+                <legend>Document List</legend>
+                <div class="container form-group">
+                    <table  class="table tbl table-hover table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th width="2%">#</th>
+                                <th class="text-left" width="15%">Type</th>
+                                <th class="text-left">Description</th>
+                                <th width="15%">Date</th>
+                                <th width="5%">Document</th>
+                            </tr>
+                            <tr *ngIf="(docs_list | json) == '[]'">
+                                <td colspan="5" class="text-center">No details available</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let datas of docs_list;let i=index">
+                                <td class="text-center">{{i+1 }}</td>
+                                <td class="text-left">{{ datas.DOCUMENTS_TYPE_NAME }}</td>
+                                <td class="text-left" [innerHTML]="datas.DOCUMENTS_DESCRIPTION | nl2br : true"> </td>
+                                <td class="text-center">{{formatDateTime( datas.TIME )}} </td>
+                                <td class="text-center"> 
+                                    <a href = "{{filePath(datas.DOCUMENTS_TITLE)}}" title="{{ datas.DOCUMENTS_TITLE }}" target="_blank"><i class="fa fa-file"></i></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </fieldset>
+        </ng-template>
+    </ngb-tab>
+</ngb-tabset>   
+   
+ 

@@ -1,0 +1,75 @@
+<div>
+  <form #AllergiesForm="ngForm" #AllergiesForm="ngForm" (ngSubmit)="saveDrugAllergies(AllergiesForm)" >
+    <fieldset class="form-group">
+      <legend>Allergies&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <label style="font-size: 14px;"><input type="checkbox" (change)="getEvent()" [checked]="form_data.patient_no_known_allergies == 1" (change)="changeKnownAllergies(form_data.patient_no_known_allergies)">&nbsp;No Known Allergies</label> 
+      </legend>
+      <div class="container form-group">
+        <label style="font-size: 14px;">Drug Allergies</label>  
+        <table class="tbl table tbl-sm  table-bordered">
+          <thead>
+            <tr>
+              <!-- <th class="text-left" width="1%">#</th> -->
+              <th class="text-left" width="50%">Generic Name</th>
+              <th class="text-left" width="50%">Brand Name</th>
+              <th class="text-center" width=1%>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let drg of drug_allergy_data;let i = index;">
+              <!-- <td class="text-center" >{{i+1}}</td> -->
+              <td>
+                <input (change)="getEvent()" [disabled]="form_data.patient_no_known_allergies == 1" [(ngModel)]="form_data.patient_drug_allergies_generic_name[i]"  class="form-control  form-control-sm" type="text" name="patient_drug_allergies_generic_name{{i}}">
+              </td>
+              <td>
+                <input (change)="getEvent()" [disabled]="form_data.patient_no_known_allergies == 1" [(ngModel)]="form_data.patient_drug_allergies_brand_name[i]"  class="form-control  form-control-sm" type="text" name="patient_drug_allergies_brand_name{{i}}">
+              </td>
+              <td class="text-center" >
+                <button [disabled]="form_data.patient_no_known_allergies == 1" *ngIf="i == drug_allergy_data.length-1" alt="Add New data" title="Add New data" type="button"  class="btn btn-success btn-sm " (click)="addDrugrow(i)" type="button" ><i  style="color: white;" class="fa fa-plus"></i></button>
+                <button [disabled]="form_data.patient_no_known_allergies == 1" *ngIf="i != drug_allergy_data.length-1" alt="Delete data" title="Delete data" type="button" class="btn btn-danger  btn-sm " (click)="deleteDrugrow(i)" type="button"><i  style="color: white;" class="fa fa-trash"></i></button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="container form-group">
+        <label style="font-size: 14px;">Other Allergies</label>
+        <table class="tbl table tbl-sm  table-bordered">
+          <thead>
+            <tr>
+              <!-- <th class="text-left" width="1%">#</th> -->
+              <th class="text-left" width="50%">Allergies Details</th>
+              <th class="text-left" width="50%">Allergies Item</th>
+              <th class="text-center" width=1%>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let drg of other_allergy_data;let i = index;">
+              <!-- <td class="text-center" >{{i+1}}</td> -->
+              <td>
+                <select (change)="getEvent()" [(ngModel)]="form_data.patient_other_allergies_detail_id[i]" class="form-control form-control-sm custom-select custom-select-sm ng-pristine ng-valid ng-touched" name="patient_other_allergies_detail_id.{{i}}" [disabled]="form_data.patient_no_known_allergies == 1">
+                  <option value="">Select allergies</option>
+                  <option *ngFor="let allergy of data" value="{{allergy.ALLERGIES_OTHER_ID}}" class="ng-tns-c13-1 ng-star-inserted">{{allergy.NAME}}</option>   
+                </select>
+              </td>
+              <td>
+                <input (change)="getEvent()" [disabled]="form_data.patient_no_known_allergies == 1" class="form-control form-control-sm" type="text" [(ngModel)]="form_data.patient_other_allergies_item[i]" name="patient_other_allergies_item.{{i}}">
+              </td>
+              <td class="text-center">
+                <button [disabled]="form_data.patient_no_known_allergies == 1" *ngIf="i == other_allergy_data.length-1" alt="Add New data" title="Add New data" type="button" class="btn btn-success btn-sm " (click)="addOtherrow(i)" type="button"><i  style="color: white" class="fa fa-plus "></i></button>
+                <button [disabled]="form_data.patient_no_known_allergies == 1" *ngIf="i != other_allergy_data.length-1" alt="Delete data" title="Delete data" type="button" class="btn  btn-danger btn-sm" (click)="deleteOtherrow(i)" type="button"><i  style="color: white" class="fa fa-trash"></i></button>
+              </td>
+            </tr>   
+          </tbody>
+        </table>
+        <div class="clearfix"></div>
+        <div class="row">
+          <!-- <div class="col-11"></div> -->
+          <div class="col-12">
+            <button class="text-left" [disabled]="formatDate(todaysDate) != formatDate(selected_visit.CREATED_TIME)" class="btn btn-primary btn-sm"  type="submit"> Save </button>&nbsp;
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+</div>

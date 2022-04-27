@@ -1,0 +1,121 @@
+<app-page-header [heading]="'Insurance Price List'" [icon]="'fa fa-fa-edit'"style="height:100px;"></app-page-header>
+<ng-template #rt let-r="result" let-t="term">
+    <ngb-highlight [result]="r.PROCEDURE_CODE+' - '+r.PROCEDURE_CODE_NAME" [term]="t"></ngb-highlight>
+  </ng-template>
+<fieldset class="form-group row" *ngIf="user_rights.ADD == '1'">
+    <legend>New</legend>
+    <div class="row col-lg-12">
+        <div class="form-group col-lg-4" >
+            <label for="p_type">TPA / Receiver</label><span class="text-danger">&nbsp;*</span>
+            <ngx-select-dropdown class="form-control form-control-sm size" [config]="config" [options]="tpa_options" name="sel_tpa_receiver" 
+                [multiple]="false" (change)="getTpa();getNetworks($event)" [(ngModel)]="tpa_data">
+            </ngx-select-dropdown>
+        </div>
+        <div class="form-group col-lg-4" >
+            <label for="p_type">Network Name</label><span class="text-danger">&nbsp;*</span>
+            <select class="form-control form-control-sm custom-select custom-select-sm" [(ngModel)]="price_data.network" name="network" id="network">
+                <option value="">Select Network</option>
+                <option *ngFor="let network of networks" value="{{ network.INS_NETWORK_ID }}" >{{ network.INS_NETWORK_NAME }}</option>
+            </select>
+        </div>
+        <div class="form-group col-lg-4" >
+            <label for="p_type">CPT</label><span class="text-danger">&nbsp;*</span>
+            <ngx-select-dropdown class="form-control form-control-sm size" [config]="configs" [options]="cpt_options" name="cpt" 
+            [multiple]="false" (change)="getCpt()" [(ngModel)]="cpt_data"></ngx-select-dropdown>
+        </div>
+        <div class="form-group col-lg-4" >
+            <label for="p_type">Price</label><span class="text-danger">&nbsp;*</span>
+            <input class="form-control form-control-sm" type="text" (keydown)="validateNumber($event)" [(ngModel)]="price_data.rate" name="rate">
+        </div>
+        <div class="form-group col-lg-4" >
+            <label for="p_type">Status</label><br>
+            <label class="radio-inline">
+                <input  type="radio" (click)="selectStatus(1)" name="status" id="active" value="1" [checked]="price_data.active_status == 1">&nbsp;&nbsp;Active &nbsp;&nbsp;
+            </label>
+            <label class="radio-inline">
+                <input  type="radio" (click)="selectStatus(0)" name="status" id="inactive" value="0" [checked]="price_data.active_status == 0">&nbsp;&nbsp;Inactive
+            </label>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <div class="form-group col-lg-7 pull-right">
+        <button *ngIf="user_rights.ADD == '1'"  class="btn btn-primary btn-sm ng-star-inserted" type="button" (click)="saveInsurancePrice();" style="width:60px;height:30px;">&nbsp;Save&nbsp;</button>&nbsp;&nbsp;&nbsp;
+        <button *ngIf="user_rights.ADD == '1'"    class="btn btn-danger btn-sm ng-star-inserted" type="button" (click)="clearForm()" style="width:60px;height:30px;">&nbsp;Clear&nbsp; </button>
+    </div>
+    <div class="clearfix"></div>
+</fieldset>
+<fieldset class="form-group row">
+    <legend>List</legend>
+    <div class="col-lg-12 ">
+        <table class="col-lg-12 borderless">
+          <tr> 
+            <td width="40%" class="text-left">
+                <div class="input-group mb-3 pull-left">
+                    <input id="typeahead-http" style="height:31px" type="text" class="form-control" 
+                    [(ngModel)]="price_data.search" 
+                    (keyup)=" listSearchPrice($event)" 
+                    (keypress)="listSearchPrice($event)"  
+                    (paste)= "listSearchPrice($event)"  
+                    name="search_text" placeholder="TPA / Network / CPT...">
+                    <div class="input-group-append">
+                        <button style="height:31px;padding:7px" class="input-group-text" (click)="clear_search()">
+                            <i  *ngIf="price_data.search != ''"  class="fa fa-close"></i>
+                            <i *ngIf="price_data.search == ''" class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </div>  
+              <div class="invalid-feedback">Sorry, suggestions could not be loaded.</div>
+            </td>
+            <td width="50%" class="text-right" style="vertical-align: top;"></td>
+          </tr>
+        </table>
+    </div>
+    <div class="col-lg-12 ">
+        <table class="table tbl table-hover table-striped table-bordered">
+            <thead >
+            <tr>
+                <th  width="2%" class="text-center">#</th>
+                <th>TPA / Receiver</th>
+                <th>Network </th>
+                <th width="30%">Current procedural terminology</th>
+                <th  class="text-center" width="7%">Insurance Rate</th>
+                <th  class="text-center" width="7%">Status</th>
+                <th  class="text-center" width="2%">Action</th>
+            </tr>
+            
+            <tr *ngIf="(insurance_price_list | json) == '[]'">
+                <td colspan="8" class="text-center">No details available</td>
+            </tr>
+            </thead>
+            <tbody>
+                <tr  *ngFor="let data of insurance_price_list;let i=index">
+                <td class="text-center">{{ start + i + 1 }}</td>
+                <td>{{ data.TPA_ECLAIM_LINK_ID}} - {{data.TPA_NAME}}</td>
+                <td>{{ data.INS_NETWORK_NAME }}</td>
+                <td>{{ data.CURRENT_PROCEDURAL_CODE }} - {{data.PROCEDURE_CODE_NAME}}</td>
+                <td class="text-center">{{data.CPT_RATE}}</td>
+                <td class="text-center" *ngIf="data.STATUS ==1">Active</td>
+                <td class="text-center" *ngIf="data.STATUS ==0">Inactive</td>
+                <td>
+                    <button *ngIf="user_rights.EDIT=='1'" (click)="editInsurancerate(data);" alt="Edit" title="Edit" class="btn btn-sm btn-default"><i class="fa fa-edit"></i></button>
+                </td>
+                </tr> 
+            </tbody>
+        </table>
+        <ngb-pagination 
+            [disabled]="price_data.search !== ''"
+            class="d-flex justify-content-center"
+            [(page)]="page"
+            [pageSize]="p"
+            [collectionSize]="collection"
+            [directionLinks]="true"
+            [boundaryLinks]="true"
+            [(page)]="page" aria-label="Default pagination"
+            [maxSize]="3"
+            (pageChange)="listInsurancePrice(page-1)">
+        </ngb-pagination>
+        <pre>Current page : {{page}}</pre>
+        <pre>Total records : {{collection}}</pre>
+    </div>
+</fieldset>

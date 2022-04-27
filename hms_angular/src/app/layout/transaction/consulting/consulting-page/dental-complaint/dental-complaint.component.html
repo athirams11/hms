@@ -1,0 +1,816 @@
+<ng-container *ngIf="department == 1 || user_data.user_group ==1">
+  <div class="clearfix"></div>
+  <div class="clearfix"></div>
+  <div class="row" style="margin:1px">
+    <div class="col-lg-9">
+      <div  style="font-size: 16px;" class="pull-left custom-control custom-radio custom-control-inline">
+        <input type="radio" class="custom-control-input" id="defaultInline1" name="inlineDefaultRadiosExample" (click)="selectType(1);showConfirm($event,confirm)"  value="1" [checked]="dental_data.patient_type==1">
+        <label style="font-size: 16px;" class="custom-control-label" for="defaultInline1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>Adult</span></label>
+      </div>
+      <div  style="font-size: 16px;" class="custom-control custom-radio custom-control-inline">
+        <input type="radio" class="custom-control-input" id="defaultInline2" name="inlineDefaultRadiosExample" (click)="selectType(2);showConfirm($event,confirm)" value="2"  [checked]="dental_data.patient_type==2">
+        <label style="font-size: 16px;" class="custom-control-label" for="defaultInline2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>Peadiatrics</span></label>
+      </div>
+    </div>
+    <div class="col-lg-2">
+      <!-- <button *ngIf="showCheckboxs == 1" (click)="finishMulitiSelection(multiselectiontooth)" class="pull-left btn btn-sm btn-success">Finish</button> -->
+      <button *ngIf="showCheckboxs == 1" (click)="showCheckbox(0)" class="pull-right btn btn-sm btn-warning text-light" title="Cancel tooth multiselection">Cancel</button>
+      <!-- <label *ngIf="showCheckboxs == 1" (click)="finishMulitiSelection()" class="pull-left btn btn-sm text-success">Finish multiselection</label>
+      <label *ngIf="showCheckboxs == 1" (click)="showCheckbox(0)" class="pull-right btn btn-sm text-primary">Hide multiselection</label> -->
+    </div>
+    <div class="col-lg-1">
+        <button class="pull-right btn btn-sm btn-brown text-light" title="Add dental history of patient" (click)="open_popup(history)">History</button>
+    </div>
+  </div>
+  <div class="row" style="margin:5px">
+    <label class="col-lg-12 text-secondary" style="font-style: italic;font-size: 13px;">
+      &nbsp;Double click on any tooth for tooth multiselection</label>
+      <div class="row" style="margin:5px;">
+        <div class="col-lg-12 row">
+          <label style="font-size: 13px;font-weight: bold;" class="text-left col-6">Treatment</label>
+          <ng-container *ngIf="procedures!='' && tooth_color!=''">
+            <div class="col-6 pull-right text-right">
+              <label style="font-size: 13px;font-weight: bold;">Selected : &nbsp;&nbsp;
+                <button class="btn btn-{{tooth_color}}"></button>&nbsp;&nbsp;
+                {{procedure}}
+              </label>
+            </div>
+          </ng-container>
+          <div class="clearfix"></div>
+          <table class="table borderless">
+            <tr>
+              <ng-container *ngFor="let pro of dental_procedure;let p=index">
+                <td *ngIf="7 > p"  style="cursor: pointer;" (click)="selectProcedure(pro)">
+                  <div class="form-control" style="font-size: 12px;" [class.selected-trt]="procedure==pro.procedures">
+                    <button class="btn btn-{{pro.color}}"   ></button>&nbsp;{{pro.procedures}}
+                  </div>
+                </td>
+              </ng-container>
+            </tr>
+            <tr>
+              <ng-container *ngFor="let pro of dental_procedure;let p=index">
+                <td *ngIf="p > 6 && 14 > p"  style="cursor: pointer;" (click)="selectProcedure(pro)">
+                  <div class="form-control" style="font-size: 12px;" [class.selected-trt]="procedure==pro.procedures">
+                    <button class="btn btn-{{pro.color}}"  ></button>&nbsp;{{pro.procedures}}
+                  </div>
+                </td>
+              </ng-container>
+            </tr>
+            <tr>
+              <ng-container *ngFor="let pro of dental_procedure;let p=index">
+                <td *ngIf="p > 13"  style="cursor: pointer;" (click)="selectProcedure(pro)">
+                  <div class="form-control" style="font-size: 12px;" [class.selected-trt]="procedure==pro.procedures">
+                    <button class="btn btn-{{pro.color}}"  ></button>&nbsp;{{pro.procedures}}
+                  </div>
+                </td>
+              </ng-container>
+            </tr>
+          </table>
+        </div>
+      </div>
+    <ng-container *ngIf="dental_data.patient_type == 1">
+      
+      <div class="row">
+        <div class="col-lg-6">
+          <fieldset class="form-group">
+            <legend> Upper Right <label class="high-light"></label></legend>
+            <div class="row col-lg-12" >
+              <table class="table borderless">
+                <tr>
+                  <ng-container *ngFor="let upp_rig of dental;let i=index">
+                    <ng-container *ngIf="8 > i">
+                      <td  class="text-center">
+                        <label><img src="{{upp_rig.image}}" width="45px" height="100px" (dblclick)="showCheckbox(1)">
+                          <input type="checkbox"  name="check" 
+                          value="{{upp_rig.check}}" 
+                          *ngIf="showCheckboxs == 1" 
+                          [disabled] = "upp_rig.alreadyExist == 1"
+                          (change)="multiselctTooths(i)">
+                        </label><br>
+                        <ng-container *ngIf="upp_rig.alreadyExist == 0">
+                          <label (click)="getPopup(i,upp_rig,toothDescription,listDescription,multiselectiontooth);">
+                            <div class="circle round">
+                              <ng-container *ngIf="haskey(dental_data.complients,i) &&  (dental_data.complients[i]).length > 0">
+                                <ng-container *ngFor="let item of arrayOne(round_log[(dental_data.complients[i]).length].count); let k = index;">
+                                  <div 
+                                    *ngIf="(1 == k+1 || k+1 < round_log[(dental_data.complients[i]).length].count) && k< 8" 
+                                    [ngStyle]="{'transform': 'rotate(' + (360/(round_log[(dental_data.complients[i]).length].count))*k + 'deg) skewY(0deg)' }" 
+                                    class="sect sect-{{dental_data.complients[i][round_log[(dental_data.complients[i]).length].order[k]].color}}">
+                                  </div>
+                                  <div 
+                                    *ngIf="(1 == k+1 || k+1 < round_log[(dental_data.complients[i]).length].count) && k >= 8" 
+                                    [ngStyle]="{'transform': 'rotate(' + (360/(round_log[(dental_data.complients[i]).length].count))*k + 'deg) skewY(-45deg)' }" 
+                                    class="sect sect-{{dental_data.complients[i][round_log[(dental_data.complients[i]).length].order[k]].color}}">
+                                  </div>
+                                  <div 
+                                    *ngIf="1 != k+1 && k+1 == round_log[(dental_data.complients[i]).length].count" 
+                                    [ngStyle]="{'transform': 'rotate(' + (360/(round_log[(dental_data.complients[i]).length].count))*k + 'deg) skewY('+ round_log[(dental_data.complients[i]).length].skew + 'deg)'}" 
+                                    class="sect sect-{{dental_data.complients[i][round_log[(dental_data.complients[i]).length].order[k]].color}}">
+                                  </div>
+                                </ng-container>
+                              </ng-container>
+                            </div>
+                          </label><br>
+                        </ng-container>
+                        <ng-container *ngIf="upp_rig.alreadyExist == 1">
+                          <label (click)="notify(upp_rig.procedure)">
+                            <div class="circle round" title="{{upp_rig.procedure}}">
+                              <div>
+                                <i class="fa fa-close text-danger font"></i>
+                              </div>
+                            </div>
+                          </label><br>
+                        </ng-container>
+                        <label class="text-voilet" style="text-align: center;">{{upp_rig.universal}}</label>
+                      </td>
+                    </ng-container>
+                  </ng-container>
+                </tr>
+              </table>
+            </div>
+          </fieldset>
+        </div>
+        <div class="col-lg-6">
+          <fieldset class="form-group">
+            <legend> Upper Left <label class="high-light"></label></legend>
+            <div class="row col-lg-12" >
+              <table class="table borderless">
+                <tr>
+                  <ng-container *ngFor="let upp_lef of dental;let j=index">
+                    <ng-container *ngIf="j >= 8 && 16 > j">
+                      <td  class="text-center" >
+                        <label><img src="{{upp_lef.image}}" width="45px" height="100px" (dblclick)="showCheckbox(1)">
+                          <input type="checkbox"  name="check" 
+                          value="{{upp_lef.check}}" 
+                          *ngIf="showCheckboxs == 1" 
+                          [disabled] = "upp_lef.alreadyExist == 1"
+                          (change)="multiselctTooths(j)">
+                        </label><br>
+                        <ng-container *ngIf="upp_lef.alreadyExist == 0">
+                          <label  (click)="getPopup(j,upp_lef,toothDescription,listDescription,multiselectiontooth);">
+                            <div class="circle round">
+                              <ng-container *ngIf=" haskey(dental_data.complients,j) &&  (dental_data.complients[j]).length > 0">
+                                  <ng-container *ngFor="let item of arrayOne(round_log[(dental_data.complients[j]).length].count); let i = index;">
+                                    <div 
+                                      *ngIf="(1 == i+1 || i+1 < round_log[(dental_data.complients[j]).length].count) && i< 8" 
+                                      [ngStyle]="{'transform': 'rotate(' + (360/(round_log[(dental_data.complients[j]).length].count))*i + 'deg) skewY(0deg)' }" 
+                                      class="sect sect-{{dental_data.complients[j][round_log[(dental_data.complients[j]).length].order[i]].color}}">
+                                    </div>
+                                    <div 
+                                      *ngIf="(1 == i+1 || i+1 < round_log[(dental_data.complients[j]).length].count) && i >= 8" 
+                                      [ngStyle]="{'transform': 'rotate(' + (360/(round_log[(dental_data.complients[j]).length].count))*i + 'deg) skewY(-45deg)' }" 
+                                      class="sect sect-{{dental_data.complients[j][round_log[(dental_data.complients[j]).length].order[i]].color}}">
+                                    </div>
+                                    <div *ngIf="1 != i+1 && i+1 == round_log[(dental_data.complients[j]).length].count" [ngStyle]="{'transform': 'rotate(' + (360/(round_log[(dental_data.complients[j]).length].count))*i + 'deg) skewY('+ round_log[(dental_data.complients[j]).length].skew + 'deg)'}" class="sect sect-{{dental_data.complients[j][round_log[(dental_data.complients[j]).length].order[i]].color}}"></div>
+                                  </ng-container>
+                              </ng-container>
+                            </div>
+                          </label><br>
+                        </ng-container>
+                        <ng-container *ngIf="upp_lef.alreadyExist == 1">
+                          <label (click)="notify(upp_lef.procedure)">
+                            <div class="circle round"  title="{{upp_lef.procedure}}">
+                              <div>
+                                <i class="fa fa-close text-danger font"></i>
+                              </div>
+                            </div>
+                          </label><br>
+                        </ng-container>
+                        <label class="text-voilet" style="text-align: center;">{{upp_lef.universal}}</label>
+                      </td>
+                    </ng-container>
+                  </ng-container>
+                </tr>
+              </table>
+            </div>
+          </fieldset>
+        </div>
+        <div class="col-lg-6">
+          <fieldset class="form-group">
+            <legend> Lower Right <label class="high-light"></label></legend>
+            <div class="row col-lg-12">
+              <table class="table borderless">
+                <tr>
+                  <ng-container *ngFor="let low_rig of dental;let l=index">
+                    <ng-container *ngIf="24 > l && l >= 16">
+                      <td  class="text-center" >
+                        <label class="text-voilet" style="text-align: center;">{{low_rig.universal}}</label><br>
+                        <ng-container *ngIf="low_rig.alreadyExist == 0">
+                          <label  (click)="getPopup(l,low_rig,toothDescription,listDescription,multiselectiontooth);">
+                            <div class="circle round">
+                              <ng-container *ngIf=" haskey(dental_data.complients,l) &&  (dental_data.complients[l]).length > 0">
+                                <ng-container *ngFor="let item of arrayOne(round_log[(dental_data.complients[l]).length].count); let i = index;">
+                                  <div 
+                                    *ngIf="(1 == i+1 || i+1 < round_log[(dental_data.complients[l]).length].count) && i< 8" 
+                                    [ngStyle]="{'transform': 'rotate(' + (360/(round_log[(dental_data.complients[l]).length].count))*i + 'deg) skewY(0deg)' }" 
+                                    class="sect sect-{{dental_data.complients[l][round_log[(dental_data.complients[l]).length].order[i]].color}}">
+                                  </div>
+                                  <div 
+                                    *ngIf="(1 == i+1 || i+1 < round_log[(dental_data.complients[l]).length].count) && i >= 8" 
+                                    [ngStyle]="{'transform': 'rotate(' + (360/(round_log[(dental_data.complients[l]).length].count))*i + 'deg) skewY(-45deg)' }" 
+                                    class="sect sect-{{dental_data.complients[l][round_log[(dental_data.complients[l]).length].order[i]].color}}">
+                                  </div>
+                                  <div *ngIf="1 != i+1 && i+1 == round_log[(dental_data.complients[l]).length].count" [ngStyle]="{'transform': 'rotate(' + (360/(round_log[(dental_data.complients[l]).length].count))*i + 'deg) skewY('+ round_log[(dental_data.complients[l]).length].skew + 'deg)'}" class="sect sect-{{dental_data.complients[l][round_log[(dental_data.complients[l]).length].order[i]].color}}"></div>
+                                </ng-container>
+                              </ng-container>
+                            </div>
+                          </label><br>
+                        </ng-container>
+                        <ng-container *ngIf="low_rig.alreadyExist == 1">
+                          <label (click)="notify()">
+                            <div class="circle round"  title="{{low_rig.procedure}}">
+                              <div>
+                                <i class="fa fa-close text-danger font"></i>
+                              </div>
+                            </div>
+                          </label><br>
+                        </ng-container>
+                        <label>
+                          <input type="checkbox"  name="check" 
+                          value="{{low_rig.check}}" 
+                          *ngIf="showCheckboxs == 1" 
+                          [disabled] = "low_rig.alreadyExist == 1"
+                          (change)="multiselctTooths(l)"><br>
+                          <img src="{{low_rig.image}}" width="45px" height="100px" (dblclick)="showCheckbox(1)">
+                        </label>  
+                      </td>
+                    </ng-container>
+                  </ng-container>
+                </tr>
+              </table>
+            </div>
+          </fieldset>
+        </div>
+        <div class="col-lg-6">
+          <fieldset class="form-group">
+            <legend> Lower Left <label class="high-light"></label></legend>
+            <div class="row col-lg-12">
+              <table class="table borderless">
+                <tr>
+                  <ng-container *ngFor="let low_left of dental;let k=index">
+                    <ng-container *ngIf="32 > k && k >= 24">
+                      <td  class="text-center" >
+                        <label class="text-voilet" style="text-align: center;">{{low_left.universal}}</label><br>
+                        <ng-container *ngIf="low_left.alreadyExist == 0">
+                          <label  (click)="getPopup(k,low_left,toothDescription,listDescription,multiselectiontooth);">
+                            <div class="circle round">
+                              <ng-container *ngIf=" haskey(dental_data.complients,k) &&  (dental_data.complients[k]).length > 0">
+                                  <ng-container *ngFor="let item of arrayOne(round_log[(dental_data.complients[k]).length].count); let i = index;">
+                                    <div 
+                                      *ngIf="(1 == i+1 || i+1 < round_log[(dental_data.complients[k]).length].count) && i< 8" 
+                                      [ngStyle]="{'transform': 'rotate(' + (360/(round_log[(dental_data.complients[k]).length].count))*i + 'deg) skewY(0deg)' }" 
+                                      class="sect sect-{{dental_data.complients[k][round_log[(dental_data.complients[k]).length].order[i]].color}}">
+                                    </div>
+                                    <div 
+                                      *ngIf="(1 == i+1 || i+1 < round_log[(dental_data.complients[k]).length].count) && i >= 8" 
+                                      [ngStyle]="{'transform': 'rotate(' + (360/(round_log[(dental_data.complients[k]).length].count))*i + 'deg) skewY(-45deg)' }" 
+                                      class="sect sect-{{dental_data.complients[k][round_log[(dental_data.complients[k]).length].order[i]].color}}">
+                                    </div>
+                                    <div *ngIf="1 != i+1 && i+1 == round_log[(dental_data.complients[k]).length].count" [ngStyle]="{'transform': 'rotate(' + (360/(round_log[(dental_data.complients[k]).length].count))*i + 'deg) skewY('+ round_log[(dental_data.complients[k]).length].skew + 'deg)'}" class="sect sect-{{dental_data.complients[k][round_log[(dental_data.complients[k]).length].order[i]].color}}"></div>
+                                  </ng-container>
+                              </ng-container>
+                            </div>
+                          </label><br>
+                        </ng-container>
+                        <ng-container *ngIf="low_left.alreadyExist == 1">
+                          <label (click)="notify()">
+                            <div class="circle round"  title="{{low_left.procedure}}">
+                              <div>
+                                <i class="fa fa-close text-danger font"></i>
+                              </div>
+                            </div>
+                          </label><br>
+                        </ng-container>
+                        <label>
+                          <input type="checkbox"  name="check" 
+                          value="{{low_left.check}}" 
+                          *ngIf="showCheckboxs == 1" 
+                          [disabled] = "low_left.alreadyExist == 1"
+                          (change)="multiselctTooths(k)"><br>
+                          <img src="{{low_left.image}}" width="45px" height="100px" (dblclick)="showCheckbox(1)">
+                        </label>
+                      </td>
+                    </ng-container>
+                  </ng-container>
+                </tr>
+              </table>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="dental_data.patient_type == 2">
+      <div class="row">
+        <div class="col-lg-6">
+          <fieldset class="form-group">
+            <legend> Upper Right <label class="high-light"></label></legend>
+              <table class="table borderless">
+                <tr>
+                  <ng-container *ngFor="let upp_rig of dental_child;let i=index">
+                    <ng-container *ngIf="5 > i">
+                      <td class="text-center">
+                        <label><img src="{{upp_rig.image}}" width="45px" height="100px" (dblclick)="showCheckbox(1)"><br>
+                          <input type="checkbox"  name="check" 
+                          value="{{upp_rig.check}}" 
+                          *ngIf="showCheckboxs == 1"
+                          [disabled] = "upp_rig.alreadyExist == 1"
+                          (change)="multiselctTooths(i)">
+                        </label>
+                        <ng-container *ngIf="upp_rig.alreadyExist == 0">
+                          <label  (click)="getPopup(i,upp_rig,toothDescription,listDescription,multiselectiontooth);">
+                            <div class="circle round">
+                              <ng-container *ngIf=" haskey(dental_data.child_complients,i) &&  (dental_data.child_complients[i]).length > 0">
+                                <ng-container *ngFor="let item of arrayOne(round_log[(dental_data.child_complients[i]).length].count); let k = index;">
+                                  <div 
+                                    *ngIf="(1 == k+1 || k+1 < round_log[(dental_data.child_complients[i]).length].count) && k< 8" 
+                                    [ngStyle]="{'transform': 'rotate(' + (360/(round_log[(dental_data.child_complients[i]).length].count))*k + 'deg) skewY(0deg)' }" 
+                                    class="sect sect-{{dental_data.child_complients[i][round_log[(dental_data.child_complients[i]).length].order[k]].color}}">
+                                  </div>
+                                  <div 
+                                    *ngIf="(1 == k+1 || k+1 < round_log[(dental_data.child_complients[i]).length].count) && k >= 8" 
+                                    [ngStyle]="{'transform': 'rotate(' + (360/(round_log[(dental_data.child_complients[i]).length].count))*k + 'deg) skewY(-45deg)' }" 
+                                    class="sect sect-{{dental_data.child_complients[i][round_log[(dental_data.child_complients[i]).length].order[k]].color}}">
+                                  </div>
+                                  <div *ngIf="1 != k+1 && k+1 == round_log[(dental_data.child_complients[i]).length].count" [ngStyle]="{'transform': 'rotate(' + (360/(round_log[(dental_data.child_complients[i]).length].count))*k + 'deg) skewY('+ round_log[(dental_data.child_complients[i]).length].skew + 'deg)'}" class="sect sect-{{dental_data.child_complients[i][round_log[(dental_data.child_complients[i]).length].order[k]].color}}"></div>
+                                </ng-container>
+                              </ng-container>
+                            </div>
+                          </label><br>
+                        </ng-container>
+                        <ng-container *ngIf="upp_rig.alreadyExist == 1">
+                          <label (click)="notify()">
+                            <div class="circle round"  title="{{upp_rig.procedure}}">
+                              <div>
+                                <i class="fa fa-close text-danger font"></i>
+                              </div>
+                            </div>
+                          </label><br>
+                        </ng-container>
+                        <label class="text-voilet" style="text-align: center;">{{upp_rig.label}}</label>
+                      </td>
+                    </ng-container>
+                  </ng-container>
+                </tr>
+              </table>
+            <!-- </div> -->
+          </fieldset>
+        </div>
+        <div class="col-lg-6">
+          <fieldset class="form-group">
+            <legend> Upper Left <label class="high-light"></label></legend>
+            <div class="row col-lg-12" >
+              <table class="table borderless">
+                <tr>
+                  <ng-container *ngFor="let upp_lef of dental_child;let j=index">
+                    <ng-container *ngIf="j >= 5 && 10 > j">
+                      <td  class="text-center" >
+                        <label><img src="{{upp_lef.image}}" width="45px" height="100px" (dblclick)="showCheckbox(1)"><br>
+                          <input type="checkbox"  name="check" 
+                          value="{{upp_lef.check}}" 
+                          *ngIf="showCheckboxs == 1" 
+                          [disabled] = "upp_lef.alreadyExist == 1"
+                          (change)="multiselctTooths(j)">
+                        </label>
+                        <ng-container *ngIf="upp_lef.alreadyExist == 0">
+                          <label  (click)="getPopup(j,upp_lef,toothDescription,listDescription,multiselectiontooth);">
+                            <div class="circle round">
+                              <ng-container *ngIf=" haskey(dental_data.child_complients,j) &&  (dental_data.child_complients[j]).length > 0">
+                                <ng-container *ngFor="let item of arrayOne(round_log[(dental_data.child_complients[j]).length].count); let i = index;">
+                                  <div 
+                                    *ngIf="(1 == i+1 || i+1 < round_log[(dental_data.child_complients[j]).length].count) && i< 8" 
+                                    [ngStyle]="{'transform': 'rotate(' + (360/(round_log[(dental_data.child_complients[j]).length].count))*i + 'deg) skewY(0deg)' }" 
+                                    class="sect sect-{{dental_data.child_complients[j][round_log[(dental_data.child_complients[j]).length].order[i]].color}}">
+                                  </div>
+                                  <div 
+                                    *ngIf="(1 == i+1 || i+1 < round_log[(dental_data.child_complients[j]).length].count) && i >= 8" 
+                                    [ngStyle]="{'transform': 'rotate(' + (360/(round_log[(dental_data.child_complients[j]).length].count))*i + 'deg) skewY(-45deg)' }" 
+                                    class="sect sect-{{dental_data.child_complients[j][round_log[(dental_data.child_complients[j]).length].order[i]].color}}">
+                                  </div>
+                                  <div *ngIf="1 != i+1 && i+1 == round_log[(dental_data.child_complients[j]).length].count" [ngStyle]="{'transform': 'rotate(' + (360/(round_log[(dental_data.child_complients[j]).length].count))*i + 'deg) skewY('+ round_log[(dental_data.child_complients[j]).length].skew + 'deg)'}" class="sect sect-{{dental_data.child_complients[j][round_log[(dental_data.child_complients[j]).length].order[i]].color}}"></div>
+                                </ng-container>
+                              </ng-container>
+                            </div>
+                          </label><br>
+                        </ng-container>
+                        <ng-container *ngIf="upp_lef.alreadyExist == 1">
+                          <label (click)="notify()">
+                            <div class="circle round"  title="{{upp_lef.procedure}}">
+                              <div>
+                                <i class="fa fa-close text-danger font"></i>
+                              </div>
+                            </div>
+                          </label><br>
+                        </ng-container>
+                        <label class="text-voilet" style="text-align: center;">{{upp_lef.label}}</label>
+                      </td>
+                    </ng-container>
+                  </ng-container>
+                </tr>
+              </table>
+            </div>
+          </fieldset>
+        </div>
+        <div class="col-lg-6">
+          <fieldset class="form-group">
+            <legend> Lower Right <label class="high-light"></label></legend>
+            <div class="row col-lg-12">
+              <table class="table borderless">
+                <tr>
+                  <ng-container *ngFor="let low_rig of dental_child;let l=index">
+                    <ng-container *ngIf="15 > l && l >= 10">
+                      <td  class="text-center" >
+                        <label class="text-voilet" style="text-align: center;">{{low_rig.label}}</label><br>
+                        <ng-container *ngIf="low_rig.alreadyExist == 0">
+                          <label  (click)="getPopup(l,low_rig,toothDescription,listDescription,multiselectiontooth);">
+                            <div class="circle round">
+                              <ng-container *ngIf=" haskey(dental_data.child_complients,l) &&  (dental_data.child_complients[l]).length > 0">
+                                <ng-container *ngFor="let item of arrayOne(round_log[(dental_data.child_complients[l]).length].count); let i = index;">
+                                  <div 
+                                    *ngIf="(1 == i+1 || i+1 < round_log[(dental_data.child_complients[l]).length].count) && i< 8" 
+                                    [ngStyle]="{'transform': 'rotate(' + (360/(round_log[(dental_data.child_complients[l]).length].count))*i + 'deg) skewY(0deg)' }" 
+                                    class="sect sect-{{dental_data.child_complients[l][round_log[(dental_data.child_complients[l]).length].order[i]].color}}">
+                                  </div>
+                                  <div 
+                                    *ngIf="(1 == i+1 || i+1 < round_log[(dental_data.child_complients[l]).length].count) && i >= 8" 
+                                    [ngStyle]="{'transform': 'rotate(' + (360/(round_log[(dental_data.child_complients[l]).length].count))*i + 'deg) skewY(-45deg)' }" 
+                                    class="sect sect-{{dental_data.child_complients[l][round_log[(dental_data.child_complients[l]).length].order[i]].color}}">
+                                  </div>
+                                  <div *ngIf="1 != i+1 && i+1 == round_log[(dental_data.child_complients[l]).length].count" [ngStyle]="{'transform': 'rotate(' + (360/(round_log[(dental_data.child_complients[l]).length].count))*i + 'deg) skewY('+ round_log[(dental_data.child_complients[l]).length].skew + 'deg)'}" class="sect sect-{{dental_data.child_complients[l][round_log[(dental_data.child_complients[l]).length].order[i]].color}}"></div>
+                                </ng-container>
+                              </ng-container>
+                            </div>
+                          </label><br>
+                        </ng-container>
+                        <ng-container *ngIf="low_rig.alreadyExist == 1">
+                          <label (click)="notify()">
+                            <div class="circle round"  title="{{low_rig.procedure}}">
+                              <div>
+                                <i class="fa fa-close text-danger font"></i>
+                              </div>
+                            </div>
+                          </label><br>
+                        </ng-container>
+                        <label>
+                          <input type="checkbox"  name="check" 
+                          value="{{low_rig.check}}" 
+                          *ngIf="showCheckboxs == 1" 
+                          [disabled] = "low_rig.alreadyExist == 1"
+                          (change)="multiselctTooths(l)"><br>
+                          <img src="{{low_rig.image}}" width="45px" height="100px" (dblclick)="showCheckbox(1)">
+                        </label>
+                      </td>
+                    </ng-container>
+                  </ng-container>
+                </tr>
+              </table>
+            </div>
+          </fieldset>
+        </div>
+        <div class="col-lg-6">
+          <fieldset class="form-group">
+            <legend> Lower Left <label class="high-light"></label></legend>
+            <div class="row col-lg-12">
+              <table class="table borderless">
+                <tr>
+                  <ng-container *ngFor="let low_left of dental_child;let k=index">
+                    <ng-container *ngIf="20 > k && k >= 15">
+                      <td  class="text-center" >
+                        <label class="text-voilet" style="text-align: center;">{{low_left.label}}</label><br>
+                        <ng-container *ngIf="low_left.alreadyExist == 0">
+                          <label  (click)="getPopup(k,low_left,toothDescription,listDescription,multiselectiontooth);">
+                            <div class="circle round">
+                              <ng-container *ngIf=" haskey(dental_data.child_complients,k) &&  (dental_data.child_complients[k]).length > 0">
+                                <ng-container *ngFor="let item of arrayOne(round_log[(dental_data.child_complients[k]).length].count); let i = index;">
+                                  <div 
+                                    *ngIf="(1 == i+1 || i+1 < round_log[(dental_data.child_complients[k]).length].count) && i< 8" 
+                                    [ngStyle]="{'transform': 'rotate(' + (360/(round_log[(dental_data.child_complients[k]).length].count))*i + 'deg) skewY(0deg)' }" 
+                                    class="sect sect-{{dental_data.child_complients[k][round_log[(dental_data.child_complients[k]).length].order[i]].color}}">
+                                  </div>
+                                  <div 
+                                    *ngIf="(1 == i+1 || i+1 < round_log[(dental_data.child_complients[k]).length].count) && i >= 8" 
+                                    [ngStyle]="{'transform': 'rotate(' + (360/(round_log[(dental_data.child_complients[k]).length].count))*i + 'deg) skewY(-45deg)' }" 
+                                    class="sect sect-{{dental_data.child_complients[k][round_log[(dental_data.child_complients[k]).length].order[i]].color}}">
+                                  </div>
+                                  <div *ngIf="1 != i+1 && i+1 == round_log[(dental_data.child_complients[k]).length].count" [ngStyle]="{'transform': 'rotate(' + (360/(round_log[(dental_data.child_complients[k]).length].count))*i + 'deg) skewY('+ round_log[(dental_data.child_complients[k]).length].skew + 'deg)'}" class="sect sect-{{dental_data.child_complients[k][round_log[(dental_data.child_complients[k]).length].order[i]].color}}"></div>
+                                </ng-container>
+                              </ng-container>
+                            </div>
+                          </label><br>
+                        </ng-container>
+                        <ng-container *ngIf="low_left.alreadyExist == 1">
+                          <label (click)="notify()">
+                            <div class="circle round"  title="{{low_left.procedure}}">
+                              <div>
+                                <i class="fa fa-close text-danger font"></i>
+                              </div>
+                            </div>
+                          </label><br>
+                        </ng-container>
+                        <label>
+                          <input type="checkbox"  name="check" 
+                          value="{{low_left.check}}" 
+                          *ngIf="showCheckboxs == 1" 
+                          [disabled] = "low_left.alreadyExist == 1"
+                          (change)="multiselctTooths(k)"><br>
+                          <img src="{{low_left.image}}" width="45px" height="100px" (dblclick)="showCheckbox(1)">
+                        </label>
+                      </td>
+                    </ng-container>
+                  </ng-container>
+                </tr>
+              </table>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+    </ng-container>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+ 
+  </div>
+</ng-container>
+<div class="row" style="margin:5px">
+  <fieldset class="form-group">
+    <legend>Dental Procedure</legend>
+    <div class="container form-group">
+      <ng-template #rt let-r="result" let-t="term">
+          <ngb-highlight [result]="r.PROCEDURE_CODE+' - '+r.PROCEDURE_CODE_NAME" [term]="t"></ngb-highlight>
+      </ng-template>
+      <table class="table tbl table-bordered">
+        <thead>
+          <tr>
+            <th style="width:35px">#</th>
+            <th style="width:70px">Tooth No</th>
+            <th class="text-left" style="width:250px">CDT Name</th>
+            <th class="text-left" style="width:80px">CDT Code</th>
+            <th style="width:50px">Qty</th>
+            <th class="text-left" style="width:100px">Procedure</th>
+            <th class="text-left" style="width:350px">Notes</th>
+            <th width="10px">Action</th>
+          </tr>
+        </thead>  
+        <tbody>
+          <tr *ngIf="laboratory_data_arr.length == 0">
+            <td colspan="8" class="text-center">No details available</td>
+          </tr>
+          <tr *ngFor="let lab of laboratory_data_arr;let i = index;">
+            <td class="text-center">{{i+1}}</td>
+            <td> 
+              <ng-container *ngIf="dental_data.patient_type == 1">
+                <select [disabled]="laboratory_data.laboratory_tooth_procedure[i] != ''" class="form-control form-control-sm custom-select custom-select-sm" [(ngModel)]="laboratory_data.laboratory_tooth_number[i]">
+                  <option value="0">Select</option>
+                  <option *ngFor="let data of adult_tooth" value="{{data.universal}}">{{data.universal}}</option>
+                </select>
+              </ng-container>
+              <ng-container *ngIf="dental_data.patient_type == 2">
+                <select [disabled]="laboratory_data.laboratory_tooth_procedure[i] != ''" class="form-control form-control-sm custom-select custom-select-sm" [(ngModel)]="laboratory_data.laboratory_tooth_number[i]">
+                  <option value="0">Select</option>
+                  <option *ngFor="let data of child_tooth" value="{{data.value}}">{{data.label}}</option>
+                </select>
+              </ng-container>
+            </td>
+            <td>           
+              <input [disabled]="laboratory_data.laboratory_tooth_procedure[i] != ''" 
+              (change)="getEvents()" style="height: 29px;" id="typeahead-http{{i}}" 
+              type="text" class="form-control"  [resultTemplate]="rt"
+               [class.is-invalid]="searchFailed" [inputFormatter]="formatter" 
+               [(ngModel)]="laboratory_data.laboratory_allias_data[i]" 
+               (selectItem)="set_item($event,i)"  [ngbTypeahead]="cptsearch" 
+               placeholder="CDT code / CDT allias name / CDT description..."/>
+              <div style="height: 29px;" class="invalid-feedback" *ngIf="searchFailed">Sorry, suggestions could not be loaded.</div>
+            </td>
+            <td> 
+              <input type="text" class="form-control  form-control-sm" readonly name="cptcode" id="cptcode" name="laboratory_cptcode{{i}}" [(ngModel)]="laboratory_data.laboratory_cptcode[i]">
+            </td>
+            <td>
+              <input [disabled]="laboratory_data.laboratory_tooth_procedure[i] != ''" (change)="getEvents()" type="text" class="form-control  form-control-sm" name="laboratory_quantity{{i}}" [(ngModel)]="laboratory_data.laboratory_quantity[i]" >
+            </td>
+            <td>
+              <input readonly (change)="getEvents()" type="text" class="form-control  form-control-sm" name="laboratory_tooth_procedure{{i}}" [(ngModel)]="laboratory_data.laboratory_tooth_procedure[i]" >
+            </td>
+            <td>
+              <textarea  style="height: 30px;font-size: 12px;" type="text" (change)="getEvents()" class="form-control  form-control-sm" name="laboratory_issue{{i}}" id="laboratory_issue{{i}}" [(ngModel)]="laboratory_data.laboratory_tooth_issue[i]" (change)="changeToothData(i)"></textarea>
+            </td>
+            <td class="text-center">
+              <button *ngIf="i == laboratory_data_arr.length-1" alt="Add New data" title="Add New data" type="button"  class="btn btn-success btn-sm " (click)="addDrugrow(i)" type="button" ><i  style="color: white" class="fa fa-plus"></i></button>
+              <button  *ngIf="i != laboratory_data_arr.length-1" alt="Delete data" title="Delete data" type="button" class="btn btn-danger  btn-sm " (click)="deleteCdtProcedure(i);deleteDrugrow(i);" type="button"><i  style="color: white;" class="fa fa-trash"></i></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="clearfix"></div>
+      <div class="form-group" >
+        <label for="p_type">Instruction to cashier</label>
+        <textarea class="form-control form-control-sm" (change)="getEvents()"  [(ngModel)]="laboratory_data.laboratory_instruction"></textarea>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+  </fieldset>
+</div>
+<div class="clearfix"></div>
+<div class="col-lg-12 container">
+  <button [disabled]="formatDate(todaysDate) != formatDate(selected_visit.CREATED_TIME) || bill_status == 1" class="btn btn-sm btn-primary" type="button"  (click)="saveDental()"> Save </button>&nbsp;&nbsp;&nbsp;
+  <button class=" btn btn-sm btn-danger" type="button"  (click)="clear()"> Clear </button>
+</div>
+
+<ng-template #toothDescription let-modal>
+  <div class="modal-header">
+    <div class="pull-right ">
+      <h5 class="modal-title" id="modal-basic-title">
+        {{procedure}} for tooth number <ng-container *ngIf="tooth_number > 0" >{{tooth_number}} </ng-container>
+      </h5>
+    </div>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <label aria-hidden="true">&times;</label>
+    </button>
+  </div>
+  <div class="modal-body" >
+    <div class="col-lg-12">
+      <div class="form-group row">
+        <div class="container form-group col-lg-12" >
+          <label for="p_type">CDT Name</label><span class="text-danger">&nbsp;*</span>
+          <ngx-select-dropdown class="form-control form-control-sm size" [config]="cdt_config" 
+            [options]="cdt_options" name="sel_tpa_receiver" 
+            [multiple]="false" (change)="getCPTdata();" (change)="changeProData(dental_data.tooth_issue[tooth_index],procedure)" 
+            [(ngModel)]="cdt_data">
+          </ngx-select-dropdown>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="container form-group col-lg-6" >
+          <label for="p_type">CDT Code</label>
+          <input type="text" class="form-control  form-control-sm" readonly 
+            name="cptcode" id="cptcode" name="cptcode"  
+            (change)="changeProData(dental_data.tooth_issue[tooth_index],procedure)" 
+            [(ngModel)]="dental_data.dental_cdt_code[tooth_index]">
+        </div>
+        <div class="container form-group col-lg-6" >
+          <label for="p_type">Quantity</label><span class="text-danger">&nbsp;*</span>
+          <input (change)="getEvents()" type="text" class="form-control  form-control-sm" 
+          (change)="changeProData(dental_data.tooth_issue[tooth_index],procedure)" 
+          name="quantity"  [(ngModel)]="dental_data.dental_cdt_quantity[tooth_index]" >
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="container form-group col-lg-12" >
+          <label for="p_type">Notes</label>
+          <textarea class="form-control" (change)="getEvents()" style="height: 120px;" 
+            [(ngModel)]="dental_data.tooth_issue[tooth_index]" 
+            (change)="changeProData(dental_data.tooth_issue[tooth_index],procedure)" 
+            name="tooth_issue">
+          </textarea>
+        </div>
+      </div>  
+    </div>
+  </div>
+  <div class="model-footer">
+    <div class="clearfix"></div>
+    <div class="form-group text-center col-lg-12">
+        <button  *ngIf="dental_data.tooth_issue[tooth_index] == null" class="btn-warning btn btn-sm " style="color:#fff" (click)="modal.dismiss('Cross click')">Cancel</button>
+        <button  *ngIf="dental_data.tooth_issue[tooth_index] != null" class="btn-danger btn btn-sm " style="color:#fff" (click)="getPopups(tooth_index,procedure);modal.dismiss('Cross click')">Remove</button>
+        &nbsp;&nbsp;&nbsp;<button  *ngIf="user_rights.ADD=='1'" class="btn-info btn btn-sm " (click)="saveIssue(toothDescription)">&nbsp;&nbsp;&nbsp;&nbsp;Add&nbsp;&nbsp;&nbsp;&nbsp;</button>
+    </div>
+  </div>
+  <div class="clearfix"></div>
+  <div class="clearfix"></div>
+</ng-template>
+
+<ng-template #listDescription let-modal>
+  <div class="modal-header">
+    <div class="pull-right ">
+        <h5 class="modal-title" id="modal-basic-title">
+        Notes <ng-container *ngIf="tooth_number > 0" >({{tooth_number}}) </ng-container>
+        </h5>
+    </div>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <label aria-hidden="true">&times;</label>
+    </button>
+  </div>
+  <div class="modal-body" >
+    <ng-container *ngIf="dental_data.patient_type == 1">
+      <ng-container *ngFor="let co of dental_data.complients[tooth_index]">
+        <div class="form-group">
+          <div style="font-size: 13px;" >
+            <button class="btn btn-{{co.color}}"></button>&nbsp;{{co.procedure}}
+            <button class="btn btn-sm  pull-right" title="Remove" (click)="deleteProcedure(tooth_index,co.procedure,listDescription)">
+              <i class="fa fa-trash text-danger"></i>
+            </button>
+            <textarea class="form-control"  (change)="getEvents()"  [(ngModel)]="co.description" (change)="changeProData(co.description,co.procedure)" name="tooth_issue"></textarea>
+          </div>
+        </div>
+        <div class="clearfix"></div>
+      </ng-container>
+    </ng-container>
+    <ng-container *ngIf="dental_data.patient_type == 2">
+      <ng-container *ngFor="let co of dental_data.child_complients[tooth_index]">
+        <div class="form-group ">
+          <div style="font-size: 13px;" >
+            <button class="btn btn-{{co.color}}"></button>&nbsp;{{co.procedure}}
+            <button class="btn btn-sm pull-right" title="Remove" (click)="deleteProcedure(tooth_index,co.procedure,listDescription)">
+              <i class="fa fa-trash text-danger"></i>
+            </button>
+            <textarea class="form-control"  (change)="getEvents()"  [(ngModel)]="co.description" (change)="changeProData(co.description,co.procedure)" name="tooth_issue"></textarea>
+          </div>
+        </div>
+        <div class="clearfix"></div>
+      </ng-container>
+    </ng-container>
+  </div>
+  <div class="model-footer">
+    <div class="form-group text-right col-lg-12">
+        <button  class="btn-warning btn btn-sm " style="color:#fff" (click)="modal.dismiss('Cross click')">Close</button>
+    </div>
+  </div>
+  <div class="clearfix"></div>
+  <div class="clearfix"></div>
+</ng-template>
+
+<ng-template #confirm let-modal >
+<div class="modal-header">
+  <h5 class="modal-title">Please confirm...</h5>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="clearfix"></div>
+    <label style="font-size: 14px;" class="text-left">The existing data will be deleted. Do you want to confirm ? </label>
+    <div class="clearfix"></div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-sm btn-danger" (click)="modal.dismiss('Cross click')">Cancel</button>
+    <button type="button" class="btn btn-sm btn-primary" (click)="clear_data();listNotAllowedProcedure();modal.dismiss('Cross click');">Ok</button>
+  </div>
+</ng-template>
+
+<ng-template #history let-modal >
+  <div class="modal-header">
+    <h5 class="modal-title">Patient History - Dental</h5>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click');listNotAllowedProcedure()">
+    <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <app-dental-investigation (saveNotify)="OnApplyNotify($event)" [patient_id]="patient_id" ></app-dental-investigation>
+</ng-template>
+
+<ng-template #multiselectiontooth let-modal>
+  <div class="modal-header">
+    <div class="pull-right ">
+      <h5 class="modal-title" id="modal-basic-title">
+        {{procedure}} for tooth numbers 
+        <ng-container *ngIf="multi_tooth_number && multi_tooth_number.length != 0">
+          {{multi_tooth_number}}
+        </ng-container>
+      </h5>
+    </div>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <label aria-hidden="true">&times;</label>
+    </button>
+  </div>
+  <div class="modal-body" >
+    <div class="col-lg-12">
+      <div class="form-group row">
+        <div class="container form-group col-lg-12" >
+          <label for="p_type">CDT Name</label><span class="text-danger">&nbsp;*</span>
+          <ngx-select-dropdown class="form-control form-control-sm size" [config]="cdt_config" 
+            [options]="cdt_options" name="sel_tpa_receiver" 
+            [multiple]="false" (change)="getmultiCPTdata();" 
+            [(ngModel)]="cdt_data">
+          </ngx-select-dropdown>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="container form-group col-lg-6" >
+          <label for="p_type">CDT Code</label>
+          <input type="text" class="form-control  form-control-sm" readonly 
+            name="cptcode" id="cptcode" name="cptcode"  
+            [(ngModel)]="dental_data.multi_cdt_code">
+        </div>
+        <div class="container form-group col-lg-6" >
+          <label for="p_type">Quantity</label><span class="text-danger">&nbsp;*</span>
+          <input (change)="getEvents()" type="text" class="form-control  form-control-sm" 
+          name="quantity"  [(ngModel)]="dental_data.multi_cdt_quantity" >
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="container form-group col-lg-12" >
+          <label for="p_type">Notes</label>
+          <textarea class="form-control" (change)="getEvents()" style="height: 120px;" 
+            [(ngModel)]="dental_data.multi_tooth_issue" 
+            name="tooth_issue">
+          </textarea>
+        </div>
+      </div>  
+    </div>
+  </div>
+  <div class="model-footer">
+    <div class="clearfix"></div>
+    <div class="form-group text-center col-lg-12">
+        <button  *ngIf="dental_data.multi_tooth_issue == null" class="btn-warning btn btn-sm " style="color:#fff" (click)="modal.dismiss('Cross click')">Cancel</button>
+        <button  *ngIf="dental_data.multi_tooth_issue != null" class="btn-danger btn btn-sm " style="color:#fff" (click)="getPopups(tooth_index,procedure);modal.dismiss('Cross click')">Remove</button>
+        &nbsp;&nbsp;&nbsp;<button  *ngIf="user_rights.ADD=='1'" class="btn-info btn btn-sm " (click)="saveMultiSelectionteeth()">&nbsp;&nbsp;&nbsp;&nbsp;Add&nbsp;&nbsp;&nbsp;&nbsp;</button>
+    </div>
+  </div>
+  <div class="clearfix"></div>
+  <div class="clearfix"></div>
+</ng-template>

@@ -1,0 +1,41 @@
+<div class="container">
+        <div class="row">
+                <div class="col-3" *ngFor="let vitals_array of vital_values">
+                        <div class="main" style="text-align:center;">
+                                <label style="text-align: center"><b><span style="color: #1d578e;">{{
+                                                        formatDateTime(vitals_array.DATE_TIME) }} </span></b></label>
+                                <table class="table-bordered center">
+                                        <tr *ngFor="let param_array of vitals_array.param_values">
+                                                <td *ngIf="param_array.PARAMETER_VALUE!=null"
+                                                        style="background-color: #ccc; ">{{param_array.SHORT_FORM}}</td>
+                                                <td *ngIf="param_array.PARAMETER_VALUE!=null">
+                                                        {{param_array.PARAMETER_VALUE}}{{param_array.SYMBOL}}</td>
+                                        </tr>
+                                </table>
+                        </div>
+                </div>
+        </div>
+</div>
+
+<!-- <ng-container *ngIf="blood_sugar.length != 0">
+        <div class="clearfix"></div>
+        <div class="clearfix"></div>    
+        <div class="container" >
+                <div class="row"> 
+                        <div class="col-12">
+                                <div class="main">
+                                        <div class="text-left">
+                                                <b><span style="color: #1d578e;">Blood Sugar Report </span></b>
+                                                <div class="clearfix"></div>
+                                        </div>
+                                        <div class="text-left">
+                                                <label name="blood_sugar" style="text-align: justify;" id="blood_sugar" >{{blood_sugar.BLOOD_SUGAR_REPORT}}</label>                       
+                                        </div>
+                                </div> 
+                        </div>          
+                </div>
+        </div> 
+        <div class="clearfix"></div>
+        <div class="clearfix"></div>    
+
+</ng-container> -->

@@ -1,0 +1,1658 @@
+<div [@routerTransition]>
+    <app-page-header [heading]="'OP Registration'" [icon]="'fa-edit'"></app-page-header>
+
+    <div class="row ">
+        <div class="col-lg-12">
+
+            <form role="form">
+                <fieldset class="form-group row">
+                    <div class="row col-lg-12">
+                        <div class="col-lg-6">
+                            <div class="row">
+                              <label for="p_number" class="col-4">Patient Number</label>
+                              <div class="col-8">
+                                <input class="form-control form-control-sm" type="text" value="" name="p_number" id="p_number">
+                              </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="row">
+                              <label for="date" class="col-2">Date</label>
+                              <div class="col-10">
+                               <input class="form-control form-control-sm" type="date" value="" name="date" id="date">
+                              </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class=" row">
+                              <label for="p_type" class="col-2">Type</label>
+                              <div class="col-10">
+                                <select class="form-control form-control-sm custom-select custom-select-sm" placeholder="Type" name="type" id="type">
+                                    <option  value="Type 1">
+                                        Type 1
+                                    </option>
+                                    <option value="Type 2" >
+                                        Type 2
+                                    </option>
+                                </select>
+                              </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset class="form-group row">
+                    <legend>Basic Information</legend>
+                    <div class="col-lg-12 row">
+                        <div class="col-lg-3">
+                            <div class="row">
+                                <label for="p_type" class="col-md-4">Name</label>
+                              <div class="col-md-8">
+                                <select class="form-control form-control-sm custom-select custom-select-sm" placeholder="Mr/Ms" name="mr" id="mr">
+                                    <option  value="Mr">
+                                        Mr
+                                    </option>
+                                    <option value="Ms" >
+                                        Ms
+                                    </option>
+                                </select>
+                              </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 ">
+                            <div class="row">
+                              <div class="col-12">
+                                <input class="form-control form-control-sm" type="text" value="" placeholder="First Name" name="f_name" id="f_name">
+                              </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 ">
+                            <div class="row">
+                              <div class="col-12">
+                                <input class="form-control form-control-sm" type="text" value="" placeholder="Middle Name" name="m_name" id="m_name">
+                              </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 ">
+                            <div class="row">
+                              <div class="col-12">
+                                <input class="form-control form-control-sm" type="text" value="" placeholder="Last Name" name="l_name" id="l_name">
+                              </div>
+                            </div>
+                        </div>
+
+                        <div class="clearfix"></div>
+                        <div class="clearfix"></div>
+                        
+                        <div class="col-lg-6">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="row">
+                                        <label for="p_type" class="col-4">Gender</label>
+                                        <div class="col-8">
+                                            <select class="form-control form-control-sm custom-select custom-select-sm" placeholder="Male/Female" name="gender" id="gender">
+                                                <option  value="M">
+                                                    Male
+                                                </option>
+                                                <option value="F" >
+                                                    Female
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="row">
+                                        <label for="p_type" class="col-3">DOB</label>
+                                      <div class="col-9">
+                                        <input class="form-control form-control-sm" type="date" placeholder="DOB" value="" name="dob" id="dob">
+                                      </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="row">
+                                
+                                <div class="col-lg-4 ">
+                                    <div class="row">
+                                        <label for="p_type" class="col-4">Age</label>
+                                        <div class="col-8">
+                                            <input class="form-control form-control-sm" type="number" placeholder="" value="" name="age" id="age">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 ">
+                                    <div class="row">
+                                        <label for="p_type" class="col-4">Month</label>
+                                        <div class="col-8">
+                                            <input class="form-control form-control-sm" type="number" placeholder="" value="" name="month" id="month">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 ">
+                                    <div class="row">
+                                        <label for="p_type" class="col-4">Days</label>
+                                        <div class="col-8">
+                                            <input class="form-control form-control-sm" type="number" placeholder="" value="" name="days" id="days">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="clearfix"></div>
+                        <div class="clearfix"></div>
+
+                        
+                        <div class="col-lg-6 ">
+                            <div class="row">
+                                <label for="p_type" class="col-3">Mobile No.</label>
+                                <div class="col-9">
+                                    <input class="form-control form-control-sm" type="number" value="" name="mobile_no" id="mobile_no">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 ">
+                            <div class="row">
+                                <label for="p_type" class="col-2">Email</label>
+                                <div class="col-10">
+                                    <input class="form-control form-control-sm" type="email" value="" name="email" id="email">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="clearfix"></div>
+                        <div class="clearfix"></div>
+
+                        
+                    </div>
+                </fieldset>
+                <!--<fieldset class="form-group row">
+                    <legend>Other Information</legend>
+                    <div class="col-lg-8">
+                        <div class="row">
+                            <label for="p_type" class="col-2">Address</label>
+                            <div class="col-10">
+                                <input class="form-control form-control-sm" type="text" value="" name="address" id="address">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 ">
+                        <div class="row">
+                            <label for="p_type" class="col-4">PO Box No.</label>
+                            <div class="col-8">
+                                <input class="form-control form-control-sm" type="text" value="" name="po_box" id="po_box">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="clearfix"></div>
+                    <div class="clearfix"></div>
+
+                    <div class="col-lg-4">
+                        <div class="row">
+                            <label for="p_type" class="col-4">Country</label>
+                            <div class="col-8">
+                                <select class="form-control form-control-sm custom-select custom-select-sm"  name="country" id="country">
+                                    <option  value="Country 1">
+                                        Country 1
+                                    </option>
+                                    <option value="Country 2" >
+                                        Country 2
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 ">
+                        <div class="row">
+                            <label for="p_type" class="col-4">Nationality</label>
+                            <div class="col-8">
+                                <input class="form-control form-control-sm" type="text" value="" name="nationality" id="nationality">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 ">
+                        <div class="row">
+                            <label for="p_type" class="col-4">National Id</label>
+                            <div class="col-8">
+                                <input class="form-control form-control-sm" type="text" value="" name="national_id" id="national_id">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="clearfix"></div>
+                    <div class="clearfix"></div>
+
+                    <div class="col-lg-4">
+                        <div class="row">
+                            <label for="p_type" class="col-4">Emirates</label>
+                            <div class="col-8">
+                                 <input class="form-control form-control-sm" type="text" value="" name="emirates" id="emirates">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 ">
+                        <div class="row">
+                            <label for="p_type" class="col-4">Res No.</label>
+                            <div class="col-8">
+                                <input class="form-control form-control-sm" type="text" value="" name="res_no" id="res_no">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 ">
+                        <div class="row">
+                            <label for="p_type" class="col-4">City</label>
+                            <div class="col-8">
+                                <input class="form-control form-control-sm" type="text" value="" name="city" id="city">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="clearfix"></div>
+                    <div class="clearfix"></div>
+
+
+                    <div class="col-lg-4">
+                        <div class="row">
+                            <label for="p_type" class="col-4">Service#</label>
+                            <div class="col-8">
+                                 <input class="form-control form-control-sm" type="text" value="" name="service" id="service">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 ">
+                        <div class="row">
+                            <label for="p_type" class="col-4">Visa Status</label>
+                            <div class="col-8">
+                                <input class="form-control form-control-sm" type="text" value="" name="visa_stat" id="visa_stat">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 ">
+                        <div class="row">
+                            <label for="p_type" class="col-4">Fax</label>
+                            <div class="col-8">
+                                <input class="form-control form-control-sm" type="text" value="" name="fax" id="fax">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="clearfix"></div>
+                    <div class="clearfix"></div>
+
+                    <div class="col-lg-4 ">
+                        <div class="row">
+                            <label for="p_type" class="col-4">Source Of Info</label>
+                            <div class="col-8">
+                                <select class="form-control form-control-sm custom-select custom-select-sm"  name="source_of_info" id="source_of_info">
+                                    <option  value="Source 1">
+                                        Source 1
+                                    </option>
+                                    <option value="Source 2" >
+                                        Source 2
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="clearfix"></div>
+                    <div class="clearfix"></div>
+
+                </fieldset>
+                <fieldset class="form-group row">
+                    <legend>Insurance Details</legend>
+                    <div class="col-lg-3 ">
+                        <div class="row">
+                            <label class="radio-inline col-lg-6">
+                                <input type="radio" name="is_insurance" id="er" value="0" checked="">&nbsp;&nbsp;&nbsp;ER
+                            </label>
+                            <label class="radio-inline  col-lg-6">
+                                <input type="radio" name="is_insurance" id="insurance" value="1">&nbsp;&nbsp;&nbsp;Insurance
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-lg-9 " style="border: 1px solid #ccc;padding: 10px 15px;">
+                        <div class="row">
+
+                            <div class="clearfix"></div>
+                            <div class="clearfix"></div>
+
+                            <div class="col-lg-6 ">
+                                <div class="row">
+                                    <label for="p_type" class="col-4">Name</label>
+                                    <div class="col-8">
+                                        <input class="form-control form-control-sm" type="text" placeholder="" value="" name="name" id="name">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 ">
+                                <div class="row">
+                                    <label for="p_type" class="col-4">Scheme</label>
+                                    <div class="col-8">
+                                        <input class="form-control form-control-sm" type="text" placeholder="" value="" name="scheme" id="scheme">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="clearfix"></div>
+                            <div class="clearfix"></div>
+                             <div class="col-lg-6 ">
+                                <div class="row">
+                                    <label for="p_type" class="col-4">Claim No.</label>
+                                    <div class="col-8">
+                                        <input class="form-control form-control-sm" type="text" placeholder="" value="" name="claim_no" id="claim_no">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 ">
+                                <div class="row">
+                                    <label for="p_type" class="col-4">Staff Credit</label>
+                                    <div class="col-8">
+                                        <input class="form-control form-control-sm" type="text" placeholder="" value="" name="staff_credit" id="staff_credit">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                    <div class="clearfix"></div>
+                    <div class="clearfix"></div>
+                </fieldset>-->
+                <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
+                    <ngb-panel >
+                        <ng-template ngbPanelTitle>
+                          <span ><b>Other Information</b></span>
+                        </ng-template>
+                        <ng-template ngbPanelContent>
+                            <div class="form-group row">
+                                <div class="col-lg-8">
+                                    <div class="row">
+                                        <label for="p_type" class="col-2">Address</label>
+                                        <div class="col-10">
+                                            <input class="form-control form-control-sm" type="text" value="" name="address" id="address">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 ">
+                                    <div class="row">
+                                        <label for="p_type" class="col-4">PO Box No.</label>
+                                        <div class="col-8">
+                                            <input class="form-control form-control-sm" type="text" value="" name="po_box" id="po_box">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="clearfix"></div>
+                                <div class="clearfix"></div>
+
+                                <div class="col-lg-4">
+                                    <div class="row">
+                                        <label for="p_type" class="col-4">Country</label>
+                                        <div class="col-8">
+                                            <select class="form-control form-control-sm custom-select custom-select-sm"  name="country" id="country">
+                                                <option  value="Country 1">
+                                                    Country 1
+                                                </option>
+                                                <option value="Country 2" >
+                                                    Country 2
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-4 ">
+                                    <div class="row">
+                                        <label for="p_type" class="col-4">Nationality</label>
+                                        <div class="col-8">
+                                            <input class="form-control form-control-sm" type="text" value="" name="nationality" id="nationality">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 ">
+                                    <div class="row">
+                                        <label for="p_type" class="col-4">National Id</label>
+                                        <div class="col-8">
+                                            <input class="form-control form-control-sm" type="text" value="" name="national_id" id="national_id">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="clearfix"></div>
+                                <div class="clearfix"></div>
+
+                                <div class="col-lg-4">
+                                    <div class="row">
+                                        <label for="p_type" class="col-4">Emirates</label>
+                                        <div class="col-8">
+                                             <input class="form-control form-control-sm" type="text" value="" name="emirates" id="emirates">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 ">
+                                    <div class="row">
+                                        <label for="p_type" class="col-4">Res No.</label>
+                                        <div class="col-8">
+                                            <input class="form-control form-control-sm" type="text" value="" name="res_no" id="res_no">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 ">
+                                    <div class="row">
+                                        <label for="p_type" class="col-4">City</label>
+                                        <div class="col-8">
+                                            <input class="form-control form-control-sm" type="text" value="" name="city" id="city">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="clearfix"></div>
+                                <div class="clearfix"></div>
+
+
+                                <div class="col-lg-4">
+                                    <div class="row">
+                                        <label for="p_type" class="col-4">Service</label>
+                                        <div class="col-8">
+                                             <input class="form-control form-control-sm" type="text" value="" name="service" id="service">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 ">
+                                    <div class="row">
+                                        <label for="p_type" class="col-4">Visa Status</label>
+                                        <div class="col-8">
+                                            <input class="form-control form-control-sm" type="text" value="" name="visa_stat" id="visa_stat">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 ">
+                                    <div class="row">
+                                        <label for="p_type" class="col-4">Fax</label>
+                                        <div class="col-8">
+                                            <input class="form-control form-control-sm" type="text" value="" name="fax" id="fax">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="clearfix"></div>
+                                <div class="clearfix"></div>
+
+                                <div class="col-lg-4 ">
+                                    <div class="row">
+                                        <label for="p_type" class="col-4">Source Of Info</label>
+                                        <div class="col-8">
+                                            <select class="form-control form-control-sm custom-select custom-select-sm"  name="source_of_info" id="source_of_info">
+                                                <option  value="Source 1">
+                                                    Source 1
+                                                </option>
+                                                <option value="Source 2" >
+                                                    Source 2
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="clearfix"></div>
+                                <div class="clearfix"></div>
+
+                            </div>
+                        </ng-template>
+                    </ngb-panel>
+                    <ngb-panel >
+                        <ng-template ngbPanelTitle>
+                          <span ><b>Insurance Details</b></span>
+                        </ng-template>
+                        <ng-template ngbPanelContent>
+                            <div class="form-group row">
+                                <div class="col-lg-3 ">
+                                    <div class="row">
+                                        <label class="radio-inline col-lg-6">
+                                            <input type="radio" name="is_insurance" id="er" value="0" checked="">&nbsp;&nbsp;&nbsp;ER
+                                        </label>
+                                        <label class="radio-inline  col-lg-6">
+                                            <input type="radio" name="is_insurance" id="insurance" value="1">&nbsp;&nbsp;&nbsp;Insurance
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-9 " style="border: 1px solid #ccc;padding: 10px 15px;">
+                                    <div class="row">
+
+                                        <div class="clearfix"></div>
+                                        <div class="clearfix"></div>
+
+                                        <div class="col-lg-6 ">
+                                            <div class="row">
+                                                <label for="p_type" class="col-4">Name</label>
+                                                <div class="col-8">
+                                                    <input class="form-control form-control-sm" type="text" placeholder="" value="" name="name" id="name">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 ">
+                                            <div class="row">
+                                                <label for="p_type" class="col-4">Scheme</label>
+                                                <div class="col-8">
+                                                    <input class="form-control form-control-sm" type="text" placeholder="" value="" name="scheme" id="scheme">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="clearfix"></div>
+                                        <div class="clearfix"></div>
+                                         <div class="col-lg-6 ">
+                                            <div class="row">
+                                                <label for="p_type" class="col-4">Claim No.</label>
+                                                <div class="col-8">
+                                                    <input class="form-control form-control-sm" type="text" placeholder="" value="" name="claim_no" id="claim_no">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 ">
+                                            <div class="row">
+                                                <label for="p_type" class="col-4">Staff Credit</label>
+                                                <div class="col-8">
+                                                    <input class="form-control form-control-sm" type="text" placeholder="" value="" name="staff_credit" id="staff_credit">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+
+                                <div class="clearfix"></div>
+                                <div class="clearfix"></div>
+                            </div>
+                        </ng-template>
+                    </ngb-panel>
+                    <ngb-panel >
+                        <ng-template ngbPanelTitle>
+                          <span ><b>Encounter Details</b></span>
+                        </ng-template>
+                        <ng-template ngbPanelContent>
+                            <div class="form-group row">
+                                <div class="col-lg-5">
+                                    <div class="row">
+                                      <label for="p_number" class="col-4">Encounter Type</label>
+                                      <div class="col-8">
+                                        <select class="form-control form-control-sm custom-select custom-select-sm" placeholder="Type" name="ec_type" id="ec_type">
+                                            <option  value="Type 1">
+                                                Type 1
+                                            </option>
+                                            <option value="Type 2" >
+                                                Type 2
+                                            </option>
+                                        </select>
+                                      </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-5">
+                                    <div class="row">
+                                      <label for="date" class="col-4">Encounter Start Type</label>
+                                      <div class="col-8">
+                                        <select class="form-control form-control-sm custom-select custom-select-sm" placeholder="Type" name="ec_start_type" id="ec_start_type">
+                                            <option  value="Type 1">
+                                                Type 1
+                                            </option>
+                                            <option value="Type 2" >
+                                                Type 2
+                                            </option>
+                                        </select>
+                                      </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class=" row">
+                                      <label class="col-md-12">
+                                        <input type="checkbox" value=""> Tax Required
+                                    </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ngb-panel>
+                    <ngb-panel >
+                        <ng-template ngbPanelTitle>
+                          <span ><b>Consultation</b></span>
+                        </ng-template>
+                        <ng-template ngbPanelContent>
+                            <div class="form-group row">
+                                <div class="col-lg-8">
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="row">
+                                              <label for="p_number" class="col-4">Payment Type</label>
+                                              <div class="col-8">
+                                                <select class="form-control form-control-sm custom-select custom-select-sm" placeholder="Type" name="type" id="type">
+                                                    <option  value="Type 1">
+                                                        Type 1
+                                                    </option>
+                                                    <option value="Type 2" >
+                                                        Type 2
+                                                    </option>
+                                                </select>
+                                              </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <div class="row">
+                                              <label for="p_number" class="col-6">Reg.&nbsp;Fee</label>
+                                              <div class="col-6">
+                                                 <input class="form-control form-control-sm" type="number" placeholder="" value="" name="reg_fee" id="reg_fee">
+                                              </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <div class="row">
+                                              <label for="p_number" class="col-4">MLC</label>
+                                              <div class="col-8">
+                                                 <input class="form-control form-control-sm" type="number" placeholder="" value="" name="mlc" id="mlc">
+                                              </div>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                        <div class="clearfix"></div>
+                                        <div class="col-lg-6">
+                                            <div class="row">
+                                              <label for="p_number" class="col-4">Customer Name</label>
+                                              <div class="col-8">
+                                                 <input class="form-control form-control-sm" type="text" placeholder="" value="" name="c_name" id="c_name">
+                                              </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="row">
+                                              <label for="p_number" class="col-4">Ref. Doctor</label>
+                                              <div class="col-8">
+                                                 <input class="form-control form-control-sm" type="text" placeholder="" value="" name="ref_doc" id="ref_doc">
+                                              </div>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                        <div class="clearfix"></div>
+                                        <div class="col-lg-6">
+                                            <div class="row">
+                                              <label for="p_number" class="col-4">From</label>
+                                              <div class="col-8">
+                                                 <input class="form-control form-control-sm" type="text" placeholder="" value="" name="from" id="from">
+                                              </div>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                        <div class="clearfix"></div>
+                                        
+                                        
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="row">
+                                              <label for="p_number" class="col-4">Gross Amt.</label>
+                                              <div class="col-8">
+                                                 <input class="form-control form-control-sm" type="text" placeholder="" value="" name="gross_amt" id="gross_amt">
+                                              </div>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                        <div class="col-lg-12">
+                                            <div class="row">
+                                              <label for="p_number" class="col-4">Dis. Amt.</label>
+                                              <div class="col-8">
+                                                 <input class="form-control form-control-sm" type="text" placeholder="" value="" name="dis_amt" id="dis_amt">
+                                              </div>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                        <div class="col-lg-12">
+                                            <div class="row">
+                                              <label for="p_number" class="col-4">Tax Amt.</label>
+                                              <div class="col-8">
+                                                 <input class="form-control form-control-sm" type="text" placeholder="" value="" name="tax_amt" id="tax_amt">
+                                              </div>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                        <div class="col-lg-12">
+                                            <div class="row">
+                                              <label for="p_number" class="col-4">Net Amt.</label>
+                                              <div class="col-8">
+                                                 <input class="form-control form-control-sm" type="text" placeholder="" value="" name="net_amt" id="net_amt">
+                                              </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="card-body table-responsive">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                            <tr>
+                                                <th style="width:20%;">Doctor</th>
+                                                <th style="width:20%;">Session</th>
+                                                <th>Time</th>
+                                                <th>Consult</th>
+                                                <th>Adv. Fee</th>
+                                                <th>Special Fee</th>
+                                                <th>Tax</th>
+                                                <th>Tax Amount</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <th scope="row">
+                                                    <input class="form-control form-control-sm" type="text" placeholder="" value="" name="doctor[]" id="doctor">
+                                                </th>
+                                                <td>
+                                                    <input class="form-control form-control-sm" type="text" placeholder="" value="" name="session[]" id="session">
+                                                </td>
+                                                <td>
+                                                    <input class="form-control form-control-sm" type="number" placeholder="" value="" name="time" id="time">
+                                                </td>
+                                                <td>
+                                                    <input class="form-control form-control-sm" type="text" placeholder="" value="" name="consult[]" id="consult">
+                                                </td>
+                                                <td>
+                                                    <input class="form-control form-control-sm" type="number" placeholder="" value="" name="adv_fee[]" id="adv_fee">
+                                                </td>
+                                                <td>
+                                                    <input class="form-control form-control-sm" type="number" placeholder="" value="" name="special_fee[]" id="special_fee">
+                                                </td>
+                                                <td>
+                                                    <input class="form-control form-control-sm" type="number" placeholder="" value="" name="tax_rate[]" id="tax_rate">
+                                                </td>
+                                                <td>
+                                                    <input class="form-control form-control-sm" type="number" placeholder="" value="" name="tax-amt[]" id="tax-amt">
+                                                </td>
+
+                                            </tr>
+                                            
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ngb-panel>
+                    <ngb-panel >
+                        <ng-template ngbPanelTitle>
+                          <span ><b>Personal</b></span>
+                        </ng-template>
+                        <ng-template ngbPanelContent>
+                            <div class="form-group row">
+                            </div>
+                        </ng-template>
+                    </ngb-panel>
+                    <ngb-panel >
+                        <ng-template ngbPanelTitle>
+                          <span ><b>Foreigner</b></span>
+                        </ng-template>
+                        <ng-template ngbPanelContent>
+                            <div class="form-group row">
+                            </div>
+                        </ng-template>
+                    </ngb-panel>
+                    <ngb-panel >
+                        <ng-template ngbPanelTitle>
+                          <span ><b>Insurance</b></span>
+                        </ng-template>
+                        <ng-template ngbPanelContent>
+                            <div class="form-group row">
+                            </div>
+                        </ng-template>
+                    </ngb-panel>
+                    <ngb-panel >
+                        <ng-template ngbPanelTitle>
+                          <span ><b>Staff details</b></span>
+                        </ng-template>
+                        <ng-template ngbPanelContent>
+                            <div class="form-group row">
+                            </div>
+                        </ng-template>
+                    </ngb-panel>
+                </ngb-accordion>
+                <!--<fieldset class="form-group row">
+                    <div class="row col-lg-12">
+                        <div class="col-lg-5">
+                            <div class="row">
+                              <label for="p_number" class="col-4">Encounter Type</label>
+                              <div class="col-8">
+                                <select class="form-control form-control-sm custom-select custom-select-sm" placeholder="Type" name="ec_type" id="ec_type">
+                                    <option  value="Type 1">
+                                        Type 1
+                                    </option>
+                                    <option value="Type 2" >
+                                        Type 2
+                                    </option>
+                                </select>
+                              </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-5">
+                            <div class="row">
+                              <label for="date" class="col-4">Encounter Start Type</label>
+                              <div class="col-8">
+                                <select class="form-control form-control-sm custom-select custom-select-sm" placeholder="Type" name="ec_start_type" id="ec_start_type">
+                                    <option  value="Type 1">
+                                        Type 1
+                                    </option>
+                                    <option value="Type 2" >
+                                        Type 2
+                                    </option>
+                                </select>
+                              </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class=" row">
+                              <label class="col-md-12">
+                                <input type="checkbox" value=""> Tax Required
+                            </label>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+            
+                <div class="form-group row " style="padding: 20px;">
+                    <ngb-tabset style="width: 100%;">
+                      <ngb-tab title="Consultation">
+                        <ng-template ngbTabContent>
+                       
+                            <fieldset class="form-group row">
+                                <div class="row col-lg-12">
+                                    <div class="col-lg-8">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="row">
+                                                  <label for="p_number" class="col-4">Payment Type</label>
+                                                  <div class="col-8">
+                                                    <select class="form-control form-control-sm custom-select custom-select-sm" placeholder="Type" name="type" id="type">
+                                                        <option  value="Type 1">
+                                                            Type 1
+                                                        </option>
+                                                        <option value="Type 2" >
+                                                            Type 2
+                                                        </option>
+                                                    </select>
+                                                  </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-3">
+                                                <div class="row">
+                                                  <label for="p_number" class="col-6">Reg.&nbsp;Fee</label>
+                                                  <div class="col-6">
+                                                     <input class="form-control form-control-sm" type="number" placeholder="" value="" name="reg_fee" id="reg_fee">
+                                                  </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-3">
+                                                <div class="row">
+                                                  <label for="p_number" class="col-4">MLC</label>
+                                                  <div class="col-8">
+                                                     <input class="form-control form-control-sm" type="number" placeholder="" value="" name="mlc" id="mlc">
+                                                  </div>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                            <div class="clearfix"></div>
+                                            <div class="col-lg-6">
+                                                <div class="row">
+                                                  <label for="p_number" class="col-4">Customer Name</label>
+                                                  <div class="col-8">
+                                                     <input class="form-control form-control-sm" type="text" placeholder="" value="" name="c_name" id="c_name">
+                                                  </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="row">
+                                                  <label for="p_number" class="col-4">Ref. Doctor</label>
+                                                  <div class="col-8">
+                                                     <input class="form-control form-control-sm" type="text" placeholder="" value="" name="ref_doc" id="ref_doc">
+                                                  </div>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                            <div class="clearfix"></div>
+                                            <div class="col-lg-6">
+                                                <div class="row">
+                                                  <label for="p_number" class="col-4">From</label>
+                                                  <div class="col-8">
+                                                     <input class="form-control form-control-sm" type="text" placeholder="" value="" name="from" id="from">
+                                                  </div>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                            <div class="clearfix"></div>
+                                            
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="row">
+                                                  <label for="p_number" class="col-4">Gross Amt.</label>
+                                                  <div class="col-8">
+                                                     <input class="form-control form-control-sm" type="text" placeholder="" value="" name="gross_amt" id="gross_amt">
+                                                  </div>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                            <div class="col-lg-12">
+                                                <div class="row">
+                                                  <label for="p_number" class="col-4">Dis. Amt.</label>
+                                                  <div class="col-8">
+                                                     <input class="form-control form-control-sm" type="text" placeholder="" value="" name="dis_amt" id="dis_amt">
+                                                  </div>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                            <div class="col-lg-12">
+                                                <div class="row">
+                                                  <label for="p_number" class="col-4">Tax Amt.</label>
+                                                  <div class="col-8">
+                                                     <input class="form-control form-control-sm" type="text" placeholder="" value="" name="tax_amt" id="tax_amt">
+                                                  </div>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                            <div class="col-lg-12">
+                                                <div class="row">
+                                                  <label for="p_number" class="col-4">Net Amt.</label>
+                                                  <div class="col-8">
+                                                     <input class="form-control form-control-sm" type="text" placeholder="" value="" name="net_amt" id="net_amt">
+                                                  </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="card-body table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                <tr>
+                                                    <th style="width:20%;">Doctor</th>
+                                                    <th style="width:20%;">Session</th>
+                                                    <th>Time</th>
+                                                    <th>Consult</th>
+                                                    <th>Adv. Fee</th>
+                                                    <th>Special Fee</th>
+                                                    <th>Tax</th>
+                                                    <th>Tax Amount</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr>
+                                                    <th scope="row">
+                                                        <input class="form-control form-control-sm" type="text" placeholder="" value="" name="doctor[]" id="doctor">
+                                                    </th>
+                                                    <td>
+                                                        <input class="form-control form-control-sm" type="text" placeholder="" value="" name="session[]" id="session">
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control form-control-sm" type="number" placeholder="" value="" name="time" id="time">
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control form-control-sm" type="text" placeholder="" value="" name="consult[]" id="consult">
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control form-control-sm" type="number" placeholder="" value="" name="adv_fee[]" id="adv_fee">
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control form-control-sm" type="number" placeholder="" value="" name="special_fee[]" id="special_fee">
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control form-control-sm" type="number" placeholder="" value="" name="tax_rate[]" id="tax_rate">
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control form-control-sm" type="number" placeholder="" value="" name="tax-amt[]" id="tax-amt">
+                                                    </td>
+
+                                                </tr>
+                                                
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab title="Personal">
+                        <ng-template ngbTabContent>
+                            <fieldset class="form-group row">
+                                <div class="row col-lg-12">
+                                    <div class="col-lg-8">
+                                        <div class="row">
+                                            <label for="p_type" class="col-2">Address</label>
+                                            <div class="col-10">
+                                                <input class="form-control form-control-sm" type="text" value="" name="address" id="address">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 ">
+                                        <div class="row">
+                                            <label for="p_type" class="col-4">PO Box No.</label>
+                                            <div class="col-8">
+                                                <input class="form-control form-control-sm" type="text" value="" name="po_box" id="po_box">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="clearfix"></div>
+                                    <div class="clearfix"></div>
+
+                                    <div class="col-lg-4">
+                                        <div class="row">
+                                            <label for="p_type" class="col-4">Country</label>
+                                            <div class="col-8">
+                                                <select class="form-control form-control-sm custom-select custom-select-sm"  name="country" id="country">
+                                                    <option  value="Country 1">
+                                                        Country 1
+                                                    </option>
+                                                    <option value="Country 2" >
+                                                        Country 2
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4 ">
+                                        <div class="row">
+                                            <label for="p_type" class="col-4">Nationality</label>
+                                            <div class="col-8">
+                                                <input class="form-control form-control-sm" type="text" value="" name="nationality" id="nationality">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 ">
+                                        <div class="row">
+                                            <label for="p_type" class="col-4">National Id</label>
+                                            <div class="col-8">
+                                                <input class="form-control form-control-sm" type="text" value="" name="national_id" id="national_id">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="clearfix"></div>
+                                    <div class="clearfix"></div>
+
+                                    <div class="col-lg-4">
+                                        <div class="row">
+                                            <label for="p_type" class="col-4">Emirates</label>
+                                            <div class="col-8">
+                                                 <input class="form-control form-control-sm" type="text" value="" name="emirates" id="emirates">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 ">
+                                        <div class="row">
+                                            <label for="p_type" class="col-4">Res No.</label>
+                                            <div class="col-8">
+                                                <input class="form-control form-control-sm" type="text" value="" name="res_no" id="res_no">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 ">
+                                        <div class="row">
+                                            <label for="p_type" class="col-4">City</label>
+                                            <div class="col-8">
+                                                <input class="form-control form-control-sm" type="text" value="" name="city" id="city">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="clearfix"></div>
+                                    <div class="clearfix"></div>
+
+
+                                    <div class="col-lg-4">
+                                        <div class="row">
+                                            <label for="p_type" class="col-4">Service#</label>
+                                            <div class="col-8">
+                                                 <input class="form-control form-control-sm" type="text" value="" name="service" id="service">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 ">
+                                        <div class="row">
+                                            <label for="p_type" class="col-4">Visa Status</label>
+                                            <div class="col-8">
+                                                <input class="form-control form-control-sm" type="text" value="" name="visa_stat" id="visa_stat">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 ">
+                                        <div class="row">
+                                            <label for="p_type" class="col-4">Fax</label>
+                                            <div class="col-8">
+                                                <input class="form-control form-control-sm" type="text" value="" name="fax" id="fax">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="clearfix"></div>
+                                    <div class="clearfix"></div>
+
+                                    <div class="col-lg-4 ">
+                                        <div class="row">
+                                            <label for="p_type" class="col-4">Source Of Info</label>
+                                            <div class="col-8">
+                                                <select class="form-control form-control-sm custom-select custom-select-sm"  name="source_of_info" id="source_of_info">
+                                                    <option  value="Source 1">
+                                                        Source 1
+                                                    </option>
+                                                    <option value="Source 2" >
+                                                        Source 2
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="clearfix"></div>
+                                    <div class="clearfix"></div>
+
+                                </div>
+                            </fieldset>
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab title="Foreigner">
+                        <ng-template ngbTabContent>
+                            <fieldset class="form-group row">
+                                <div class="row col-lg-12">
+                                    <div class="col-lg-8">
+                                        <div class="row">
+                                            <label for="p_type" class="col-2">Address</label>
+                                            <div class="col-10">
+                                                <input class="form-control form-control-sm" type="text" value="" name="address" id="address">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 ">
+                                        <div class="row">
+                                            <label for="p_type" class="col-4">PO Box No.</label>
+                                            <div class="col-8">
+                                                <input class="form-control form-control-sm" type="text" value="" name="po_box" id="po_box">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="clearfix"></div>
+                                    <div class="clearfix"></div>
+
+                                    <div class="col-lg-4">
+                                        <div class="row">
+                                            <label for="p_type" class="col-4">Country</label>
+                                            <div class="col-8">
+                                                <select class="form-control form-control-sm custom-select custom-select-sm"  name="country" id="country">
+                                                    <option  value="Country 1">
+                                                        Country 1
+                                                    </option>
+                                                    <option value="Country 2" >
+                                                        Country 2
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4 ">
+                                        <div class="row">
+                                            <label for="p_type" class="col-4">Nationality</label>
+                                            <div class="col-8">
+                                                <input class="form-control form-control-sm" type="text" value="" name="nationality" id="nationality">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 ">
+                                        <div class="row">
+                                            <label for="p_type" class="col-4">National Id</label>
+                                            <div class="col-8">
+                                                <input class="form-control form-control-sm" type="text" value="" name="national_id" id="national_id">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="clearfix"></div>
+                                    <div class="clearfix"></div>
+
+                                    <div class="col-lg-4">
+                                        <div class="row">
+                                            <label for="p_type" class="col-4">Emirates</label>
+                                            <div class="col-8">
+                                                 <input class="form-control form-control-sm" type="text" value="" name="emirates" id="emirates">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 ">
+                                        <div class="row">
+                                            <label for="p_type" class="col-4">Res No.</label>
+                                            <div class="col-8">
+                                                <input class="form-control form-control-sm" type="text" value="" name="res_no" id="res_no">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 ">
+                                        <div class="row">
+                                            <label for="p_type" class="col-4">City</label>
+                                            <div class="col-8">
+                                                <input class="form-control form-control-sm" type="text" value="" name="city" id="city">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="clearfix"></div>
+                                    <div class="clearfix"></div>
+
+
+                                    <div class="col-lg-4">
+                                        <div class="row">
+                                            <label for="p_type" class="col-4">Service#</label>
+                                            <div class="col-8">
+                                                 <input class="form-control form-control-sm" type="text" value="" name="service" id="service">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 ">
+                                        <div class="row">
+                                            <label for="p_type" class="col-4">Visa Status</label>
+                                            <div class="col-8">
+                                                <input class="form-control form-control-sm" type="text" value="" name="visa_stat" id="visa_stat">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 ">
+                                        <div class="row">
+                                            <label for="p_type" class="col-4">Fax</label>
+                                            <div class="col-8">
+                                                <input class="form-control form-control-sm" type="text" value="" name="fax" id="fax">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="clearfix"></div>
+                                    <div class="clearfix"></div>
+
+                                    <div class="col-lg-4 ">
+                                        <div class="row">
+                                            <label for="p_type" class="col-4">Source Of Info</label>
+                                            <div class="col-8">
+                                                <select class="form-control form-control-sm custom-select custom-select-sm"  name="source_of_info" id="source_of_info">
+                                                    <option  value="Source 1">
+                                                        Source 1
+                                                    </option>
+                                                    <option value="Source 2" >
+                                                        Source 2
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="clearfix"></div>
+                                    <div class="clearfix"></div>
+
+                                </div>
+                            </fieldset>
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab title="Insurance">
+                        <ng-template ngbTabContent>
+                            <fieldset class="form-group row">
+                                <div class="row col-lg-12">
+                                    <div class="col-lg-8">
+                                        <div class="row">
+                                            <label for="p_type" class="col-2">Address</label>
+                                            <div class="col-10">
+                                                <input class="form-control form-control-sm" type="text" value="" name="address" id="address">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 ">
+                                        <div class="row">
+                                            <label for="p_type" class="col-4">PO Box No.</label>
+                                            <div class="col-8">
+                                                <input class="form-control form-control-sm" type="text" value="" name="po_box" id="po_box">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="clearfix"></div>
+                                    <div class="clearfix"></div>
+
+                                    <div class="col-lg-4">
+                                        <div class="row">
+                                            <label for="p_type" class="col-4">Country</label>
+                                            <div class="col-8">
+                                                <select class="form-control form-control-sm custom-select custom-select-sm"  name="country" id="country">
+                                                    <option  value="Country 1">
+                                                        Country 1
+                                                    </option>
+                                                    <option value="Country 2" >
+                                                        Country 2
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4 ">
+                                        <div class="row">
+                                            <label for="p_type" class="col-4">Nationality</label>
+                                            <div class="col-8">
+                                                <input class="form-control form-control-sm" type="text" value="" name="nationality" id="nationality">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 ">
+                                        <div class="row">
+                                            <label for="p_type" class="col-4">National Id</label>
+                                            <div class="col-8">
+                                                <input class="form-control form-control-sm" type="text" value="" name="national_id" id="national_id">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="clearfix"></div>
+                                    <div class="clearfix"></div>
+
+                                    <div class="col-lg-4">
+                                        <div class="row">
+                                            <label for="p_type" class="col-4">Emirates</label>
+                                            <div class="col-8">
+                                                 <input class="form-control form-control-sm" type="text" value="" name="emirates" id="emirates">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 ">
+                                        <div class="row">
+                                            <label for="p_type" class="col-4">Res No.</label>
+                                            <div class="col-8">
+                                                <input class="form-control form-control-sm" type="text" value="" name="res_no" id="res_no">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 ">
+                                        <div class="row">
+                                            <label for="p_type" class="col-4">City</label>
+                                            <div class="col-8">
+                                                <input class="form-control form-control-sm" type="text" value="" name="city" id="city">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="clearfix"></div>
+                                    <div class="clearfix"></div>
+
+
+                                    <div class="col-lg-4">
+                                        <div class="row">
+                                            <label for="p_type" class="col-4">Service#</label>
+                                            <div class="col-8">
+                                                 <input class="form-control form-control-sm" type="text" value="" name="service" id="service">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 ">
+                                        <div class="row">
+                                            <label for="p_type" class="col-4">Visa Status</label>
+                                            <div class="col-8">
+                                                <input class="form-control form-control-sm" type="text" value="" name="visa_stat" id="visa_stat">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 ">
+                                        <div class="row">
+                                            <label for="p_type" class="col-4">Fax</label>
+                                            <div class="col-8">
+                                                <input class="form-control form-control-sm" type="text" value="" name="fax" id="fax">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="clearfix"></div>
+                                    <div class="clearfix"></div>
+
+                                    <div class="col-lg-4 ">
+                                        <div class="row">
+                                            <label for="p_type" class="col-4">Source Of Info</label>
+                                            <div class="col-8">
+                                                <select class="form-control form-control-sm custom-select custom-select-sm"  name="source_of_info" id="source_of_info">
+                                                    <option  value="Source 1">
+                                                        Source 1
+                                                    </option>
+                                                    <option value="Source 2" >
+                                                        Source 2
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="clearfix"></div>
+                                    <div class="clearfix"></div>
+
+                                </div>
+                            </fieldset>
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab title="Staff Details" [disabled]="true">
+                        <ng-template ngbTabContent>
+                          
+                        </ng-template>
+                      </ngb-tab>
+                      
+                    </ngb-tabset>
+                </div>
+
+                -->
+
+
+
+
+
+
+
+                <!-- Other Form Components Details Commented
+                <div class="form-group row">
+                  <label for="example-search-input" class="col-2 col-form-label">Search</label>
+                  <div class="col-10">
+                    <input class="form-control" type="search" value="How do I shoot web" id="example-search-input">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="example-email-input" class="col-2 col-form-label">Email</label>
+                  <div class="col-10">
+                    <input class="form-control" type="email" value="bootstrap@example.com" id="example-email-input">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="example-url-input" class="col-2 col-form-label">URL</label>
+                  <div class="col-10">
+                    <input class="form-control" type="url" value="https://getbootstrap.com" id="example-url-input">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="example-tel-input" class="col-2 col-form-label">Telephone</label>
+                  <div class="col-10">
+                    <input class="form-control" type="tel" value="1-(555)-555-5555" id="example-tel-input">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="example-password-input" class="col-2 col-form-label">Password</label>
+                  <div class="col-10">
+                    <input class="form-control" type="password" value="hunter2" id="example-password-input">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="example-number-input" class="col-2 col-form-label">Number</label>
+                  <div class="col-10">
+                    <input class="form-control" type="number" value="42" id="example-number-input">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="example-datetime-local-input" class="col-2 col-form-label">Date and time</label>
+                  <div class="col-10">
+                    <input class="form-control" type="datetime-local" value="2011-08-19T13:45:00" id="example-datetime-local-input">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="example-date-input" class="col-2 col-form-label">Date</label>
+                  <div class="col-10">
+                    <input class="form-control" type="date" value="2011-08-19" id="example-date-input">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="example-month-input" class="col-2 col-form-label">Month</label>
+                  <div class="col-10">
+                    <input class="form-control" type="month" value="2011-08" id="example-month-input">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="example-week-input" class="col-2 col-form-label">Week</label>
+                  <div class="col-10">
+                    <input class="form-control" type="week" value="2011-W33" id="example-week-input">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="example-time-input" class="col-2 col-form-label">Time</label>
+                  <div class="col-10">
+                    <input class="form-control" type="time" value="13:45:00" id="example-time-input">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="example-color-input" class="col-2 col-form-label">Color</label>
+                  <div class="col-10">
+                    <input class="form-control" type="color" value="#563d7c" id="example-color-input">
+                  </div>
+                </div>
+                <fieldset class="form-group">
+                    <label>Text Input</label>
+                    <input class="form-control">
+                    <p class="help-block">Example block-level help text here.</p>
+                </fieldset>
+
+                <fieldset class="form-group">
+                    <label>Text Input with Placeholder</label>
+                    <input class="form-control" placeholder="Enter text">
+                </fieldset>
+
+                <div class="form-group">
+                    <label>Static Control</label>
+                    <p class="form-control-static">email@example.com</p>
+                </div>
+
+                <fieldset class="form-group">
+                    <label for="exampleInputFile">File input</label>
+                    <input type="file" class="form-control-file" id="exampleInputFile">
+                </fieldset>
+
+                <fieldset class="form-group">
+                    <label>Text area</label>
+                    <textarea class="form-control" rows="3"></textarea>
+                </fieldset>
+
+                <div class="form-group">
+                    <label>Checkboxes</label>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" value=""> Checkbox 1
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" value=""> Checkbox 2
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" value=""> Checkbox 3
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Inline Checkboxes</label>
+                    <label class="checkbox-inline">
+                        <input type="checkbox">1
+                    </label>
+                    <label class="checkbox-inline">
+                        <input type="checkbox">2
+                    </label>
+                    <label class="checkbox-inline">
+                        <input type="checkbox">3
+                    </label>
+                </div>
+
+                <fieldset class="form-group">
+                    <label>Radio Buttons</label>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked=""> Radio 1
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2"> Radio 2
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="optionsRadios" id="optionsRadios3" value="option3"> Radio 3
+                        </label>
+                    </div>
+                </fieldset>
+
+                <fieldset class="form-group">
+                    <label>Inline Radio Buttons</label>
+                    <label class="radio-inline">
+                        <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline1" value="option1" checked="">1
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline2" value="option2">2
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline3" value="option3">3
+                    </label>
+                </fieldset>
+
+                <div class="form-group">
+                    <label>Selects</label>
+                    <select class="form-control">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                    </select>
+                </div>
+
+                <fieldset class="form-group">
+                    <label>Multiple Selects</label>
+                    <select multiple="" class="form-control">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                    </select>
+                </fieldset>
+
+                <button type="submit" class="btn btn-info">Submit Button</button>
+                <button type="reset" class="btn btn-info">Reset Button</button>
+            -->
+            </form>
+
+        </div>
+    </div>
+    <!-- /.row -->
+</div>

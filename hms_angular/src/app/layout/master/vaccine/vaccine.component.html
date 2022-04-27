@@ -1,0 +1,123 @@
+
+<app-page-header [heading]="'Vaccine'" [icon]="'fa fa-eyedropper'"></app-page-header>
+<fieldset class="form-group row" *ngIf="user_rights.ADD == '1'">
+    <legend>New</legend>
+    <div class="row col-lg-12">
+        <div class="form-group col-lg-4" >
+            <label for="p_type">Name</label><span class="text-danger">&nbsp;*</span>
+            <input class="form-control form-control-sm" type="text" [(ngModel)]="vaccineData.vaccine_name">
+        </div>
+        <div class="form-group col-lg-4" >
+            <label for="p_type">Vaccine&nbsp;Age</label><span class="text-danger">&nbsp;*</span>
+            <select [(ngModel)]="vaccineData.vaccine_age" class="form-control form-control-sm custom-select custom-select-sm" name="vaccineData.age">
+                <option value="">Select Vaccine Age</option>
+                <option *ngFor="let age of vaccine_age" value="{{ age.MASTER_DATA_ID }}" >{{ age.DATA }}</option>
+            </select>
+        </div>
+        <div class="form-group col-lg-4" >
+            <label for="p_type">Patient&nbsp;Type</label><span class="text-danger">&nbsp;*</span>
+            <select [(ngModel)]="vaccineData.vaccine_type" class="form-control form-control-sm custom-select custom-select-sm" name="vaccineData.type">
+                <option value="">Select Patient Type</option>
+                <option *ngFor="let type of patient_type" value="{{ type.MASTER_DATA_ID }}" >{{ type.DATA }}</option>
+            </select>
+        </div>
+        <div class="form-group col-lg-4" >
+            <label for="p_type">Price Per Item</label><span class="text-danger">&nbsp;*</span>
+            <input [(ngModel)]="vaccineData.vaccine_price_of_one_item" (keydown)="validateNumber($event)"  class="form-control form-control-sm" type="text" name="vaccine_price">
+        </div>
+        <div class="form-group col-lg-4" >
+            <label for="p_type">Order</label><span class="text-danger">&nbsp;*</span>
+            <input [(ngModel)]="vaccineData.vaccine_order"  class="form-control form-control-sm" type="text" >
+        </div>
+        <div class="form-group col-lg-4" >
+            <br>
+            <input type="checkbox"  [checked]="vaccineData.vaccine_optional == 1" (click)="checkVaccineOptional()">
+            <label class="form-check-label con">&nbsp;&nbsp;&nbsp;Optional&nbsp;Vaccines </label> 
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <div class="form-group col-lg-7 pull-right">
+        <button *ngIf="user_rights.ADD == '1'"  class="btn btn-primary btn-sm ng-star-inserted" type="button" (click)="saveVaccine();" style="width:60px;height:30px;">&nbsp;Save&nbsp;</button>&nbsp;&nbsp;&nbsp;
+        <button *ngIf="user_rights.ADD == '1'"  (click)="clearForm();"  class="btn btn-danger btn-sm ng-star-inserted" type="button" style="width:60px;height:30px;">&nbsp;Clear&nbsp; </button>
+    </div>
+    <div class="clearfix"></div>
+</fieldset>
+<fieldset class="form-group row">
+    <legend>List</legend>
+    <div class="col-lg-12 ">
+        <table class="col-lg-12 borderless">
+          <tr> 
+            <td width="40%" class="text-left">
+                <div class="input-group mb-3 pull-left">
+                    <input id="typeahead-http" style="height:31px" type="text" class="form-control" 
+                    [(ngModel)]="vaccineData.search_vaccine" 
+                    (keyup)="getSearchlist($event)" 
+                    (keypress)="getSearchlist($event)"  
+                    (paste)= "getSearchlist($event)"  
+                    name="search_text" placeholder="Vaccine Name ..."/>
+
+                    <div class="input-group-append">
+                        <button style="height:31px;padding:7px" class="input-group-text" (click)="clear_search()">
+                            <i  *ngIf="vaccineData.search_vaccine != ''"  class="fa fa-close"></i>
+                            <i *ngIf="vaccineData.search_vaccine == ''" class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </div>  
+              <div class="invalid-feedback">Sorry, suggestions could not be loaded.</div>
+            </td>
+            <td width="50%" class="text-right" style="vertical-align: top;"></td>
+          </tr>
+        </table>
+    </div>
+    <div class="clearfix"></div>
+    <div class="col-lg-12 " >
+        <table class="table tbl table-hover table-striped table-bordered">
+            <thead>
+            <tr>
+                <th width="2%" class="text-center">#</th>
+                <th>Vaccine Name</th>
+                <th class="text-center">Vaccine Age</th>
+                <th class="text-center">Patient Type</th>
+                <th  width="10%" class="text-center">Price Per Item</th>
+                <th class="text-center">Order</th>
+                <th  width="10%"class="text-center">Action</th>
+            </tr>
+            <tr *ngIf="(vaccine_list | json) == '[]'">
+                <td colspan="8" class="text-center">No details available</td>
+            </tr>
+            </thead>
+            <tbody>
+                <tr  *ngFor="let vaccine of vaccine_list;let i=index">
+                <td class="text-center">{{ start + i + 1}}</td>
+                <td>{{ vaccine.VACCINE_NAME}}
+                    <ng-container *ngIf="vaccine.VACCINE_OPTIONAL == 1">
+                        <span class="text-danger">&nbsp;&nbsp;( Optional )</span>
+                    </ng-container>
+                </td>
+                <td class="text-center">{{ vaccine.VACCINE_AGE }}</td>
+                <td class="text-center">{{ vaccine.PATIENT_TYPE_NAME }}</td>
+                <td class="text-center">{{ vaccine.PRICE_OF_ONE_ITEM }}</td>
+                <td class="text-center">{{ vaccine.LIST_ORDER }}</td>
+                <td class="text-center">
+                    <button *ngIf="user_rights.EDIT=='1'" (click)="editVaccine(vaccine);" alt="Edit" title="Edit" class="btn btn-sm btn-default"><i class="fa fa-edit"></i></button>
+                </td>
+                </tr>
+            </tbody>
+        </table>
+        <ngb-pagination 
+            [disabled]="vaccineData.search_vaccine !== ''"
+            class="d-flex justify-content-center"
+            [(page)]="page"
+            [pageSize]="p"
+            [collectionSize]="collection"
+            [directionLinks]="true"
+            [boundaryLinks]="true"
+            [(page)]="page" aria-label="Default pagination"
+            [maxSize]="3"
+            (pageChange)="getVaccinelist(page-1)">
+        </ngb-pagination>
+        <pre>Current page : {{page}}</pre>
+        <pre>Total records : {{collection}}</pre>
+    </div>  
+</fieldset>

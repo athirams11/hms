@@ -16,15 +16,16 @@
   </div> -->
   <ng-container *ngFor="let moduleGroup of menulist">
     <ng-container *ngIf="moduleGroup.MODULE_GROUP_ID != setting.DASHBOARD_MODULE_GROUP_ID">
-      <div class="col-2" *ngFor="let module of moduleGroup.sub_menu">
+      <div class="col-2" style="text-align: center" *ngFor="let module of moduleGroup.sub_menu">
         <a href="javascript:void(0)" [routerLink]="[moduleGroup.MODULE_GROUP_PATH + module.MODULE_PATH]"
           class="router-link-active ex1">
           <span>
-            <label style="color: #1d578e">{{module.MODULE_NAME}}</label>
-            <div style="text-align: center">
-              <i class="{{ module.MODULE_ICON }}" style="font-size: 55px;padding-top:10px"></i>
+            <div>
+              <i class="{{ module.MODULE_ICON }}"
+                style="font-size: 55px;padding:50px;text-shadow:3px 6px rgba(195, 226, 243, 0.75)"></i>
             </div>
           </span>
+          <label style="color: #1d578e;text-transform: uppercase">{{module.MODULE_NAME}}</label>
         </a>
       </div>
     </ng-container>

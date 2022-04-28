@@ -4,6 +4,15 @@ $topnav-background-color: #0a73af;
     display: block;
 }
 
+.login-box {
+    padding-top: 30px;
+    padding-bottom: 30px;
+    border: double;
+    border-radius: 27px;
+    border: solid 1px #49aaff;
+    background-color: #99bddc87;
+}
+
 .login-page {
     background-image: url('../../assets/images/Background.jpg');
     position: absolute;

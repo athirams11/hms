@@ -51,17 +51,6 @@
                     <!-- <td class="text-center"><button *ngIf="visit.OP_REGISTRATION_TYPE == 1" class="btn btn-xs btn-link"><i class="fa fa-umbrella"></i></button></td> -->
                     <td>{{ visit.DEPARTMENT_NAME }}</td>
                     <td>{{ visit.MOBILE_NO }} </td>
-                    <td>
-                        <button *ngIf="visit.general == 1" title="General Consent"
-                            (click)="pdfexport(visit,3,visit.PATIENT_NO)" alt="General Consent"
-                            class="btn btn-xs btn-margin  btn-success "><i class="fa fa-file-pdf-o"></i></button>
-                        <button *ngIf="visit.dental == 1" title="Dental Consent" (click)="pdfexport(visit,1,0)"
-                            alt="Dental Consent" class="btn btn-xs btn-margin  btn-warning "><i
-                                class="fa fa-file-pdf-o"></i></button>
-                        <button *ngIf="visit.covid == 1" title="Patient Screening Form - Covid 19"
-                            (click)="pdfexport(visit,2,visit.PATIENT_NO)" alt="Patient Screening Form - Covid 19"
-                            class="btn btn-xs btn-margin  btn-info "><i class="fa fa-file-pdf-o"></i></button>
-                    </td>
                     <td *ngIf="user_rights.EDIT=='1'">
                         {{ visit.ACTION }}
                         <button title="Start Assessment" (click)="startAssesment(visit)" alt="Start Pre-consult"

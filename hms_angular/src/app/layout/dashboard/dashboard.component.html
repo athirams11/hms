@@ -1,6 +1,6 @@
 <div class="row container">
 
-  <div class="col-6">
+  <div class="col-6" *ngIf="!allZero">
     <div style="width:500px">
       <canvas baseChart [data]="pieChartData" [labels]="pieChartLabels" [chartType]="pieChartType"
         [options]="pieChartOptions" [colors]="chartColors">

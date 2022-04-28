@@ -21,33 +21,31 @@ class ReportModel extends CI_Model
 			CONCAT(OP.FIRST_NAME,' ',OP.MIDDLE_NAME,' ',OP.LAST_NAME) AS PATIENT_NAME,
 			DATE_FORMAT(DATE(CONVERT_TZ(B.BILLING_DATE,'+00:00','+05:30')), '%d-%m-%Y') AS INVOICE_DATE, 
 			B.BILLING_INVOICE_NUMBER,
-			D.DOCTORS_NAME,TPA.TPA_NAME,
-			CONCAT(TPA.TPA_ECLAIM_LINK_ID , ' - ', TPA.TPA_NAME) AS TPA,
-			TPA.TPA_ECLAIM_LINK_ID,B.BILLED_AMOUNT,
+			D.DOCTORS_NAME,B.BILLED_AMOUNT,
 			B.PAID_BY_PATIENT,B.PATIENT_DISCOUNT,B.PATIENT_TYPE,	
 			(B.PAID_BY_PATIENT - B.PATIENT_DISCOUNT) AS PATIENT_AMOUNT,
-			B.INSURED_AMOUNT,U.FIRSTNAME,U.LASTNAME,B.PAYMENT_MODE,C.CORPORATE_COMPANY_NAME");
+			B.INSURED_AMOUNT,U.FIRSTNAME,U.LASTNAME,B.PAYMENT_MODE");
 		$this->db->from("BILLING B");
 		$this->db->join("BILLING_DETAILS BD","BD.BILLING_ID = B.BILLING_ID");
 		$this->db->join("OP_REGISTRATION OP","OP.OP_REGISTRATION_ID = B.PATIENT_ID","left");
 		$this->db->join("NURSING_ASSESSMENT N","N.NURSING_ASSESSMENT_ID = B.ASSESSMENT_ID","left");
 		$this->db->join("PATIENT_VISIT_LIST V","V.PATIENT_VISIT_LIST_ID = N.VISIT_ID","left");
 		$this->db->join("DOCTORS D","D.DOCTORS_ID = V.DOCTOR_ID","left");
-		$this->db->join("OP_INS_DETAILS IN","IN.OP_REGISTRATION_ID = B.PATIENT_ID AND IN.OP_INS_DETAILS_ID = B.PATIENT_TYPE_DETAIL_ID AND B.PATIENT_TYPE = 1","left");
+		// $this->db->join("OP_INS_DETAILS IN","IN.OP_REGISTRATION_ID = B.PATIENT_ID AND IN.OP_INS_DETAILS_ID = B.PATIENT_TYPE_DETAIL_ID AND B.PATIENT_TYPE = 1","left");
 		$this->db->join("USERS U","U.USER_SPK = B.CREATED_BY","left");
-		$this->db->join("TPA","TPA.TPA_ID = IN.OP_INS_TPA","left");
-		$this->db->join("OP_CORPORATE_DETAILS OC","OC.OP_REGISTRATION_ID = B.PATIENT_ID AND OC.OP_CORPORATE_DETAILS_ID = B.PATIENT_TYPE_DETAIL_ID AND B.PATIENT_TYPE = 3","left");
-		$this->db->join("CORPORATE_COMPANY C","C.CORPORATE_COMPANY_ID = OC.OP_CORPORATE_COMPANY_ID","left");
+		// $this->db->join("TPA","TPA.TPA_ID = IN.OP_INS_TPA","left");
+		// $this->db->join("OP_CORPORATE_DETAILS OC","OC.OP_REGISTRATION_ID = B.PATIENT_ID AND OC.OP_CORPORATE_DETAILS_ID = B.PATIENT_TYPE_DETAIL_ID AND B.PATIENT_TYPE = 3","left");
+		// $this->db->join("CORPORATE_COMPANY C","C.CORPORATE_COMPANY_ID = OC.OP_CORPORATE_COMPANY_ID","left");
 		$this->db->where("B.GENERATED",1);
 		$this->db->where("B.PAID_BY_PATIENT > 0");
 		$this->db->where("B.BILL_STATUS",1);
 		$this->db->group_by("B.BILLING_ID");
 		
-		if(isset($post_data["tpa_id"]) && $post_data["tpa_id"] > 0)
-		{
-			$this->db->start_cache();	
-			$this->db->where("TPA.TPA_ID",$post_data["tpa_id"]);	
-		}		
+		// if(isset($post_data["tpa_id"]) && $post_data["tpa_id"] > 0)
+		// {
+		// 	$this->db->start_cache();	
+		// 	$this->db->where("TPA.TPA_ID",$post_data["tpa_id"]);	
+		// }		
 		if(isset($post_data["doctor_id"]) && $post_data["doctor_id"] > 0)
 		{
 			$this->db->start_cache();	
@@ -58,32 +56,32 @@ class ReportModel extends CI_Model
 			$this->db->start_cache();	
 			$this->db->where("B.CREATED_BY",$post_data["cashier_id"]);	
 		}	
-		if(isset($post_data["company_id"]) && $post_data["company_id"] > 0)
-		{
-			$this->db->start_cache();	
-			$this->db->where("C.CORPORATE_COMPANY_ID",$post_data["company_id"]);	
-		}	
-		if(isset($post_data["pay_type"]) && $post_data["pay_type"] == 1 && isset($post_data["tpa_id"]) && $post_data["tpa_id"] == 0)
-		{
-			$this->db->start_cache();	
-			$this->db->where("B.PATIENT_TYPE",1);	
-		}
-		if(isset($post_data["pay_type"]) && $post_data["pay_type"] == 2 && isset($post_data["company_id"]) && $post_data["company_id"] == 0)
-		{
-			$this->db->start_cache();	
-			$this->db->where("B.PATIENT_TYPE",3);	
-		}		
+		// if(isset($post_data["company_id"]) && $post_data["company_id"] > 0)
+		// {
+		// 	$this->db->start_cache();	
+		// 	$this->db->where("C.CORPORATE_COMPANY_ID",$post_data["company_id"]);	
+		// }	
+		// if(isset($post_data["pay_type"]) && $post_data["pay_type"] == 1 && isset($post_data["tpa_id"]) && $post_data["tpa_id"] == 0)
+		// {
+		// 	$this->db->start_cache();	
+		// 	$this->db->where("B.PATIENT_TYPE",1);	
+		// }
+		// if(isset($post_data["pay_type"]) && $post_data["pay_type"] == 2 && isset($post_data["company_id"]) && $post_data["company_id"] == 0)
+		// {
+		// 	$this->db->start_cache();	
+		// 	$this->db->where("B.PATIENT_TYPE",3);	
+		// }		
 		if($post_data["search_text"] != '')
 		{
 			$this->db->group_start();
 			$this->db->like("B.BILLING_INVOICE_NUMBER",$post_data["search_text"]);
 			$this->db->or_like("D.DOCTORS_NAME",$post_data["search_text"]);
 			$this->db->or_like("OP.OP_REGISTRATION_NUMBER",$post_data["search_text"]);
-			$this->db->or_like("TPA.TPA_NAME",$post_data["search_text"]);
-			$this->db->or_like("TPA.TPA_ECLAIM_LINK_ID",$post_data["search_text"]);
+			// $this->db->or_like("TPA.TPA_NAME",$post_data["search_text"]);
+			// $this->db->or_like("TPA.TPA_ECLAIM_LINK_ID",$post_data["search_text"]);
 			$this->db->or_like("U.FIRSTNAME",$post_data["search_text"]);
 			$this->db->or_like("U.LASTNAME",$post_data["search_text"]);
-			$this->db->or_like("C.CORPORATE_COMPANY_NAME",$post_data["search_text"]);
+			// $this->db->or_like("C.CORPORATE_COMPANY_NAME",$post_data["search_text"]);
 			$this->db->group_end();
 			if($post_data["limit"] > 0)
 			{

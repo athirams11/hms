@@ -281,13 +281,13 @@ class DoctorPrescriptionModel extends CI_Model
 	public function getPrescriptionDetails($doctor_prescription_id, $table)
 	{
 			$this->db->start_cache();			
-			$this->db->select("DPD.*,R.DESCRIPTION");	
+			$this->db->select("DPD.*");	
 			$this->db->select("M.DDC_CODE ,M.TRADE_NAME ,M.SCIENTIFIC_CODE,M.SCIENTIFIC_NAME,
 				CONCAT(M.TRADE_NAME,' - ',M.SCIENTIFIC_NAME) AS TRADE_NAMES");								
 			//$this->db->select("GM.NAME as GENERIC_NAME");								
 			$this->db->from($table);
 			$this->db->join("MEDICINE M","M.MEDICINE_ID = DPD.MEDICINE_ID","left");
-			$this->db->join("MASTER_ROUTE_OF_ADMIN R","R.MASTER_ROUTE_OF_ADMIN_ID = DPD.ROUTE","left");
+			// $this->db->join("MASTER_ROUTE_OF_ADMIN R","R.MASTER_ROUTE_OF_ADMIN_ID = DPD.ROUTE","left");
 			//$this->db->join("MEDICINE_GENERIC_MASTER GM","GM.GENERIC_ID = DPD.GENERIC_ID","left");
 			
 			$this->db->where("DOCTOR_PRESCRIPTION_ID", $doctor_prescription_id);
@@ -772,7 +772,7 @@ class DoctorPrescriptionModel extends CI_Model
 			->join("NURSING_ASSESSMENT N","N.NURSING_ASSESSMENT_ID = D.ASSESSMENT_ID","LEFT")
 			->join("DOCTOR_PRESCRIPTION_DETAILS DR","DR.DOCTOR_PRESCRIPTION_ID = D.DOCTOR_PRESCRIPTION_ID","LEFT")
 			->join("DOCTORS DS","DS.LOGIN_ID = D.DOCTOR_ID","LEFT")
-			->join("MASTER_ROUTE_OF_ADMIN R","R.MASTER_ROUTE_OF_ADMIN_ID = DR.ROUTE","LEFT")
+			// ->join("MASTER_ROUTE_OF_ADMIN R","R.MASTER_ROUTE_OF_ADMIN_ID = DR.ROUTE","LEFT")
 			->join("MEDICINE M","M.MEDICINE_ID = DR.MEDICINE_ID","LEFT")
 			//->join("CPT_GROUP C","WHERE CPT_GROUP_ID = 5","LEFT")
 			->where("D.STATUS",0)

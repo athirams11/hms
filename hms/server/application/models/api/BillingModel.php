@@ -102,7 +102,7 @@ class BillingModel extends CI_Model
 			{
 				$data["patient_data"] = $query->row();
 
-				$data["ins_data"] = $this->getInsDetails($data["patient_data"]->OP_REGISTRATION_ID);
+				$data["ins_data"] = false;
 				//print_r($data["ins_data"]);exit();
 				$data["co_ins"] = array();
 				if($data["ins_data"] != false)
@@ -116,7 +116,7 @@ class BillingModel extends CI_Model
 						}
 					}
 				}
-				$data["corporate_data"] = $this->getCorporateDetails($data["patient_data"]->OP_REGISTRATION_ID);
+				$data["corporate_data"] = false;
 				//print_r($data);
 				$result 	= array('data'=>$data,
 									'status'=>'Success'
@@ -999,7 +999,7 @@ class BillingModel extends CI_Model
 						}
 					}
 				}
-				$data["corporate_data"] = $this->billCorporateDetails($bill_data);
+				$data["corporate_data"] = FALSE;
 				//print_r($data);
 				$result 	= array('data'=>$data,
 									'status'=>'Success'
@@ -1215,7 +1215,7 @@ class BillingModel extends CI_Model
 				$this->db->join("OPTIONS SP","SP.OPTIONS_ID = P.DEPARTMENT_ID AND SP.OPTIONS_TYPE = 8","left");	
 				$this->db->join("BILLING B","NA.NURSING_ASSESSMENT_ID = B.ASSESSMENT_ID","left");
 				$this->db->join("LAB_INVESTIGATION L","L.ASSESSMENT_ID = B.ASSESSMENT_ID","left");
-				$this->db->join("OP_INS_DETAILS INS","INS.OP_REGISTRATION_ID = OP.OP_REGISTRATION_ID","left");
+				// $this->db->join("OP_INS_DETAILS INS","INS.OP_REGISTRATION_ID = OP.OP_REGISTRATION_ID","left");
 				$this->db->order_by("NA.END_TIME","DESC");
 				$this->db->order_by("NA.NURSING_ASSESSMENT_ID","DESC");
 				$this->db->group_by("NA.NURSING_ASSESSMENT_ID");
@@ -1233,7 +1233,7 @@ class BillingModel extends CI_Model
 						{
 							if($value["PATIENT_TYPE_DETAIL_ID"] == null)
 							{
-								$data[$key]["insurance"] = $this->getInsDetails($value["PATIENT_ID"]);
+								$data[$key]["insurance"] = false;
 								if($data[$key]["insurance"] != false)
 								{
 									if($data[$key]["insurance"]["OP_INS_IS_ALL"] != 1)
@@ -1325,7 +1325,6 @@ class BillingModel extends CI_Model
 			//$this->db->select("NA.NURSING_ASSESSMENT_ID,OP.*,B.*,NA.*,INS.*");
 			$this->db->select(" NA.NURSING_ASSESSMENT_ID,
 							    B.BILLING_ID,
-							    INS.OP_INS_DETAILS_ID,
 							    OP_REGISTRATION_NUMBER,
 							    FIRST_NAME,
 							    MIDDLE_NAME,
@@ -1334,29 +1333,30 @@ class BillingModel extends CI_Model
 							    BILLING_INVOICE_NUMBER,
 							    DUPLICATE_INVOICE_NUMBER,
 							    BILLING_DATE,
-							    INSURANCE_PAYERS_NAME,
-							    INS_NETWORK_NAME,
-							    OP_INS_MEMBER_ID,
+							    // INSURANCE_PAYERS_NAME,
+							    // INS_NETWORK_NAME,
+							    // OP_INS_MEMBER_ID,
 							    STAT,
 							    BILLED_AMOUNT,
 							    PAID_BY_PATIENT,
 							    INSURED_AMOUNT,
-							    OP_INS_PAYER,
-							    INS_NETWORK_CODE,
-							    OP_INS_NETWORK,
-							    OP_INS_MEMBER_ID,
-							    OP_INS_POLICY_NO,
-							    INSURANCE_PAYERS_ECLAIM_LINK_ID");
+							    // OP_INS_PAYER,
+							    // INS_NETWORK_CODE,
+							    // OP_INS_NETWORK,
+							    // OP_INS_MEMBER_ID,
+							    // OP_INS_POLICY_NO,
+							    // INSURANCE_PAYERS_ECLAIM_LINK_ID
+								");
 			$this->db->from("BILLING B");						
 			$this->db->join("OP_REGISTRATION OP","OP.OP_REGISTRATION_ID = B.PATIENT_ID","left");
 			//$this->db->join("OP_INS_DETAILS INS","INS.OP_REGISTRATION_ID = B.PATIENT_ID","left");							
-			$this->db->join("(
-					              SELECT    MAX(OP_INS_DETAILS.OP_INS_DETAILS_ID) OP_LATEST_INS_DETAILS_ID, OP_INS_DETAILS.* 
-					              FROM      OP_INS_DETAILS 
-					              GROUP BY  OP_REGISTRATION_ID
-					          )  INS","INS.OP_REGISTRATION_ID = B.PATIENT_ID","left");							
-			$this->db->join("INSURANCE_PAYERS IP","IP.INSURANCE_PAYERS_ID = INS.OP_INS_PAYER","left");
-			$this->db->join("INS_NETWORK IN","IN.INS_NETWORK_ID = INS.OP_INS_NETWORK","left");
+			// $this->db->join("(
+			// 		              SELECT    MAX(OP_INS_DETAILS.OP_INS_DETAILS_ID) OP_LATEST_INS_DETAILS_ID, OP_INS_DETAILS.* 
+			// 		              FROM      OP_INS_DETAILS 
+			// 		              GROUP BY  OP_REGISTRATION_ID
+			// 		          )  INS","INS.OP_REGISTRATION_ID = B.PATIENT_ID","left");							
+			// $this->db->join("INSURANCE_PAYERS IP","IP.INSURANCE_PAYERS_ID = INS.OP_INS_PAYER","left");
+			// $this->db->join("INS_NETWORK IN","IN.INS_NETWORK_ID = INS.OP_INS_NETWORK","left");
 			$this->db->join("NURSING_ASSESSMENT NA","NA.NURSING_ASSESSMENT_ID = B.ASSESSMENT_ID","left");
 			$this->db->join("PATIENT_VISIT_LIST V","NA.VISIT_ID = V.PATIENT_VISIT_LIST_ID","left");	
 			$this->db->where("NA.STAT",1);	

@@ -26,20 +26,20 @@ class OpVisitEntry extends CI_Controller
     {     
       case 'POST':          
         $post_data  = json_decode(file_get_contents("php://input"),true); 
-
+        $rsult =  array('data'=>array(),'status'=>'Success' );
         $result["INSURANCE_CONST"] = INSURANCE_ID_CONSTANT;  
 
         $result["specialized_in"]         = $this->MasterModel->master_dropdown_listing("OPTIONS O","O.OPTIONS_ID,O.OPTIONS_NAME,O.OPTIONS_TYPE","O.OPTIONS_NAME","ASC","O.OPTIONS_TYPE = 8 AND O.OPTIONS_STATUS = 1");
 
-        $result["tpa_receiver"]     = $this->MasterModel->master_dropdown_listing("TPA T","T.TPA_ID,T.TPA_NAME,T.TPA_ECLAIM_LINK_ID","T.TPA_ECLAIM_LINK_ID","ASC","T.TPA_STATUS = 1");
+        $result["tpa_receiver"]     = $rsult;
 
-        $result["networks"]     = $this->MasterModel->master_dropdown_listing("INS_NETWORK N","N.INS_NETWORK_ID,N.INS_NETWORK_NAME,N.INS_NETWORK_CODE,N.TPA_ID","N.INS_NETWORK_NAME ","ASC","N.INS_NETWORK_STATUS = 1");
+        $result["networks"]     = $rsult;
 
-        $result["ins_com_pay"]     = $this->MasterModel->master_dropdown_listing("INSURANCE_PAYERS I","I.INSURANCE_PAYERS_ID,I.INSURANCE_PAYERS_ECLAIM_LINK_ID,I.INSURANCE_PAYERS_NAME","I.INSURANCE_PAYERS_ECLAIM_LINK_ID","ASC","I.INSURANCE_PAYERS_STATUS = 1");
+        $result["ins_com_pay"]     = $rsult;
 
-        $result["co_in_types"]     = $this->MasterModel->master_dropdown_listing("OPTIONS O","O.OPTIONS_ID,O.OPTIONS_NAME,O.OPTIONS_TYPE","O.OPTIONS_NAME","ASC","O.OPTIONS_TYPE = 9 AND O.OPTIONS_STATUS = 1");
+        $result["co_in_types"]     = $rsult;
 
-        $result["discount_sites"]   = $this->MasterModel->master_dropdown_listing("MASTER_DISCOUNT_SITES","DISCOUNT_SITES_ID,DISCOUNT_SITES_NAME,STATUS","DISCOUNT_SITES_NAME","ASC","STATUS = 1");
+        $result["discount_sites"]   = $rsult;
 
         log_activity('API-'.$this->router->fetch_class().'-'.$this->router->fetch_method().'',"Message : ".json_encode($result),"Posted Data :".json_encode($post_data)); 
         $result["status"] = "Success";
@@ -145,7 +145,7 @@ class OpVisitEntry extends CI_Controller
         {     
         case 'POST':          
               $post_data  = json_decode(file_get_contents("php://input"),true); 
-              //print_r($post_data);            
+              // print_r($post_data);            
               $result      = $this->OpVisitModel->getPatientDetails($post_data);
               //$this->response($result, REST_Controller::HTTP_CREATED); // CREATED (201) being the HTTP response code
               //$response = str_replace($this->ApiModel->replace_xml_tag('added_plans'), $replace, $response);

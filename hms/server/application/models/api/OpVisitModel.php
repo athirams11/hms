@@ -65,20 +65,20 @@ class OpVisitModel extends CI_Model
 	 		if($post_data["op_reg_id"])
 	 			$this->db->where("OP_REGISTRATION_ID",$post_data["op_reg_id"]);	
 	 		$this->db->where("OP_REGISTRATION_STATUS",1);	
-			$this->db->select("OP.*, RT.OPTIONS_NAME as PAY_TYPE, C.COUNTRY_NAME as COUNTRY_NAME, C.COUNTRY_NAME as NATIONALITY_NAME, EM.OPTIONS_NAME as EMIRATES_NAME, SI.OPTIONS_NAME as SOURCE_OF_INFO_NAME");
+			$this->db->select("OP.*, RT.OPTIONS_NAME as PAY_TYPE, C.COUNTRY_NAME as COUNTRY_NAME");
 			$this->db->from("OP_REGISTRATION OP");
 			$this->db->join("OPTIONS RT","RT.OPTIONS_ID = OP.OP_REGISTRATION_TYPE","left");
 			$this->db->join("COUNTRY C","C.COUNTRY_ID = OP.COUNTRY","left");
-			$this->db->join("COUNTRY N","N.COUNTRY_ID = OP.NATIONALITY","left");
-			$this->db->join("OPTIONS EM","EM.OPTIONS_ID = OP.EMIRATES","left");
-			$this->db->join("OPTIONS SI","SI.OPTIONS_ID = OP.SOURCE_OF_INFO","left");
+			// $this->db->join("COUNTRY N","N.COUNTRY_ID = OP.NATIONALITY","left");
+			// $this->db->join("OPTIONS EM","EM.OPTIONS_ID = OP.EMIRATES","left");
+			// $this->db->join("OPTIONS SI","SI.OPTIONS_ID = OP.SOURCE_OF_INFO","left");
 			$query = $this->db->get();
 
 			if($query->num_rows() > 0)
 			{
 				$data["patient_data"] = $query->row();
 
-				$data["ins_data"] = $this->getInsDetails($data["patient_data"]->OP_REGISTRATION_ID);
+				$data["ins_data"] = false;
 				$data["co_ins"] = array();
 				if($data["ins_data"] != false)
 				{
@@ -91,7 +91,7 @@ class OpVisitModel extends CI_Model
 						}
 					}
 				}
-				$data["corporate_data"] = $this->getCorporateDetails($data["patient_data"]->OP_REGISTRATION_ID);
+				$data["corporate_data"] = false;
 				//print_r($data);
 				$result 	= array('data'=>$data,
 									'status'=>'Success'
@@ -497,9 +497,9 @@ class OpVisitModel extends CI_Model
 					$data=$query->result_array();
 					foreach ($data as $key => $value) 
 					{
-						 $data[$key]["general"] =$this->getPatientConsent_id($value["PATIENT_NO"],3);
-						 $data[$key]["dental"] =$this->getPatientConsent($value["PATIENT_VISIT_LIST_ID"],1);
-						 $data[$key]["covid"]=$this->getPatientConsent_id($value["PATIENT_NO"],2);
+						//  $data[$key]["general"] =$this->getPatientConsent_id($value["PATIENT_NO"],3);
+						//  $data[$key]["dental"] =$this->getPatientConsent($value["PATIENT_VISIT_LIST_ID"],1);
+						//  $data[$key]["covid"]=$this->getPatientConsent_id($value["PATIENT_NO"],2);
 						 // print_r($value);exit();
 						if($value["OP_REGISTRATION_TYPE"] == 1 &&  $value["PATIENT_TYPE"] == null || $value["PATIENT_TYPE"] != null &&  $value["PATIENT_TYPE"] == 1)
 						{

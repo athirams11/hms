@@ -242,10 +242,10 @@ class OpRegistrationModel extends CI_Model
 					}
 					$data["corporate_data"] = $this->getCorporateDetails($data["patient_data"]->OP_REGISTRATION_ID);
 					$data["op_attachment"] = $this->getAttachment($data["patient_data"]->OP_REGISTRATION_ID);
-					$data["old_insurance"] = $this->getOldInsDetails($data["patient_data"]->OP_REGISTRATION_ID);
-					$data["patient_data"]->general=$this->getPatientConsents_id($data["patient_data"]->OP_REGISTRATION_NUMBER,3);
-					$data["patient_data"]->dental=$this->getPatientConsents_id($data["patient_data"]->OP_REGISTRATION_NUMBER,1);
-					$data["patient_data"]->covid=$this->getPatientConsents_id($data["patient_data"]->OP_REGISTRATION_NUMBER,2);
+					$data["old_insurance"] = false;
+					$data["patient_data"]->general=2;
+					$data["patient_data"]->dental=2;
+					$data["patient_data"]->covid=2;
 					//$data["old_co_ins"] = array();
 					if($data["old_insurance"] != 0)
 					{
@@ -343,7 +343,7 @@ class OpRegistrationModel extends CI_Model
 					}
 					$data["corporate_data"] = $this->getCorporateDetails($data["patient_data"]->OP_REGISTRATION_ID);
 					$data["op_attachment"] = $this->getAttachment($data["patient_data"]->OP_REGISTRATION_ID);
-					$data["old_insurance"] = $this->getOldInsDetails($data["patient_data"]->OP_REGISTRATION_ID);
+					$data["old_insurance"] = false;
 					
 					if($data["old_insurance"] != 0)
 					{
@@ -1174,7 +1174,7 @@ class OpRegistrationModel extends CI_Model
 					$data["co_ins"] = $this->getCoinsDetails($data["ins_data"]->OP_INS_DETAILS_ID);
 				}
 			}
-			$data["old_ins"] = $this->getOldInsDetails($OP_REGISTRATION_ID);
+			$data["old_ins"] = false;
 					//$data["old_co_ins"] = array();
 				if($data["old_ins"] != 0)
 				{
@@ -1398,10 +1398,13 @@ class OpRegistrationModel extends CI_Model
 			$post_data["search_text"] = isset($post["search_text"]) ? $post["search_text"] : ''; 
 			$this->load->model('api/InstitutionManagementModel');
 			if($post_data["p_number"]!=0){
-				$PatientConsent	= $this->getPatientConsent($post_data);	
-			}
+				$PatientConsent	= array('data'=>array(),"sign_path"=>""
+				'status'=>'Success'
+				);
 			else{
-				$PatientConsent	= $this->getPatientConsent_id($post_data);	
+				$PatientConsent	=  array('data'=>array(),"sign_path"=>""
+				'status'=>'Success'
+				);
 			}
 			$institution      = $this->InstitutionManagementModel->listInstitution($post_data);
 			$pateint_details	= $this->getPatientDetailss($post_data);	
@@ -1469,7 +1472,9 @@ class OpRegistrationModel extends CI_Model
 			$post_data["limit"] = isset($post["limit"]) ? $post["limit"] : 0;     
 			$post_data["search_text"] = isset($post["search_text"]) ? $post["search_text"] : ''; 
 			$this->load->model('api/InstitutionManagementModel');
-			$PatientConsent	= $this->getPatientConsent_id($post_data);
+			$PatientConsent	= array('data'=>array(),"sign_path"=>""
+			'status'=>'Success'
+			);
 			$institution      = $this->InstitutionManagementModel->listInstitution($post_data);
 			$pateint_details	= $this->getPatientDetailss($post_data);	
 			// print_r($pateint_details);

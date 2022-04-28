@@ -375,7 +375,7 @@ class Billing extends CI_Controller
         $post_data["lab_investigation_details_id"] = isset($post["lab_investigation_details_id"]) ? $post["lab_investigation_details_id"] : 0;
         $post_data["description"] = isset($post["description"]) ? $post["description"] : "";            
         $post_data["quantity"] = isset($post["quantity"]) ? $post["quantity"] : "";
-        $post_data["rate"] = isset($post["rate"]) ? $post["rate"] : "";
+        $post_data["rate"] = isset($post["rate"]) ? $post["rate"] : 0;
         $post_data["change_of_future"] = isset($post["change_of_future"]) ? $post["change_of_future"] : "";
         $post_data["remarks"] = isset($post["remarks"]) ? $post["remarks"] : "";
         $post_data["priority"] = isset($post["priority"]) ? $post["priority"] : "";

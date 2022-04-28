@@ -12,7 +12,7 @@ class MedicineModel extends CI_Model
 		$this->db->stop_cache();
 		$this->db->flush_cache();
 		$this->db->start_cache();	
-
+		$START = $post_data["start"] - 1;
 		$sql = "SELECT *,CONCAT(`DM`.`TRADE_NAME`,' - ',`DM`.`SCIENTIFIC_NAME`) AS TRADE_NAMES
 		 FROM `MEDICINE` `DM`
 				WHERE `MEDICINE_STATUS` = 1
@@ -32,7 +32,7 @@ class MedicineModel extends CI_Model
 						WHEN `DM`.`SCIENTIFIC_NAME` LIKE '%".trim($post_data["search_text"])."' THEN 10
 						ELSE 9
                   	END
-			LIMIT ".$post_data["start"].",".$post_data["limit"]."";	
+			LIMIT ".$START.",".$post_data["limit"]."";	
 		$query = $this->db->query($sql);
 		
 

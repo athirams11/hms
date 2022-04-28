@@ -56,6 +56,7 @@ export class DashboardComponent implements OnInit {
   public subscription: Subscription;
   source = interval(5000);
   name: any;
+  allZero: boolean = false;
 
   constructor(public rest: ModuleService) {
     // monkeyPatchChartJsTooltip();
@@ -116,6 +117,7 @@ export class DashboardComponent implements OnInit {
     this.rest.getModuleSummary(sentData).subscribe((result) => {
       if (result['status'] == 'Success') {
         this.pieChartData = result['data']['COUNT'];
+        this.allZero = result['data']['COUNT'].every(item => item === 0);
         this.pieChartLabels = result['data']['NAME'];
         if (result['data']['COUNT'] == 1) {
           this.pieChartData = [1];

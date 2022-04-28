@@ -1,5 +1,5 @@
-import { Component, OnInit,Input, Output, OnChanges, SimpleChanges } from '@angular/core';
-import {DatePipe} from '@angular/common';
+import { Component, OnInit, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { NursingAssesmentService } from './../../../../../shared/services'
@@ -13,24 +13,24 @@ import { formatTime, formatDateTime, formatDate } from './../../../../../shared/
   styleUrls: ['./summary.component.scss']
 })
 export class SummaryComponent implements OnInit, OnChanges {
- 
+
   @Input() assessment_id: number = 0;
   @Input() patient_id: number = 0;
-  @Input() vital_values:any = [];
-  @Input() blood_sugar:any = [];
+  @Input() vital_values: any = [];
+  @Input() blood_sugar: any = [];
   private notifier: NotifierService;
-  public user_rights : any ={};
+  public user_rights: any = {};
   public loading = false;
-  public user_data : any ={};
-  public vital_params : any = [];
+  public user_data: any = {};
+  public vital_params: any = [];
   //public vital_values : any = [];
-  public param_values : any = [];
-  public vital_form_values : any = [];
+  public param_values: any = [];
+  public vital_form_values: any = [];
   public dateVal = new Date();
-  public assessment_entry_id : number = 0;
-  constructor(public datepipe: DatePipe,private router: Router, public rest2:NursingAssesmentService,notifierService: NotifierService) {
+  public assessment_entry_id: number = 0;
+  constructor(public datepipe: DatePipe, private router: Router, public rest2: NursingAssesmentService, notifierService: NotifierService) {
     this.notifier = notifierService;
-   }
+  }
 
   ngOnInit() {
     this.user_rights = JSON.parse(localStorage.getItem('user_rights'));
@@ -44,37 +44,34 @@ export class SummaryComponent implements OnInit, OnChanges {
     this.getAssesmentParameters();
     this.user_data = JSON.parse(localStorage.getItem('user'));
   }
-  public formatTime (time) {
-    return  formatTime(time);
+  public formatTime(time) {
+    return formatTime(time);
   }
-  public formatDate (date) {
-    return  formatDate(date);
+  public formatDate(date) {
+    return formatDate(date);
   }
-  public formatDateTime (data) {
-      return formatDateTime(data);
+  public formatDateTime(data) {
+    return formatDateTime(data);
   }
-  public getAssesmentParameters()
-  {
-      var postData = {
-        test_methode : AppSettings.NURSING_ASSESMENT
-      }
-      this.loading = true;
-      this.rest2.getAssesmentParameters(postData).subscribe((result) => {
-        if(result.status == "Success")
-        {
-          this.loading = false;
-        //console.log(result.data);
+  public getAssesmentParameters() {
+    var postData = {
+      test_methode: AppSettings.NURSING_ASSESMENT
+    }
+    this.loading = true;
+    this.rest2.getAssesmentParameters(postData).subscribe((result) => {
+      console.log(result);
+      if (result.status == "Success") {
+        this.loading = false;
         this.vital_params = result.data;
         //this.router.navigate(['transaction/pre-consulting']);
-          //window.location.reload();
-        }
-        else
-        {
-          
-          this.loading = false;
-        }
-      }, (err) => {
-        console.log(err);
-      });
+        //window.location.reload();
+      }
+      else {
+
+        this.loading = false;
+      }
+    }, (err) => {
+      console.log(err);
+    });
   }
 }

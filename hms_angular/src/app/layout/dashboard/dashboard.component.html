@@ -1,63 +1,32 @@
-<div [@routerTransition]>
-    <h2 class="text-muted">Dashboard <small>Statistics Overview</small></h2>
-    <div class="row">
-        <div class="col-md-12">
-            <ngb-carousel>
-                <ng-template ngbSlide *ngFor="let slider of sliders">
-                    <img class="img-fluid mx-auto d-block" [src]="slider.imagePath" alt="Random first slide" width="100%">
-                    <div class="carousel-caption">
-                        <h3>{{slider.label}}</h3>
-                        <p>{{slider.text}}</p>
-                    </div>
-                </ng-template>
-            </ngb-carousel>
-        </div>
-    </div>
-    <hr>
-    <div class="row">
-        <div class="col-xl-3 col-lg-6">
-            <app-stat [bgClass]="'primary'" [icon]="'fa-comments'" [count]="26" [label]="'New Comments!'" ></app-stat>
-        </div>
-        <div class="col-xl-3 col-lg-6">
-            <app-stat [bgClass]="'warning'" [icon]="'fa-tasks'" [count]="12" [label]="'New task!'" ></app-stat>
-        </div>
-        <div class="col-xl-3 col-lg-6">
-            <app-stat [bgClass]="'success'" [icon]="'fa-shopping-cart'" [count]="124" [label]="'New Orders!'" ></app-stat>
-        </div>
-        <div class="col-xl-3 col-lg-6">
-            <app-stat [bgClass]="'danger'" [icon]="'fa-support'" [count]="13" [label]="'New Tickets!'"></app-stat>
-        </div>
-    </div>
-    <hr />
-    <ngb-alert [type]="alert.type" (close)="closeAlert(alert)" *ngFor="let alert of alerts">{{ alert.message }}</ngb-alert>
-    <hr />
-    <div class="row">
-        <div class="col-lg-8">
-            <div class="card card-default">
-                <div class="card-header">
-                    <i class="fa fa-clock-o fa-fw"></i> Responsive Timeline
-                </div>
-                <!-- /.card-header -->
-                <app-timeline></app-timeline>
-                <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-        </div>
-        <!-- /.col-lg-8 -->
-        <div class="col-lg-4">
-            <div class="card card-default mb-3">
-                <div class="card-header">
-                    <i class="fa fa-bell fa-fw"></i> Notifications card
-                </div>
-                <!-- /.card-header -->
-                <app-notification></app-notification>
-                <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
+<div class="row container">
 
-            <app-chat></app-chat>
-            <!-- /.card .chat-card -->
-        </div>
-        <!-- /.col-lg-4 -->
+  <div class="col-6">
+    <div style="width:500px">
+      <canvas baseChart [data]="pieChartData" [labels]="pieChartLabels" [chartType]="pieChartType"
+        [options]="pieChartOptions" [colors]="chartColors">
+        <!-- 
+            [legend]="pieChartLegend"
+            [plugins]="pieChartPlugins" -->
+      </canvas>
     </div>
+  </div>
+  <!-- <div class="col-6"> 
+    <div class="col-3" *ngFor="let name of per.name">{{name}}</div>
+    <div class="col-3" *ngFor="let percentage of per.percentage">{{percentage}}</div>
+  </div> -->
+  <ng-container *ngFor="let moduleGroup of menulist">
+    <ng-container *ngIf="moduleGroup.MODULE_GROUP_ID != setting.DASHBOARD_MODULE_GROUP_ID">
+      <div class="col-2" *ngFor="let module of moduleGroup.sub_menu">
+        <a href="javascript:void(0)" [routerLink]="[moduleGroup.MODULE_GROUP_PATH + module.MODULE_PATH]"
+          class="router-link-active ex1">
+          <span>
+            <label style="color: #1d578e">{{module.MODULE_NAME}}</label>
+            <div style="text-align: center">
+              <i class="{{ module.MODULE_ICON }}" style="font-size: 55px;padding-top:10px"></i>
+            </div>
+          </span>
+        </a>
+      </div>
+    </ng-container>
+  </ng-container>
 </div>

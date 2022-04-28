@@ -18,7 +18,7 @@ export class AppSettings {
 
 
   // public static API_ENDPOINT = 'http://localhost/projects/HMS/hms/server/';
-  public static API_ENDPOINT = 'http://localhost/HMS/hms/server/';
+  public static API_ENDPOINT = 'http://localhost/HMS_CLONE/hms/server/';
   //public static API_ENDPOINT = 'http://localhost:8080/codecommit/hms/hms/server/';  
   //public static API_ENDPOINT = 'http://localhost/HMS/hms/server/';  
   //public static API_ENDPOINT = 'http://15.206.136.29/demo/hms/server/'  ;

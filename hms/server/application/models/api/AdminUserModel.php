@@ -160,9 +160,9 @@
 			if($post_data["password"]!=""){
 				$data["PASSWORD"]  = md5(trim($post_data["password"]));
 			} 
-			if($post_data["department_id"] > 0){
-				$data["DEPARTMENT_ID"]  = $post_data["department_id"];
-			} 
+			// if($post_data["department_id"] > 0){
+			// 	$data["DEPARTMENT_ID"]  = $post_data["department_id"];
+			// } 
 			
 			$this->db->where('USER_SPK !=',trim($post_data["user_id"]));
 			$this->db->group_start();
@@ -212,9 +212,9 @@
 					}
 				}
 				}else{
-					if(isset($post_data["department_id"])){
-						$data["DEPARTMENT_ID"]  = $post_data["department_id"];
-					} 
+					// if(isset($post_data["department_id"])){
+					// 	$data["DEPARTMENT_ID"]  = $post_data["department_id"];
+					// } 
 					$this->db->trans_begin();
 					$this->db->where("USER_SPK", $post_data["user_id"]);
 					$query = $this->db->update("USERS", $data);

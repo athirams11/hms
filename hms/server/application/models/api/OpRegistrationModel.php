@@ -1398,12 +1398,10 @@ class OpRegistrationModel extends CI_Model
 			$post_data["search_text"] = isset($post["search_text"]) ? $post["search_text"] : ''; 
 			$this->load->model('api/InstitutionManagementModel');
 			if($post_data["p_number"]!=0){
-				$PatientConsent	= array('data'=>array(),"sign_path"=>""
-				'status'=>'Success'
-				);
+				$PatientConsent	= array('data'=>array(),"sign_path"=>"",'status'=>'Success'	);
+			}
 			else{
-				$PatientConsent	=  array('data'=>array(),"sign_path"=>""
-				'status'=>'Success'
+				$PatientConsent	=  array('data'=>array(),"sign_path"=>"",	'status'=>'Success'
 				);
 			}
 			$institution      = $this->InstitutionManagementModel->listInstitution($post_data);
@@ -1472,7 +1470,7 @@ class OpRegistrationModel extends CI_Model
 			$post_data["limit"] = isset($post["limit"]) ? $post["limit"] : 0;     
 			$post_data["search_text"] = isset($post["search_text"]) ? $post["search_text"] : ''; 
 			$this->load->model('api/InstitutionManagementModel');
-			$PatientConsent	= array('data'=>array(),"sign_path"=>""
+			$PatientConsent	= array('data'=>array(),"sign_path"=>"",
 			'status'=>'Success'
 			);
 			$institution      = $this->InstitutionManagementModel->listInstitution($post_data);

@@ -5,7 +5,7 @@ import { map, catchError, tap } from 'rxjs/operators';
 import { AppSettings } from '../../app.settings';
 const httpOptions = {
   headers: new HttpHeaders({
-    'Content-Type':  'application/json'
+    'Content-Type': 'application/json'
   })
 };
 const cpt_path1 = AppSettings.API_ENDPOINT + 'Querys/getPatientList';
@@ -47,23 +47,23 @@ export class ConsultingService {
 
 
     return this.http
-      .post<any>(cpt_path, JSON.stringify( {search_text:  term, limit: 50, current_procedural_code_id : '0', start: 1})).pipe(
+      .post<any>(cpt_path, JSON.stringify({ search_text: term, limit: 50, current_procedural_code_id: '0', start: 1 })).pipe(
         map(response => response['data'])
       );
   }
-  cptDentalsearch(term: string ,procedure_code_category : number,dental_procedure_id : number) {
+  cptDentalsearch(term: string, procedure_code_category: number, dental_procedure_id: number) {
     if (term === '') {
       return of([]);
     }
 
 
     return this.http
-      .post<any>(cpt_path, JSON.stringify( {
-        search_text:  term, limit: 50, 
-        current_procedural_code_id : '0', 
+      .post<any>(cpt_path, JSON.stringify({
+        search_text: term, limit: 50,
+        current_procedural_code_id: '0',
         start: 1,
-        procedure_code_category : procedure_code_category,
-        dental_procedure_id : dental_procedure_id
+        procedure_code_category: procedure_code_category,
+        dental_procedure_id: dental_procedure_id
       })).pipe(
         map(response => response['data'])
       );
@@ -75,7 +75,7 @@ export class ConsultingService {
 
 
     return this.http
-      .post<any>(cpt_path, JSON.stringify( {search_text:  term, limit: 50, current_procedural_code_id : '0', start: 1})).pipe(
+      .post<any>(cpt_path, JSON.stringify({ search_text: term, limit: 50, current_procedural_code_id: '0', start: 1 })).pipe(
         map(response => response['data'])
       );
   }
@@ -84,23 +84,23 @@ export class ConsultingService {
       return of([]);
     }
     return this.http
-      .post<any>(diagnosis_path, JSON.stringify( {search_text:  term, limit: 50, diagnosis_id : '0', start: 1})).pipe(
+      .post<any>(diagnosis_path, JSON.stringify({ search_text: term, limit: 50, diagnosis_id: '0', start: 1 })).pipe(
         map(response => response['data'])
       );
   }
   listCpt(postdata): Observable<any> {
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'CurrentProceduralCode/listCurrentProceduralCode', JSON.stringify(postdata)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('getcpt'))
-    ));
-    
+      tap((result) =>
+        catchError(this.handleError<any>('getcpt'))
+      ));
+
   }
   medicine_search(term: string) {
     if (term === '') {
       return of([]);
     }
     return this.http
-      .post<any>(medicine_path, JSON.stringify( {search_text:  term, limit: 50, medicine_id : '0', start: 1})).pipe(
+      .post<any>(medicine_path, JSON.stringify({ search_text: term, limit: 50, medicine_id: '0', start: 0 })).pipe(
         map(response => response['data'])
       );
   }
@@ -109,7 +109,7 @@ export class ConsultingService {
       return of([]);
     }
     return this.http
-      .post<any>(routeofadmin_path, JSON.stringify( {search_text:  term, limit: 50, routeofadmin_id : '0', start: 1})).pipe(
+      .post<any>(routeofadmin_path, JSON.stringify({ search_text: term, limit: 50, routeofadmin_id: '0', start: 1 })).pipe(
         map(response => response['data'])
       );
   }
@@ -118,7 +118,7 @@ export class ConsultingService {
       return of([]);
     }
     return this.http
-      .post<any>(generic_path, JSON.stringify( {search_text:  term, limit: 50, medicine_id : '0', start: 1})).pipe(
+      .post<any>(generic_path, JSON.stringify({ search_text: term, limit: 50, medicine_id: '0', start: 0 })).pipe(
         map(response => response['data'])
       );
   }
@@ -127,216 +127,216 @@ export class ConsultingService {
       return of([]);
     }
     return this.http
-      .post<any>(vaccine_path, JSON.stringify( {search_text:  term, limit: 50, immunization_id : '0', start: 1})).pipe(
+      .post<any>(vaccine_path, JSON.stringify({ search_text: term, limit: 50, immunization_id: '0', start: 1 })).pipe(
         map(response => response['data'])
       );
   }
   private extractData(res: Response) {
     const body = res;
-    return body || { };
+    return body || {};
   }
-  
-  saveInsurancePrice (opData): Observable<any> {
+
+  saveInsurancePrice(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'InsurancePrice/saveInsurancePrice', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('saveInsurancePrice'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('saveInsurancePrice'))
+      ));
   }
-  getInsurancePrice (opData): Observable<any> {
+  getInsurancePrice(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'InsurancePrice/getInsurancePrice', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('getInsurancePrice'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('getInsurancePrice'))
+      ));
   }
-  listInsurancePrice (opData): Observable<any> {
+  listInsurancePrice(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'InsurancePrice/listInsurancePrice', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('listInsurancePrice'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('listInsurancePrice'))
+      ));
   }
-  save_specialComments (opData): Observable<any> {
+  save_specialComments(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + '/PatientSpecialComment/savePatientSpecialComment', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('savecomplaints'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('savecomplaints'))
+      ));
   }
-  getSpecialcomments (opData): Observable<any> {
+  getSpecialcomments(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'PatientSpecialComment/getPatientSpecialComment', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('Document error'))
+      tap((result) =>
+        catchError(this.handleError<any>('Document error'))
       ));
-      }
-  getPreviousSpecialcomments (opData): Observable<any> {
+  }
+  getPreviousSpecialcomments(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'PatientSpecialComment/getPreviousPatientSpecialComment', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('Document error'))
+      tap((result) =>
+        catchError(this.handleError<any>('Document error'))
       ));
-    }
-  saveComplaints (opData): Observable<any> {
+  }
+  saveComplaints(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'ChiefComplaints/saveComplaints', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('savecomplaints'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('savecomplaints'))
+      ));
   }
-  saveDentalComplaints (opData): Observable<any> {
+  saveDentalComplaints(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'DentalComplaints/saveDentalComplaints', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('saveDentalComplaints'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('saveDentalComplaints'))
+      ));
   }
   saveDentalHistory(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'DentalComplaints/saveDentalHistory', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('saveDentalHistory'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('saveDentalHistory'))
+      ));
   }
-  saveTpa (opData): Observable<any> {
+  saveTpa(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'TPA_reciever/saveTPA', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('savetpa'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('savetpa'))
+      ));
   }
-  saveType (opData): Observable<any> {
+  saveType(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'Laboratory/saveType', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('saveType'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('saveType'))
+      ));
   }
 
-  getTypelist (opData): Observable<any> {
+  getTypelist(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'Laboratory/listType', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('getTypelist error'))
+      tap((result) =>
+        catchError(this.handleError<any>('getTypelist error'))
       ));
   }
 
-  getType (opData): Observable<any> {
+  getType(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'Laboratory/getType', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('getType error'))
+      tap((result) =>
+        catchError(this.handleError<any>('getType error'))
       ));
 
   }
 
 
-  saveTest (opData): Observable<any> {
+  saveTest(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'Laboratory/saveTest', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('saveTest'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('saveTest'))
+      ));
   }
 
-  getTestlist (opData): Observable<any> {
+  getTestlist(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'Laboratory/listTest', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('getTestlist error'))
+      tap((result) =>
+        catchError(this.handleError<any>('getTestlist error'))
       ));
   }
 
-  getTest (opData): Observable<any> {
+  getTest(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'Laboratory/getTest', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('getTest error'))
+      tap((result) =>
+        catchError(this.handleError<any>('getTest error'))
       ));
 
   }
 
 
 
-  saveCollection (opData): Observable<any> {
+  saveCollection(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'Laboratory/saveCollection', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('saveCollection'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('saveCollection'))
+      ));
   }
 
-  attachcollection (opData): Observable<any> {
+  attachcollection(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'Laboratory/attachcollection', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('attachcollection'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('attachcollection'))
+      ));
   }
 
-  attachradiology (opData): Observable<any> {
+  attachradiology(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'Laboratory/attachradiology', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('attachradiology'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('attachradiology'))
+      ));
   }
 
-  getCollectionlist (opData): Observable<any> {
+  getCollectionlist(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'Laboratory/listCollection', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('getCollectionlist error'))
+      tap((result) =>
+        catchError(this.handleError<any>('getCollectionlist error'))
       ));
   }
 
   changeStatus(params): Observable<any> {
     //console.log(params);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'Laboratory/changeStatus', JSON.stringify(params)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('changeStatus'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('changeStatus'))
+      ));
   }
 
   removefile(params): Observable<any> {
     //console.log(params);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'Laboratory/removefile', JSON.stringify(params)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('removefile'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('removefile'))
+      ));
   }
 
   removeradiofile(params): Observable<any> {
     //console.log(params);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'Laboratory/removeradiofile', JSON.stringify(params)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('removeradiofile'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('removeradiofile'))
+      ));
   }
 
-  searchCollection (opData): Observable<any> {
+  searchCollection(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'Laboratory/searchCollection', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('searchCollection error'))
+      tap((result) =>
+        catchError(this.handleError<any>('searchCollection error'))
       ));
   }
 
-  searchradiology (opData): Observable<any> {
+  searchradiology(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'Laboratory/searchradiology', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('searchradiology error'))
+      tap((result) =>
+        catchError(this.handleError<any>('searchradiology error'))
       ));
   }
 
-  getattachradio (opData): Observable<any> {
+  getattachradio(opData): Observable<any> {
     //console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'Laboratory/getattachradio', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('getattachradio'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('getattachradio'))
+      ));
   }
   getOpDropdowns(): Observable<any> {
     return this.http.post(AppSettings.API_ENDPOINT + 'OpRegistration/options', null).pipe(
@@ -347,372 +347,372 @@ export class ConsultingService {
       return of([]);
     }
     return this.http
-      .post<any>(cpt_path1, JSON.stringify( {search_text:  term, limit: 50, start: 1})).pipe(
+      .post<any>(cpt_path1, JSON.stringify({ search_text: term, limit: 50, start: 1 })).pipe(
         map(response => response['data'])
       );
   }
   getDropdowns(): Observable<any> {
-    return this.http.post(AppSettings.API_ENDPOINT + 'Appointment/options',null).pipe(
+    return this.http.post(AppSettings.API_ENDPOINT + 'Appointment/options', null).pipe(
       map(this.extractData));
   }
 
   getlab(opData): Observable<any> {
-    return this.http.post(AppSettings.API_ENDPOINT + 'Laboratory/getlab',JSON.stringify(opData)).pipe(
+    return this.http.post(AppSettings.API_ENDPOINT + 'Laboratory/getlab', JSON.stringify(opData)).pipe(
       map(this.extractData));
   }
 
   getdroptest(): Observable<any> {
-    return this.http.post(AppSettings.API_ENDPOINT + 'Laboratory/testoptions',null).pipe(
+    return this.http.post(AppSettings.API_ENDPOINT + 'Laboratory/testoptions', null).pipe(
       map(this.extractData));
   }
-  getCollection (opData): Observable<any> {
+  getCollection(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'Laboratory/getCollection', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('getCollection error'))
+      tap((result) =>
+        catchError(this.handleError<any>('getCollection error'))
       ));
 
   }
 
-  saveInsurancepayer (opData): Observable<any> {
+  saveInsurancepayer(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'Insurance_payer/saveinsurance_payers', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('saveInsurancepayer'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('saveInsurancepayer'))
+      ));
   }
-  saveNetwork (opData): Observable<any> {
+  saveNetwork(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'INS_network/saveinsnetwork', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('saveNetwork'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('saveNetwork'))
+      ));
   }
-  getPreviousComplaints (opData): Observable<any> {
+  getPreviousComplaints(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'ChiefComplaints/getPreviousComplaints', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('Document error'))
+      tap((result) =>
+        catchError(this.handleError<any>('Document error'))
       ));
   }
-  getTpalist (opData): Observable<any> {
+  getTpalist(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'TPA_reciever/listTPA', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('getTpalist error'))
+      tap((result) =>
+        catchError(this.handleError<any>('getTpalist error'))
       ));
   }
-  getInspayerlist (opData): Observable<any> {
+  getInspayerlist(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'Insurance_payer/listinsurance_payers', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('getInspayerlist error'))
+      tap((result) =>
+        catchError(this.handleError<any>('getInspayerlist error'))
       ));
   }
-  getNetworklist (opData): Observable<any> {
+  getNetworklist(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'INS_network/listinsnetwork', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('getNetworklist error'))
+      tap((result) =>
+        catchError(this.handleError<any>('getNetworklist error'))
       ));
 
   }
-  getTpa (opData): Observable<any> {
+  getTpa(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'TPA_reciever/getTPA', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('getTpa error'))
+      tap((result) =>
+        catchError(this.handleError<any>('getTpa error'))
       ));
 
   }
-  getInscompany (opData): Observable<any> {
+  getInscompany(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'Insurance_payer/getinsurance_payers', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('getInscompany error'))
+      tap((result) =>
+        catchError(this.handleError<any>('getInscompany error'))
       ));
 
   }
-  getNetwork (opData): Observable<any> {
+  getNetwork(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'INS_network/getinsnetwork', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('getNetwork error'))
+      tap((result) =>
+        catchError(this.handleError<any>('getNetwork error'))
       ));
 
   }
-  getComplaints (opData): Observable<any> {
+  getComplaints(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'ChiefComplaints/getComplaints', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('Document error'))
+      tap((result) =>
+        catchError(this.handleError<any>('Document error'))
       ));
   }
   getDentalComplaints(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'DentalComplaints/getDentalComplaints', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('getDentalComplaints'))
+      tap((result) =>
+        catchError(this.handleError<any>('getDentalComplaints'))
       ));
   }
   getDentalHistory(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'DentalComplaints/getDentalHistory', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('getDentalHistory'))
+      tap((result) =>
+        catchError(this.handleError<any>('getDentalHistory'))
       ));
   }
   listNotAllowedProcedure(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'DentalComplaints/listNotAllowedProcedure', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('listNotAllowedProcedure'))
+      tap((result) =>
+        catchError(this.handleError<any>('listNotAllowedProcedure'))
       ));
   }
   listDentalProcedure(): Observable<any> {
-    return this.http.post(AppSettings.API_ENDPOINT + 'DentalComplaints/listDentalProcedure',null).pipe(
+    return this.http.post(AppSettings.API_ENDPOINT + 'DentalComplaints/listDentalProcedure', null).pipe(
       map(this.extractData));
   }
   // downloadFile(): any {
-	// 	return this.http.get(AppSettings.API_ENDPOINT + 'public/uploads/pdf_name.pdf', {responseType: 'blob'});
+  // 	return this.http.get(AppSettings.API_ENDPOINT + 'public/uploads/pdf_name.pdf', {responseType: 'blob'});
   // } 
   downloadDentalHistoryPdf(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'DentalComplaints/downloadDentalHistoryPdf', JSON.stringify(opData)).pipe(
-    tap((result) => 
-    catchError(this.handleError<any>('downloadDentalHistoryPdf'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('downloadDentalHistoryPdf'))
+      ));
   }
-  get_master_data (opData): Observable<any> {
+  get_master_data(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'Settings/get_master_data', JSON.stringify(opData)).pipe(
-    tap((result) => 
-    catchError(this.handleError<any>('get_master_data'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('get_master_data'))
+      ));
   }
-  get_filetype (opData): Observable<any> {
+  get_filetype(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'Settings/get_master_data', JSON.stringify(opData)).pipe(
-    tap((result) => 
-    catchError(this.handleError<any>(' get_filetype'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>(' get_filetype'))
+      ));
   }
-  get_Documenttype (opData): Observable<any> {
+  get_Documenttype(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'Settings/get_master_data', JSON.stringify(opData)).pipe(
-    tap((result) => 
-    catchError(this.handleError<any>(' get_Documenttype'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>(' get_Documenttype'))
+      ));
   }
-  get_priority (opData): Observable<any> {
+  get_priority(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'Settings/get_master_data', JSON.stringify(opData)).pipe(
-    tap((result) => 
-    catchError(this.handleError<any>(' get_filetype'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>(' get_filetype'))
+      ));
   }
 
-  savePatientDiagnosis (opData): Observable<any> {
+  savePatientDiagnosis(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'PatientDiagnosis/savePatientDiagnosis', JSON.stringify(opData)).pipe(
-    tap((result) => 
-    catchError(this.handleError<any>('savePatientDiagnosis'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('savePatientDiagnosis'))
+      ));
   }
-  getPatientDiagnosis (opData): Observable<any> {
+  getPatientDiagnosis(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'PatientDiagnosis/getPatientDiagnosis', JSON.stringify(opData)).pipe(
-    tap((result) => 
-    catchError(this.handleError<any>('getPatientDiagnosis'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('getPatientDiagnosis'))
+      ));
   }
-  getPreviousDiagnosis (opData): Observable<any> {
+  getPreviousDiagnosis(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'PatientDiagnosis/getPreviousDiagnosis', JSON.stringify(opData)).pipe(
-    tap((result) => 
-    catchError(this.handleError<any>('getPreviousDiagnosis'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('getPreviousDiagnosis'))
+      ));
   }
-  listDiagnosis (opData): Observable<any> {
+  listDiagnosis(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'Diagnosis/listDiagnosis', JSON.stringify(opData)).pipe(
-    tap((result) => 
-    catchError(this.handleError<any>('listDiagnosis'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('listDiagnosis'))
+      ));
   }
   getDiagnosis(postdata): Observable<any> {
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'Diagnosis/getDiagnosis', JSON.stringify(postdata)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('listDiagnosis'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('listDiagnosis'))
+      ));
   }
-  saveReportsAndNotes (opData): Observable<any> {
+  saveReportsAndNotes(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'ReportsAndNotes/saveReportsAndNotes', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('saveReportsAndNotes'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('saveReportsAndNotes'))
+      ));
   }
-  getReportsAndNotes (opData): Observable<any> {
+  getReportsAndNotes(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'ReportsAndNotes/getReportsAndNotes', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('getReportsAndNotes'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('getReportsAndNotes'))
+      ));
   }
-  listImmunization (opData): Observable<any> {
+  listImmunization(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'Immunization/listImmunization', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('listImmunization'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('listImmunization'))
+      ));
   }
-  getImmunization (opData): Observable<any> {
+  getImmunization(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'Immunization/getImmunization', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('getImmunization'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('getImmunization'))
+      ));
   }
-  saveImmunization (opData): Observable<any> {
+  saveImmunization(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'Immunization/saveImmunization', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('saveImmunization'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('saveImmunization'))
+      ));
   }
-  savePatientImmunization (opData): Observable<any> {
+  savePatientImmunization(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'PatientImmunization/savePatientImmunization', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('savePatientImmunization'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('savePatientImmunization'))
+      ));
   }
-  getPatientImmunization (opData): Observable<any> {
+  getPatientImmunization(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'PatientImmunization/getPatientImmunization', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('getPatientImmunization'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('getPatientImmunization'))
+      ));
   }
   listMedicine(opData): Observable<any> {
-      return this.http.post<any>(AppSettings.API_ENDPOINT + 'Medicine/listMedicine', JSON.stringify(opData)).pipe(
-        tap((result) => 
+    return this.http.post<any>(AppSettings.API_ENDPOINT + 'Medicine/listMedicine', JSON.stringify(opData)).pipe(
+      tap((result) =>
         catchError(this.handleError<any>('listMedicine'))
       ));
   }
-  listRouteOfAdmin (opData): Observable<any> {
+  listRouteOfAdmin(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'DoctorPrescription/listRouteOfAdmin', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('listRouteOfAdmin'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('listRouteOfAdmin'))
+      ));
   }
-  
+
   getRouteOfAdmin(opData): Observable<any> {
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'DoctorPrescription/getRouteOfAdmin', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('getRouteOfAdmin'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('getRouteOfAdmin'))
+      ));
   }
   getMedicine(opData): Observable<any> {
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'Medicine/getMedicine', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('getMedicine'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('getMedicine'))
+      ));
   }
-  listGenericType (opData): Observable<any> {
+  listGenericType(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'MedicineGenericType/listGenericType', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('listGenericType'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('listGenericType'))
+      ));
   }
-  getGenericType (opData): Observable<any> {
+  getGenericType(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'MedicineGenericType/getGenericType', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('getGenericType'))
-    ));
-    }
-  getPrescription (opData): Observable<any> {
+      tap((result) =>
+        catchError(this.handleError<any>('getGenericType'))
+      ));
+  }
+  getPrescription(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'DoctorPrescription/getPrescription', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('getPrescription'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('getPrescription'))
+      ));
   }
-  savePrescription (opData): Observable<any> {
+  savePrescription(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'DoctorPrescription/savePrescription', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('savePrescription'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('savePrescription'))
+      ));
   }
-  uploadToeRx (opData): Observable<any> {
+  uploadToeRx(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'DoctorPrescription/generateRxFile', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('generateRxFile'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('generateRxFile'))
+      ));
   }
-  savePatientSickLeave (opData): Observable<any> {
+  savePatientSickLeave(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'PatientSickLeave/savePatientSickLeave', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('savePatientSickLeave'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('savePatientSickLeave'))
+      ));
   }
   downloaSickleavePdf(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'PatientSickLeave/downloaSickleavePdf', JSON.stringify(opData)).pipe(
-    tap((result) => 
-    catchError(this.handleError<any>('downloaSickleavePdf'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('downloaSickleavePdf'))
+      ));
   }
-  getPatientSickLeave (opData): Observable<any> {
+  getPatientSickLeave(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'PatientSickLeave/getPatientSickLeave', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('getPatientSickLeave'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('getPatientSickLeave'))
+      ));
   }
-  listPatientSickLeave (opData): Observable<any> {
+  listPatientSickLeave(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'PatientSickLeave/listPatientSickLeave', JSON.stringify(opData)).pipe(
-      tap((result) => 
-      catchError(this.handleError<any>('listPatientSickLeave'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('listPatientSickLeave'))
+      ));
   }
-  getPreviousPrescription (opData): Observable<any> {
+  getPreviousPrescription(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'DoctorPrescription/getPreviousPrescription', JSON.stringify(opData)).pipe(
-    tap((result) => 
-    catchError(this.handleError<any>('getPreviousPrescription'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('getPreviousPrescription'))
+      ));
   }
 
-  getCancelPrescription (opData): Observable<any> {
+  getCancelPrescription(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'DoctorPrescription/getCancelPrescription', JSON.stringify(opData)).pipe(
-    tap((result) => 
-    catchError(this.handleError<any>('getCancelPrescription'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('getCancelPrescription'))
+      ));
   }
 
-  getCDTByProcedureId (opData): Observable<any> {
+  getCDTByProcedureId(opData): Observable<any> {
     // console.log(opData);
     return this.http.post<any>(AppSettings.API_ENDPOINT + 'DentalComplaints/getCDTByProcedureId', JSON.stringify(opData)).pipe(
-    tap((result) => 
-    catchError(this.handleError<any>('getCDTByProcedureId'))
-    ));
+      tap((result) =>
+        catchError(this.handleError<any>('getCDTByProcedureId'))
+      ));
   }
   getdentalProcedure(): Observable<any> {
-    return this.http.post<any>(AppSettings.API_ENDPOINT + 'CurrentProceduralCode/options',null).pipe(
+    return this.http.post<any>(AppSettings.API_ENDPOINT + 'CurrentProceduralCode/options', null).pipe(
       map(this.extractData));
   }
-   // To handle error
-   private handleError<T> (operation = 'operation', result?: T) {
+  // To handle error
+  private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
 
       // TODO: send the error to remote logging infrastructure

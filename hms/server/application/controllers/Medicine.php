@@ -23,7 +23,7 @@ class Medicine extends CI_Controller
 	              $post  = json_decode(file_get_contents("php://input"),true); 
 	              //print_r($post_data);       
 	              $post_data["medicine_id"] = isset($post["medicine_id"]) ? $post["medicine_id"] : '';    
-	              $post_data["start"] = isset($post["start"]) ? $post["start"] : 1;     
+	              $post_data["start"] = isset($post["start"]) ? $post["start"] : 0;     
 	              $post_data["limit"] = isset($post["limit"]) ? $post["limit"] : 0;     
 	              $post_data["search_text"] = isset($post["search_text"]) ? $post["search_text"] : '';  
 	              $result      = $this->MedicineModel->listMedicine($post_data);

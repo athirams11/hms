@@ -12,7 +12,7 @@ class MedicineModel extends CI_Model
 		$this->db->stop_cache();
 		$this->db->flush_cache();
 		$this->db->start_cache();	
-		$START = $post_data["start"] - 1;
+		$START = $post_data["start"];
 		$sql = "SELECT *,CONCAT(`DM`.`TRADE_NAME`,' - ',`DM`.`SCIENTIFIC_NAME`) AS TRADE_NAMES
 		 FROM `MEDICINE` `DM`
 				WHERE `MEDICINE_STATUS` = 1

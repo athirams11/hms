@@ -188,6 +188,7 @@ export class VaccineComponent implements OnInit {
       user_id: 0,
       search_vaccine: ''
     };
+    this.immunization_id = 0
   }
   getVaccinelist(page = 0) {
     const limit = 50;
